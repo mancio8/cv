@@ -8,8 +8,8 @@ import image from "@astrojs/image";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://mancio8.github.io/cv',
-  base: '/',
+  site: 'https://mancio8.github.io',
+  base: '/cv',
     integrations: [mdx(), sitemap(), tailwind(), image(
     {
       serviceEntryPoint: '@astrojs/image/sharp',
