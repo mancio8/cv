@@ -1,6 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
+import HorizontalCard from "../components/HorizontalCard.astro";
+import Card from "../components/Card.astro";
+import Table from "../components/Table.astro";
+import TeamSection from "../components/TeamSection.astro";
+import TeamSection2 from "../components/TeamSection2.astro";
 ---
 
 <BaseLayout title="Resume" sideBarActiveItemID="cv">
@@ -41,5 +46,171 @@ import TimeLineElement from "../components/cv/TimeLine.astro";
       </ul>
   </div>
 
+  <TeamSection
+    title="Asd FC Guardia Sanframondi"
+    img="/post_img.webp"
+    desc="Calendario calcio"
+    url="#"
+    tags="Allegri Allegri"
+  />
+
+  <HorizontalCard
+    title="Asd FC Guardia Sanframondi"
+    img="/post_img.webp"
+    desc="Calendario calcio"
+    url="#"
+    badge="NEW"
+  />
+  <Table
+  title="Asd FC Guardia Sanframondi"
+  img="/post_img.webp"
+  desc="Calendario calcio"
+  url="#"
+  badge="NEW"
+/>
+  <div class="row">
+   
+  <Card
+    title="Asd FC Guardia Sanframondi"
+    img="/post_img.webp"
+    desc="Calendario calcio"
+    url="#"
+    badge="NEW"
+  />
+  <Card
+    title="Asd FC Guardia Sanframondi"
+    img="/post_img.webp"
+    desc="Calendario calcio"
+    url="#"
+    badge="NEW"
+  />
+  </div>
+  <div class='grid grid-cols-1 md:grid-cols-2'>
+    <div><Card
+      title="Asd FC Guardia Sanframondi"
+      img="/post_img.webp"
+      desc="Calendario calcio"
+      url="#"
+      badge="NEW"
+    /></div>
+    <div><Card
+      title="Asd FC Guardia Sanframondi"
+      img="/post_img.webp"
+      desc="Calendario calcio"
+      url="#"
+      badge="NEW"
+    /></div>
+    <div><Card
+      title="Asd FC Guardia Sanframondi"
+      img="/post_img.webp"
+      desc="Calendario calcio"
+      url="#"
+      badge="NEW"
+    /></div>
+    <div><Card
+      title="Asd FC Guardia Sanframondi"
+      img="/post_img.webp"
+      desc="Calendario calcio"
+      url="#"
+      badge="NEW"
+    /></div>
+    <div><Card
+      title="Asd FC Guardia Sanframondi"
+      img="/post_img.webp"
+      desc="Calendario calcio"
+      url="#"
+      
+    /></div>
+  </div>
+
+  <div class='flex items-center justify-center min-h-screen'>
+    <div class='w-full max-w-lg px-10 py-8 mx-auto bg-[#ff5a00] rounded-lg shadow-xl'>
+      <div class='max-w-md mx-auto space-y-6 my-20 px-10'>
+        <div class="w-full h-full flex flex-col p-4 bg-black/40 rounded-lg">
+          <img src="https://i.scdn.co/image/ab67616d0000b2739e3f258987afca1e41440fb5"/>
+          <h1 class="font-semibold text-lg text-white mt-3">Part Of Me</h1>
+          <p class="font-semibold text-sm text-gray-200">Spada</p>
+          <img class="h-5 w-16 mt-6 filter opacity-60 brightness grayscale invert" src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_Black.png"/>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+
+  <TeamSection2
+  title="Allegri Allegri"
+  img="/post_img.webp"
+  desc="Calendario calcio"
+  url="#"
+  tags="Allegri Allegri"
+/>
+
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
+  <Card
+      title="Asd FC Guardia Sanframondi"
+      img="/post_img.webp"
+      desc="Calendario calcio"
+      url="#"
+      badge="NEW"
+    />
+    <Card
+    title="Asd FC Guardia Sanframondi"
+    img="/post_img.webp"
+    desc="Calendario calcio"
+    url="#"
+    badge="NEW"
+  />
+  <div class="h-32 rounded-lg bg-gray-200"></div>
+</div>
+
+<article class="flex bg-white transition hover:shadow-xl dark:bg-gray-900 dark:shadow-gray-800/25">
+  <div class="rotate-180 p-2 [writing-mode:_vertical-lr]">
+    <time
+      datetime="2022-10-10"
+      class="flex items-center justify-between gap-4 text-xs font-bold uppercase text-gray-900 dark:text-white"
+    >
+      <span>2022</span>
+      <span class="w-px flex-1 bg-gray-900/10 dark:bg-white/10"></span>
+      <span>Oct 10</span>
+    </time>
+  </div>
+
+  <div class="hidden sm:block sm:basis-56">
+    <img
+      alt="Guitar"
+      src="https://images.unsplash.com/photo-1609557927087-f9cf8e88de18?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+      class="aspect-square h-full w-full object-cover"
+    />
+  </div>
+
+  <div class="flex flex-1 flex-col justify-between">
+    <div
+      class="border-s border-gray-900/10 p-4 dark:border-white/10 sm:!border-l-transparent sm:p-6"
+    >
+      <a href="#">
+        <h3 class="font-bold uppercase text-gray-900 dark:text-white">
+          Finding the right guitar for your style - 5 tips
+        </h3>
+      </a>
+
+      <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-700 dark:text-gray-200">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae dolores, possimus
+        pariatur animi temporibus nesciunt praesentium dolore sed nulla ipsum eveniet corporis
+        quidem, mollitia itaque minus soluta, voluptates neque explicabo tempora nisi culpa eius
+        atque dignissimos. Molestias explicabo corporis voluptatem?
+      </p>
+    </div>
+
+    <div class="sm:flex sm:items-end sm:justify-end">
+      <a
+        href="#"
+        class="block bg-yellow-400 px-5 py-3 text-center text-xs font-bold uppercase text-gray-900 transition hover:bg-yellow-500"
+      >
+        Read Blog
+      </a>
+    </div>
+  </div>
+</article>
   
 </BaseLayout>
