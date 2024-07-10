@@ -25,18 +25,7 @@ const last_posts = posts.slice(0, 3);
         problemi complessi e l’ottimizzazione delle soluzioni.
       </text>
     </div>
-    <div class="mt-8">
-      <a class="btn" href="https://twitter.com/manuelernestog" target="_blank">
-        Let's connect!</a
-      >
-      <a
-        href="https://github.com/manuelernestog/astrofy"
-        target="_blank"
-        class="btn btn-outline ml-5"
-      >
-        Get This template
-      </a>
-    </div>
+    
   </div>
 
   <div>
@@ -58,22 +47,14 @@ const last_posts = posts.slice(0, 3);
     url="http://arciguardia.online/"
   />
   <div class="divider my-0"></div>
-  <HorizontalCard hidden
-    title="Demo Project 3"
-    img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-    badge="FOSS"
-  />
+  
 
-  <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">Latest from blog</div>
-  </div>
-
-  {
+  
+<!-- 
+    {
     last_posts.map((post) => (
       <>
-        <HorizontalCard hidden
+        <HorizontalCard 
           title={post.data.title}
           img={post.data.heroImage}
           desc={post.data.description}
@@ -85,4 +66,6 @@ const last_posts = posts.slice(0, 3);
       </>
     ))
   }
+-->
+
 </BaseLayout>
