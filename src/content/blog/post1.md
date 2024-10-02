@@ -2,7 +2,7 @@
 title: "Instance Segmentation per l’Identificazione di Oggetti in Tempo Reale nei Contesti Automobilistici"
 description: "Lo scopo di questa tesi è quello di sviluppare un sistema in grado di effetuare l'istance segmentation"
 pubDate: "Sep 10 2022"
-heroImage: "/post_img.webp"
+heroImage: "/th.jpeg"
 ---
 
 # Introduzione
