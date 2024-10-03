@@ -46,14 +46,17 @@ import TestaCroce from "../components/TestaCorce.astro";
         class="textarea textarea-primary"
         id="base64-input"
         rows="10"
-        cols="50"
+        cols="35"
         placeholder="Inserisci il Base64 qui..."></textarea>
-
-      <!-- Bottone per convertire in immagine -->
+        <div class="row">
+           <!-- Bottone per convertire in immagine -->
       <button id="convert-image-button">Converti in Immagine</button>
 
       <!-- Bottone per convertire in PDF -->
       <button id="convert-pdf-button">Converti in PDF</button>
+        </div>
+
+     
 
       <!-- Dove mostrerà l'immagine o il PDF -->
       <div id="output-container"></div>
@@ -103,7 +106,7 @@ import TestaCroce from "../components/TestaCorce.astro";
         // Crea un elemento <iframe> per visualizzare il PDF
         const pdfElement = document.createElement("iframe");
         pdfElement.src = `data:application/pdf;base64,${base64}`;
-        pdfElement.width = "70%";
+        pdfElement.width = "100%";
         pdfElement.height = "600px";
 
         // Pulisce il contenuto precedente e aggiunge il PDF
