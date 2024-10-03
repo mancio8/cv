@@ -12,16 +12,8 @@ import TestaCroce from "../components/TestaCorce.astro";
     <input type="radio" name="my-accordion-2" checked="checked" />
     <div class="collapse-title text-xl font-medium">Generatore di QR Code</div>
     <div class="collapse-content">
-      <input
-        class="input input-bordered input-primary w-full max-w-xs"
-        type="text"
-        id="input-text"
-        placeholder="Inserisci il link o il testo"
-      />
-      <button class="btn btn-outline btn-primary" id="generate"
-        >Genera QR Code</button
-      ><QRCodeGenerator />
-      <div id="qrcode-container"></div>
+      <QRCodeGenerator />
+      
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
@@ -29,32 +21,18 @@ import TestaCroce from "../components/TestaCorce.astro";
     <div class="collapse-title text-xl font-medium">
       Generatore di Password Sicure
     </div>
-    <GenPass />
+
     <div class="collapse-content">
-      <input
-        class="input input-bordered input-primary w-full max-w-xs"
-        type="number"
-        id="password-length"
-        placeholder="Lunghezza password"
-      />
-      <button class="btn btn-outline btn-primary" id="generate-password"
-        >Genera Password</button
-      >
-      <div id="password-container"></div>
-      <button class="btn btn-outline btn-secondary" id="copy-password"
-        >Copia Password</button
-      >
+      <GenPass />
+      
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
     <input type="radio" name="my-accordion-2" />
     <div class="collapse-title text-xl font-medium">Gioco Testa o Croce</div>
-    <TestaCroce />
     <div class="collapse-content">
-      <button id="toss-button">Lancia la Moneta</button>
-      <div id="result">Risultato:</div>
-      <h2>Storia dei Lanci</h2>
-      <ul id="history-list"></ul>
+      <TestaCroce />
+      
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
@@ -125,7 +103,7 @@ import TestaCroce from "../components/TestaCorce.astro";
         // Crea un elemento <iframe> per visualizzare il PDF
         const pdfElement = document.createElement("iframe");
         pdfElement.src = `data:application/pdf;base64,${base64}`;
-        pdfElement.width = "100%";
+        pdfElement.width = "70%";
         pdfElement.height = "600px";
 
         // Pulisce il contenuto precedente e aggiunge il PDF

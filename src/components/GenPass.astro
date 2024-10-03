@@ -1,3 +1,17 @@
+<input
+        class="input input-bordered input-primary w-full max-w-xs"
+        type="number"
+        id="password-length"
+        placeholder="Lunghezza password"
+      />
+      <button class="btn btn-outline btn-primary" id="generate-password"
+        >Genera Password</button
+      >
+      <div id="password-container"></div>
+      <button class="btn btn-outline btn-secondary" id="copy-password"
+        >Copia Password</button
+      >
+
 <script>
     function generatePassword(length: number): string {
     const charset: string =
