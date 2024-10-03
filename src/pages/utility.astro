@@ -4,159 +4,96 @@ import HorizontalCard from "../components/HorizontalCard.astro";
 import { getCollection } from "astro:content";
 ---
 
-<BaseLayout sideBarActiveItemID="home">
-  <h1>Generatore di QR Code</h1>
-  <input
-    type="text"
-    id="input-text"
-    placeholder="Inserisci il link o il testo"
-  />
-  <button id="generate">Genera QR Code</button>
-  <div id="qrcode-container"></div>
+<BaseLayout sideBarActiveItemID="utility">
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" checked="checked" />
+    <div class="collapse-title text-xl font-medium">Generatore di QR Code</div>
+    <div class="collapse-content">
+      <input
+        class="input input-bordered input-primary w-full max-w-xs"
+        type="text"
+        id="input-text"
+        placeholder="Inserisci il link o il testo"
+      />
+      <button class="btn btn-outline btn-primary" id="generate"
+        >Genera QR Code</button
+      >
+      <div id="qrcode-container"></div>
+    </div>
+  </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title text-xl font-medium">
+      Generatore di Password Sicure
+    </div>
+    <div class="collapse-content">
+      <input
+        class="input input-bordered input-primary w-full max-w-xs"
+        type="number"
+        id="password-length"
+        placeholder="Lunghezza password"
+      />
+      <button class="btn btn-outline btn-primary" id="generate-password"
+        >Genera Password</button
+      >
+      <div id="password-container"></div>
+      <button class="btn btn-outline btn-secondary" id="copy-password"
+        >Copia Password</button
+      >
+    </div>
+  </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title text-xl font-medium">Gioco Testa o Croce</div>
+    <div class="collapse-content">
+      <button id="toss-button">Lancia la Moneta</button>
+      <div id="result">Risultato:</div>
+      <h2>Storia dei Lanci</h2>
+      <ul id="history-list"></ul>
+    </div>
+  </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title text-xl font-medium">
+      Converti Base64 in Immagine o PDF
+    </div>
+    <div class="collapse-content">
+      <!-- Input per base64 -->
+      <textarea
+        class="textarea textarea-primary"
+        id="base64-input"
+        rows="10"
+        cols="50"
+        placeholder="Inserisci il Base64 qui..."></textarea>
 
-  <h1>Generatore di Password Sicure</h1>
-  <input type="number" id="password-length" placeholder="Lunghezza password" />
-  <button id="generate-password">Genera Password</button>
-  <div id="password-container"></div>
-  <button id="copy-password">Copia Password</button>
+      <!-- Bottone per convertire in immagine -->
+      <button id="convert-image-button">Converti in Immagine</button>
 
-  <h1>Gioco Testa o Croce</h1>
-  <button id="toss-button">Lancia la Moneta</button>
-  <div id="result">Risultato:</div>
-  <h2>Storia dei Lanci</h2>
-  <ul id="history-list"></ul>
+      <!-- Bottone per convertire in PDF -->
+      <button id="convert-pdf-button">Converti in PDF</button>
 
-  <h1>Converti Base64 in Immagine o PDF</h1>
+      <!-- Dove mostrerà l'immagine o il PDF -->
+      <div id="output-container"></div>
+    </div>
+  </div>
 
-  <!-- Input per base64 -->
-  <textarea
-    id="base64-input"
-    rows="10"
-    cols="50"
-    placeholder="Inserisci il Base64 qui..."></textarea>
+  <h1>Calcolatore di Differenza tra Date</h1>
+  <form id="date-form">
+    <label for="date1">Data 1:</label>
+    <input type="date" id="date1" required />
+    <br />
+    <label for="date2">Data 2:</label>
+    <input type="date" id="date2" required />
+    <br />
+    <button type="submit">Calcola</button>
+  </form>
+  <p id="result2"></p>
 
-  <!-- Bottone per convertire in immagine -->
-  <button id="convert-image-button">Converti in Immagine</button>
+  <script type="module" src="/src/typescript/qrcode.ts"></script>
 
-  <!-- Bottone per convertire in PDF -->
-  <button id="convert-pdf-button">Converti in PDF</button>
+  <script type="module" src="/src/typescript/genPass.ts"></script>
 
-  <!-- Dove mostrerà l'immagine o il PDF -->
-  <div id="output-container"></div>
-
-  <script>
-    import QRCode from "qrcode";
-    document.addEventListener("DOMContentLoaded", function () {
-      const generateButton = document.getElementById("generate");
-      const qrCodeContainer = document.getElementById("qrcode-container");
-      const inputField = document.getElementById(
-        "input-text"
-      ) as HTMLInputElement; // Cast a HTMLInputElement
-
-      if (generateButton && qrCodeContainer && inputField) {
-        generateButton.addEventListener("click", async function () {
-          const inputValue = inputField.value; // Ora `value` esiste su HTMLInputElement
-          if (inputValue) {
-            try {
-              const qrCodeUrl = await QRCode.toDataURL(inputValue);
-              qrCodeContainer.innerHTML = `<img src="${qrCodeUrl}" alt="QR Code">`;
-            } catch (error) {
-              console.error(
-                "Errore durante la generazione del QR Code:",
-                error
-              );
-            }
-          }
-        });
-      }
-    });
-  </script>
-
-  <script>
-    function generatePassword(length: number): string {
-      const charset: string =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
-      let password: string = "";
-
-      for (let i = 0, n = charset.length; i < length; ++i) {
-        password += charset.charAt(Math.floor(Math.random() * n));
-      }
-
-      return password;
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const generateButton: HTMLButtonElement | null = document.getElementById(
-        "generate-password"
-      ) as HTMLButtonElement;
-      const passwordContainer: HTMLElement | null =
-        document.getElementById("password-container");
-      const copyButton: HTMLButtonElement | null = document.getElementById(
-        "copy-password"
-      ) as HTMLButtonElement;
-
-      generateButton?.addEventListener("click", () => {
-        const length: number =
-          parseInt(
-            (document.getElementById("password-length") as HTMLInputElement)
-              .value,
-            10
-          ) || 8;
-        const password: string = generatePassword(length);
-
-        if (passwordContainer) {
-          passwordContainer.textContent = `La tua password sicura: ${password}`;
-        }
-      });
-
-      copyButton?.addEventListener("click", () => {
-        if (passwordContainer) {
-          const passwordText: string =
-            passwordContainer.textContent?.replace(
-              "La tua password sicura: ",
-              ""
-            ) || "";
-          navigator.clipboard
-            .writeText(passwordText)
-            .then(() => {
-              alert("Password copiata negli appunti!");
-            })
-            .catch((err) => {
-              console.error("Errore nella copia della password: ", err);
-            });
-        }
-      });
-    });
-  </script>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const tossButton: HTMLButtonElement | null = document.getElementById(
-        "toss-button"
-      ) as HTMLButtonElement;
-      const resultDisplay: HTMLElement | null =
-        document.getElementById("result");
-      const historyList: HTMLElement | null =
-        document.getElementById("history-list");
-
-      let history: string[] = [];
-
-      tossButton?.addEventListener("click", () => {
-        const result: string = Math.random() < 0.5 ? "Testa" : "Croce";
-
-        if (resultDisplay) {
-          resultDisplay.textContent = `Risultato: ${result}`;
-        }
-
-        history.push(result);
-
-        // Aggiorna la lista della storia
-        const historyItem: HTMLLIElement = document.createElement("li");
-        historyItem.textContent = result;
-        historyList?.appendChild(historyItem);
-      });
-    });
-  </script>
+  <script type="module" src="/src/typescript/testaCroce.ts"></script>
 
   <script>
     // Funzione per convertire Base64 in un'immagine
@@ -218,6 +155,56 @@ import { getCollection } from "astro:content";
         if (base64Value) {
           convertBase64ToPDF(base64Value);
         }
+      });
+  </script>
+
+  <script>
+    // src/script.ts
+
+    function calculateDateDifference(
+      date1: Date,
+      date2: Date
+    ): { daysPassed: number; daysRemaining: number } {
+      const today = new Date();
+
+      const diffTime1 = today.getTime() - date1.getTime();
+      const diffTime2 = date2.getTime() - today.getTime();
+
+      const daysPassed = Math.floor(diffTime1 / (1000 * 60 * 60 * 24));
+      const daysRemaining = Math.floor(diffTime2 / (1000 * 60 * 60 * 24));
+
+      return { daysPassed, daysRemaining };
+    }
+
+    document
+      .getElementById("date-form")
+      ?.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const date1Input = document.getElementById("date1") as HTMLInputElement;
+        const date2Input = document.getElementById("date2") as HTMLInputElement;
+
+        const date1 = new Date(date1Input.value);
+        const date2 = new Date(date2Input.value);
+
+        const { daysPassed, daysRemaining } = calculateDateDifference(
+          date1,
+          date2
+        );
+
+        const resultElement = document.getElementById("result2")!;
+        resultElement.textContent = `
+        ${
+          daysPassed < 0
+            ? "La data 1 è nel futuro"
+            : `Sono passati ${daysPassed} giorno(i) dalla data 1.`
+        }
+        ${
+          daysRemaining < 0
+            ? "La data 2 è nel passato"
+            : `Ci sono ${daysRemaining} giorno(i) rimanenti fino alla data 2.`
+        }
+    `;
       });
   </script>
 </BaseLayout>
