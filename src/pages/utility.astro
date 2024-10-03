@@ -20,6 +20,30 @@ import { getCollection } from "astro:content";
   <div id="password-container"></div>
   <button id="copy-password">Copia Password</button>
 
+  <h1>Gioco Testa o Croce</h1>
+  <button id="toss-button">Lancia la Moneta</button>
+  <div id="result">Risultato:</div>
+  <h2>Storia dei Lanci</h2>
+  <ul id="history-list"></ul>
+
+  <h1>Converti Base64 in Immagine o PDF</h1>
+
+  <!-- Input per base64 -->
+  <textarea
+    id="base64-input"
+    rows="10"
+    cols="50"
+    placeholder="Inserisci il Base64 qui..."></textarea>
+
+  <!-- Bottone per convertire in immagine -->
+  <button id="convert-image-button">Converti in Immagine</button>
+
+  <!-- Bottone per convertire in PDF -->
+  <button id="convert-pdf-button">Converti in PDF</button>
+
+  <!-- Dove mostrerà l'immagine o il PDF -->
+  <div id="output-container"></div>
+
   <script>
     import QRCode from "qrcode";
     document.addEventListener("DOMContentLoaded", function () {
@@ -48,44 +72,152 @@ import { getCollection } from "astro:content";
     });
   </script>
 
-<script>
-  function generatePassword(length: number): string {
-    const charset: string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
-    let password: string = "";
-    
-    for (let i = 0, n = charset.length; i < length; ++i) {
+  <script>
+    function generatePassword(length: number): string {
+      const charset: string =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+      let password: string = "";
+
+      for (let i = 0, n = charset.length; i < length; ++i) {
         password += charset.charAt(Math.floor(Math.random() * n));
+      }
+
+      return password;
     }
-    
-    return password;
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const generateButton: HTMLButtonElement | null = document.getElementById('generate-password') as HTMLButtonElement;
-    const passwordContainer: HTMLElement | null = document.getElementById('password-container');
-    const copyButton: HTMLButtonElement | null = document.getElementById('copy-password') as HTMLButtonElement;
+    document.addEventListener("DOMContentLoaded", () => {
+      const generateButton: HTMLButtonElement | null = document.getElementById(
+        "generate-password"
+      ) as HTMLButtonElement;
+      const passwordContainer: HTMLElement | null =
+        document.getElementById("password-container");
+      const copyButton: HTMLButtonElement | null = document.getElementById(
+        "copy-password"
+      ) as HTMLButtonElement;
 
-    generateButton?.addEventListener('click', () => {
-        const length: number = parseInt((document.getElementById('password-length') as HTMLInputElement).value, 10) || 8;
+      generateButton?.addEventListener("click", () => {
+        const length: number =
+          parseInt(
+            (document.getElementById("password-length") as HTMLInputElement)
+              .value,
+            10
+          ) || 8;
         const password: string = generatePassword(length);
-        
-        if (passwordContainer) {
-            passwordContainer.textContent = `La tua password sicura: ${password}`;
-        }
-    });
 
-    copyButton?.addEventListener('click', () => {
         if (passwordContainer) {
-            const passwordText: string = passwordContainer.textContent?.replace('La tua password sicura: ', '') || '';
-            navigator.clipboard.writeText(passwordText).then(() => {
-                alert('Password copiata negli appunti!');
-            }).catch(err => {
-                console.error('Errore nella copia della password: ', err);
+          passwordContainer.textContent = `La tua password sicura: ${password}`;
+        }
+      });
+
+      copyButton?.addEventListener("click", () => {
+        if (passwordContainer) {
+          const passwordText: string =
+            passwordContainer.textContent?.replace(
+              "La tua password sicura: ",
+              ""
+            ) || "";
+          navigator.clipboard
+            .writeText(passwordText)
+            .then(() => {
+              alert("Password copiata negli appunti!");
+            })
+            .catch((err) => {
+              console.error("Errore nella copia della password: ", err);
             });
         }
+      });
     });
-});
+  </script>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tossButton: HTMLButtonElement | null = document.getElementById(
+        "toss-button"
+      ) as HTMLButtonElement;
+      const resultDisplay: HTMLElement | null =
+        document.getElementById("result");
+      const historyList: HTMLElement | null =
+        document.getElementById("history-list");
 
-</script>
+      let history: string[] = [];
+
+      tossButton?.addEventListener("click", () => {
+        const result: string = Math.random() < 0.5 ? "Testa" : "Croce";
+
+        if (resultDisplay) {
+          resultDisplay.textContent = `Risultato: ${result}`;
+        }
+
+        history.push(result);
+
+        // Aggiorna la lista della storia
+        const historyItem: HTMLLIElement = document.createElement("li");
+        historyItem.textContent = result;
+        historyList?.appendChild(historyItem);
+      });
+    });
+  </script>
+
+  <script>
+    // Funzione per convertire Base64 in un'immagine
+    function convertBase64ToImage(base64: string) {
+      const outputContainer = document.getElementById("output-container");
+
+      if (outputContainer) {
+        // Crea un elemento <img> per visualizzare l'immagine
+        const imgElement = document.createElement("img");
+        imgElement.src = `data:image/jpeg;base64,${base64}`;
+        imgElement.alt = "Immagine decodificata da Base64";
+
+        // Pulisce il contenuto precedente e aggiunge la nuova immagine
+        outputContainer.innerHTML = "";
+        outputContainer.appendChild(imgElement);
+      }
+    }
+
+    // Funzione per convertire Base64 in un PDF
+    function convertBase64ToPDF(base64: string) {
+      const outputContainer = document.getElementById("output-container");
+
+      if (outputContainer) {
+        // Crea un elemento <iframe> per visualizzare il PDF
+        const pdfElement = document.createElement("iframe");
+        pdfElement.src = `data:application/pdf;base64,${base64}`;
+        pdfElement.width = "100%";
+        pdfElement.height = "600px";
+
+        // Pulisce il contenuto precedente e aggiunge il PDF
+        outputContainer.innerHTML = "";
+        outputContainer.appendChild(pdfElement);
+      }
+    }
+
+    // Event listener per il pulsante di conversione immagine
+    document
+      .getElementById("convert-image-button")
+      ?.addEventListener("click", () => {
+        const base64Input = document.getElementById(
+          "base64-input"
+        ) as HTMLTextAreaElement;
+        const base64Value = base64Input.value.trim();
+
+        if (base64Value) {
+          convertBase64ToImage(base64Value);
+        }
+      });
+
+    // Event listener per il pulsante di conversione PDF
+    document
+      .getElementById("convert-pdf-button")
+      ?.addEventListener("click", () => {
+        const base64Input = document.getElementById(
+          "base64-input"
+        ) as HTMLTextAreaElement;
+        const base64Value = base64Input.value.trim();
+
+        if (base64Value) {
+          convertBase64ToPDF(base64Value);
+        }
+      });
+  </script>
 </BaseLayout>
