@@ -1,15 +1,14 @@
 <button id="toss-button">Lancia la Moneta</button>
-      <div id="result">Risultato:</div>
-      <h2>Storia dei Lanci</h2>
-      <ul id="history-list"></ul>
+<div id="result">Risultato:</div>
+<h2>Storia dei Lanci</h2>
+<ul id="history-list"></ul>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     const tossButton: HTMLButtonElement | null = document.getElementById(
       "toss-button"
     ) as HTMLButtonElement;
-    const resultDisplay: HTMLElement | null =
-      document.getElementById("result");
+    const resultDisplay: HTMLElement | null = document.getElementById("result");
     const historyList: HTMLElement | null =
       document.getElementById("history-list");
 

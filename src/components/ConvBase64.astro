@@ -1,0 +1,80 @@
+<!-- Input per base64 -->
+<textarea
+  class="textarea textarea-primary"
+  id="base64-input"
+  rows="10"
+  cols="35"
+  placeholder="Inserisci il Base64 qui..."></textarea>
+<div class="row">
+  <!-- Bottone per convertire in immagine -->
+  <button id="convert-image-button">Converti in Immagine</button>
+
+  <!-- Bottone per convertire in PDF -->
+  <button id="convert-pdf-button">Converti in PDF</button>
+</div>
+
+<!-- Dove mostrerà l'immagine o il PDF -->
+<div id="output-container"></div>
+
+<script>
+  // Funzione per convertire Base64 in un'immagine
+  function convertBase64ToImage(base64: string) {
+    const outputContainer = document.getElementById("output-container");
+
+    if (outputContainer) {
+      // Crea un elemento <img> per visualizzare l'immagine
+      const imgElement = document.createElement("img");
+      imgElement.src = `data:image/jpeg;base64,${base64}`;
+      imgElement.alt = "Immagine decodificata da Base64";
+
+      // Pulisce il contenuto precedente e aggiunge la nuova immagine
+      outputContainer.innerHTML = "";
+      outputContainer.appendChild(imgElement);
+    }
+  }
+
+  // Funzione per convertire Base64 in un PDF
+  function convertBase64ToPDF(base64: string) {
+    const outputContainer = document.getElementById("output-container");
+
+    if (outputContainer) {
+      // Crea un elemento <iframe> per visualizzare il PDF
+      const pdfElement = document.createElement("iframe");
+      pdfElement.src = `data:application/pdf;base64,${base64}`;
+      pdfElement.width = "100%";
+      pdfElement.height = "600px";
+
+      // Pulisce il contenuto precedente e aggiunge il PDF
+      outputContainer.innerHTML = "";
+      outputContainer.appendChild(pdfElement);
+    }
+  }
+
+  // Event listener per il pulsante di conversione immagine
+  document
+    .getElementById("convert-image-button")
+    ?.addEventListener("click", () => {
+      const base64Input = document.getElementById(
+        "base64-input"
+      ) as HTMLTextAreaElement;
+      const base64Value = base64Input.value.trim();
+
+      if (base64Value) {
+        convertBase64ToImage(base64Value);
+      }
+    });
+
+  // Event listener per il pulsante di conversione PDF
+  document
+    .getElementById("convert-pdf-button")
+    ?.addEventListener("click", () => {
+      const base64Input = document.getElementById(
+        "base64-input"
+      ) as HTMLTextAreaElement;
+      const base64Value = base64Input.value.trim();
+
+      if (base64Value) {
+        convertBase64ToPDF(base64Value);
+      }
+    });
+</script>

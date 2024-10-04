@@ -5,6 +5,8 @@ import { getCollection } from "astro:content";
 import QRCodeGenerator from "../components/QrCodeGenerator.astro";
 import GenPass from "../components/GenPass.astro";
 import TestaCroce from "../components/TestaCorce.astro";
+import ConvBase64 from "../components/ConvBase64.astro";
+import DiffDate from "../components/DiffDate.astro";
 ---
 
 <BaseLayout sideBarActiveItemID="utility">
@@ -41,152 +43,21 @@ import TestaCroce from "../components/TestaCorce.astro";
       Converti Base64 in Immagine o PDF
     </div>
     <div class="collapse-content">
-      <!-- Input per base64 -->
-      <textarea
-        class="textarea textarea-primary"
-        id="base64-input"
-        rows="10"
-        cols="35"
-        placeholder="Inserisci il Base64 qui..."></textarea>
-        <div class="row">
-           <!-- Bottone per convertire in immagine -->
-      <button id="convert-image-button">Converti in Immagine</button>
-
-      <!-- Bottone per convertire in PDF -->
-      <button id="convert-pdf-button">Converti in PDF</button>
-        </div>
-
-     
-
-      <!-- Dove mostrerà l'immagine o il PDF -->
-      <div id="output-container"></div>
+      <ConvBase64/>
+    </div>
+  </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title text-xl font-medium">
+      Calcolatore di Differenza tra Date
+    </div>
+    <div class="collapse-content">
+      <DiffDate/>
     </div>
   </div>
 
-  <h1>Calcolatore di Differenza tra Date</h1>
-  <form id="date-form">
-    <label for="date1">Data 1:</label>
-    <input type="date" id="date1" required />
-    <br />
-    <label for="date2">Data 2:</label>
-    <input type="date" id="date2" required />
-    <br />
-    <button type="submit">Calcola</button>
-  </form>
-  <p id="result2"></p>
-
+ 
   
 
-  <script>
-    // Funzione per convertire Base64 in un'immagine
-    function convertBase64ToImage(base64: string) {
-      const outputContainer = document.getElementById("output-container");
 
-      if (outputContainer) {
-        // Crea un elemento <img> per visualizzare l'immagine
-        const imgElement = document.createElement("img");
-        imgElement.src = `data:image/jpeg;base64,${base64}`;
-        imgElement.alt = "Immagine decodificata da Base64";
-
-        // Pulisce il contenuto precedente e aggiunge la nuova immagine
-        outputContainer.innerHTML = "";
-        outputContainer.appendChild(imgElement);
-      }
-    }
-
-    // Funzione per convertire Base64 in un PDF
-    function convertBase64ToPDF(base64: string) {
-      const outputContainer = document.getElementById("output-container");
-
-      if (outputContainer) {
-        // Crea un elemento <iframe> per visualizzare il PDF
-        const pdfElement = document.createElement("iframe");
-        pdfElement.src = `data:application/pdf;base64,${base64}`;
-        pdfElement.width = "100%";
-        pdfElement.height = "600px";
-
-        // Pulisce il contenuto precedente e aggiunge il PDF
-        outputContainer.innerHTML = "";
-        outputContainer.appendChild(pdfElement);
-      }
-    }
-
-    // Event listener per il pulsante di conversione immagine
-    document
-      .getElementById("convert-image-button")
-      ?.addEventListener("click", () => {
-        const base64Input = document.getElementById(
-          "base64-input"
-        ) as HTMLTextAreaElement;
-        const base64Value = base64Input.value.trim();
-
-        if (base64Value) {
-          convertBase64ToImage(base64Value);
-        }
-      });
-
-    // Event listener per il pulsante di conversione PDF
-    document
-      .getElementById("convert-pdf-button")
-      ?.addEventListener("click", () => {
-        const base64Input = document.getElementById(
-          "base64-input"
-        ) as HTMLTextAreaElement;
-        const base64Value = base64Input.value.trim();
-
-        if (base64Value) {
-          convertBase64ToPDF(base64Value);
-        }
-      });
-  </script>
-
-  <script>
-    // src/script.ts
-
-    function calculateDateDifference(
-      date1: Date,
-      date2: Date
-    ): { daysPassed: number; daysRemaining: number } {
-      const today = new Date();
-
-      const diffTime1 = today.getTime() - date1.getTime();
-      const diffTime2 = date2.getTime() - today.getTime();
-
-      const daysPassed = Math.floor(diffTime1 / (1000 * 60 * 60 * 24));
-      const daysRemaining = Math.floor(diffTime2 / (1000 * 60 * 60 * 24));
-
-      return { daysPassed, daysRemaining };
-    }
-
-    document
-      .getElementById("date-form")
-      ?.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const date1Input = document.getElementById("date1") as HTMLInputElement;
-        const date2Input = document.getElementById("date2") as HTMLInputElement;
-
-        const date1 = new Date(date1Input.value);
-        const date2 = new Date(date2Input.value);
-
-        const { daysPassed, daysRemaining } = calculateDateDifference(
-          date1,
-          date2
-        );
-
-        const resultElement = document.getElementById("result2")!;
-        resultElement.textContent = `
-        ${
-          daysPassed < 0
-            ? "La data 1 è nel futuro"
-            : `Sono passati ${daysPassed} giorno(i) dalla data 1.`
-        }
-        ${
-          daysRemaining < 0
-            ? "La data 2 è nel passato"
-            : `Ci sono ${daysRemaining} giorno(i) rimanenti fino alla data 2.`
-        }
-    `;
-      });
-  </script>
 </BaseLayout>
