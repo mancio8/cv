@@ -1,0 +1,17 @@
+---
+import { getStandings } from '../services/motoGPService';
+
+const standings = await getStandings();
+---
+
+<div class="card bg-base-100 shadow-xl p-4 my-4">
+    <h2 class="card-title">Classifiche MotoGP</h2>
+    <ul>
+        {standings.map(standing => (
+            <li >
+                {standing.position}. {standing.riderName} - {standing.points} punti
+            </li>
+        ))}
+    </ul>
+</div>
+

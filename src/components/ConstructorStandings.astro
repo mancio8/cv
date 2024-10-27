@@ -1,0 +1,16 @@
+---
+import { getConstructorStandings } from '../services/f1Service';
+
+const standings = await getConstructorStandings();
+---
+
+<div class="card bg-base-100 shadow-xl p-4 my-4">
+    <h2 class="card-title">Classifica Costruttori</h2>
+    <ul>
+        {standings.map((standing) => (
+            <li>
+                {standing.position}. {standing.Constructor.name} - {standing.points} punti
+            </li>
+        ))}
+    </ul>
+</div>

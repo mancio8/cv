@@ -1,0 +1,35 @@
+---
+import { getNextRace } from '../services/f1Service';
+
+const race = await getNextRace();
+---
+
+<div class="card bg-base-100 shadow-xl p-4 my-4">
+    <h2 class="card-title">Prossima Gara</h2>
+    {race ? (
+        <>
+            <p>{race.raceName} - {race.Circuit.circuitName}</p>
+            <p><strong>Data:</strong> {race.date}</p>
+            <p><strong>Qualifiche:</strong> {race.qualTimeInItaly} (ora italiana)</p>
+            <p><strong>Gara:</strong> {race.raceTimeInItaly} (ora italiana)</p>
+
+            {race.qualifyingResults.length > 0 && (
+                <div class="my-4">
+                    <h3 class="text-lg font-semibold">Risultati Qualifiche</h3>
+                    <ul>
+                        {race.qualifyingResults.map(result => (
+                            <li>
+                                {result.position}. {result.Driver.givenName} {result.Driver.familyName} - {result.Constructor.name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            
+           
+        </>
+    ) : (
+        <p>Caricamento...</p>
+    )}
+</div>
+

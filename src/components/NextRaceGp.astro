@@ -1,0 +1,32 @@
+---
+import { getNextRace, getStandings } from '../services/motoGPService';
+
+const nextRace = await getNextRace();
+const standings = await getStandings();
+---
+
+<div class="card bg-base-100 shadow-xl p-4 my-4">
+    <h2 class="card-title">Prossima Gara MotoGP</h2>
+    {nextRace ? (
+        <>
+            <p>{nextRace.name} - {nextRace.circuitName}</p>
+            <p><strong>Data:</strong> {nextRace.dateTime}</p>
+            <p><strong>Gara:</strong> {nextRace.raceTimeInItaly} (ora italiana)</p>
+
+            {nextRace.qualifyingResults.length > 0 && (
+                <div class="my-4">
+                    <h3 class="text-lg font-semibold">Risultati Qualifiche</h3>
+                    <ul>
+                        {nextRace.qualifyingResults.map(result => (
+                            <li>
+                                {result.position}. {result.riderName} - {result.team}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </>
+    ) : (
+        <p>Caricamento...</p>
+    )}
+</div>
