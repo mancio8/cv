@@ -7,6 +7,14 @@ import GenPass from "../components/GenPass.astro";
 import TestaCroce from "../components/TestaCorce.astro";
 import ConvBase64 from "../components/ConvBase64.astro";
 import DiffDate from "../components/DiffDate.astro";
+import NextRace from '../components/NextRace.astro';
+import LastRaceResults from '../components/LastRaceResults.astro';
+import DriverStandings from '../components/DriverStandings.astro';
+import ConstructorStandings from '../components/ConstructorStandings.astro'
+
+
+
+
 ---
 
 <BaseLayout sideBarActiveItemID="utility">
@@ -55,9 +63,22 @@ import DiffDate from "../components/DiffDate.astro";
       <DiffDate/>
     </div>
   </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title text-xl font-medium">
+      F1
+    </div>
+    <div class="collapse-content">
+      <!--inizio component-->
+      <NextRace />
+      <LastRaceResults />
+      <!--fine component -->
+    </div>
+  </div>
 
  
   
 
 
 </BaseLayout>
+
