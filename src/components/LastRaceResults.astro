@@ -2,28 +2,7 @@
 import { getLastRaceResults } from '../services/f1Service';
 
 const results = await getLastRaceResults();
-const standings = [
-    { position: 1, Driver: { givenName: "Lewis", familyName: "Hamilton" }, Constructor: { name: "Mercedes", color: "#00D2BE" } },
-    { position: 2, Driver: { givenName: "Max", familyName: "Verstappen" }, Constructor: { name: "Red Bull", color: "#1E41FF" } },
-    { position: 3, Driver: { givenName: "Charles", familyName: "Leclerc" }, Constructor: { name: "Ferrari", color: "#DC0000" } },
-    { position: 4, Driver: { givenName: "Sergio", familyName: "Pérez" }, Constructor: { name: "Red Bull", color: "#1E41FF" } },
-    { position: 5, Driver: { givenName: "Lando", familyName: "Norris" }, Constructor: { name: "McLaren", color: "#FF8700" } },
-    { position: 6, Driver: { givenName: "Carlos", familyName: "Sainz" }, Constructor: { name: "Ferrari", color: "#DC0000" } },
-    { position: 7, Driver: { givenName: "Fernando", familyName: "Alonso" }, Constructor: { name: "Aston Martin", color: "#006F62" } },
-    { position: 8, Driver: { givenName: "Esteban", familyName: "Ocon" }, Constructor: { name: "Alpine", color: "#0090FF" } },
-    { position: 9, Driver: { givenName: "Lance", familyName: "Stroll" }, Constructor: { name: "Aston Martin", color: "#006F62" } },
-    { position: 10, Driver: { givenName: "George", familyName: "Russell" }, Constructor: { name: "Mercedes", color: "#00D2BE" } },
-    { position: 11, Driver: { givenName: "Oscar", familyName: "Piastri" }, Constructor: { name: "McLaren", color: "#FF8700" } },
-    { position: 12, Driver: { givenName: "Zhou", familyName: "Guanyu" }, Constructor: { name: "Alfa Romeo", color: "#900000" } },
-    { position: 13, Driver: { givenName: "Valtteri", familyName: "Bottas" }, Constructor: { name: "Alfa Romeo", color: "#900000" } },
-    { position: 14, Driver: { givenName: "Nico", familyName: "Hülkenberg" }, Constructor: { name: "Haas", color: "#D7D7D7" } },
-    { position: 15, Driver: { givenName: "Kevin", familyName: "Magnussen" }, Constructor: { name: "Haas", color: "#D7D7D7" } },
-    { position: 16, Driver: { givenName: "Yuki", familyName: "Tsunoda" }, Constructor: { name: "AlphaTauri", color: "#C8C8C8" } },
-    { position: 17, Driver: { givenName: "Nyck", familyName: "de Vries" }, Constructor: { name: "AlphaTauri", color: "#C8C8C8" } },
-    { position: 18, Driver: { givenName: "Alexander", familyName: "Albon" }, Constructor: { name: "Williams", color: "#00BFFF" } },
-    { position: 19, Driver: { givenName: "Logan", familyName: "Sargeant" }, Constructor: { name: "Williams", color: "#00BFFF" } },
-    { position: 20, Driver: { givenName: "Robert", familyName: "Kubica" }, Constructor: { name: "Alfa Romeo", color: "#900000" } } // In alcune gare
-];
+
 
 ---
 
@@ -46,7 +25,7 @@ const standings = [
 .team-mclaren { border: 2px solid #FF8700; }
 .team-astonmartin { border: 2px solid #006F62; }
 .team-alpinef1team { border: 2px solid #0090FF; }
-.team-sauber { border: 2px solid #900000; }
+.team-sauber { border: 2px solid #52E252; }
 .team-haasf1team { border: 2px solid #D7D7D7; }
 .team-rbf1team { border: 2px solid #C8C8C8; }
 .team-williams { border: 2px solid #00BFFF; }
