@@ -91,21 +91,21 @@ const driversData = await Promise.all(driverIds.map(async (driverId) => {
   <div class="collapse collapse-arrow bg-base-200">
     <input type="radio" name="my-accordion-2" />
     <div class="collapse-title text-xl font-medium">
-      Statistiche piloti F1
+        Statistiche piloti F1
     </div>
     <div class="collapse-content">
-      <!--inizio component-->
-      <div class="row">
-        {driversData.map(({ driverData, driverStats }) => (
-          <div class="w-full mb-4">
-            <StatsComponent driverData={driverData} driverStats={driverStats} />
-          </div>
-        ))}
-      </div>
-      
-      <!--fine component -->
+        <!-- Inizio componente -->
+        <div class="flex flex-col items-center">
+            {driversData.map(({ driverData, driverStats }) => (
+                <div class="w-full mb-4">
+                    <StatsComponent driverData={driverData} driverStats={driverStats} />
+                </div>
+            ))}
+        </div>
+        <!-- Fine componente -->
     </div>
-  </div>
+</div>
+
 
  
   
