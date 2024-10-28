@@ -6,11 +6,39 @@ const standings = await getDriverStandings();
 
 <div class="card bg-base-100 shadow-xl p-4 my-4">
     <h2 class="card-title">Classifica Piloti</h2>
-    <ul>
-        {standings.map((standing) => (
-            <li>
-                {standing.position}. {standing.Driver.givenName} {standing.Driver.familyName} - {standing.points} punti
-            </li>
-        ))}
-    </ul>
+    <table class="table w-full">
+        <thead>
+            <tr>
+                <th>Posizione</th>
+                <th>Nome Pilota</th>
+                <th>Constructor</th>
+                <th>Punti</th>
+            </tr>
+        </thead>
+        <tbody>
+            {standings.map((standing) => (
+                <tr class={`team-${standing.constructor.name.toLowerCase().replace(/\s/g, '')}`}>
+                    <td>{standing.position}</td>
+                    <td>{standing.driver.givenName} {standing.driver.familyName}</td>
+                    <td>{standing.constructor.name}</td>
+                    <td>{standing.points} punti</td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
 </div>
+
+<style>
+    /* styles.css */
+.team-mercedes { border: 2px solid #00D2BE; }
+.team-redbull { border: 2px solid #1E41FF; }
+.team-ferrari { border: 2px solid #DC0000; }
+.team-mclaren { border: 2px solid #FF8700; }
+.team-astonmartin { border: 2px solid #006F62; }
+.team-alpinef1team { border: 2px solid #0090FF; }
+.team-sauber { border: 2px solid #52E252; }
+.team-haasf1team { border: 2px solid #D7D7D7; }
+.team-rbf1team { border: 2px solid #C8C8C8; }
+.team-williams { border: 2px solid #00BFFF; }
+
+</style>

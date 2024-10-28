@@ -43,11 +43,56 @@ export async function getLastRaceResults() {
 export async function getDriverStandings() {
     const response = await fetch('https://ergast.com/api/f1/current/driverStandings.json', { cache: "no-store" });
     const data = await response.json();
-    return data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+    
+    // Estrai le informazioni sui piloti e i team
+    const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
+    // Aggiungi il nome del team a ciascun pilota
+    const driverStandingsWithTeams = standings.map(standing => {
+        return {
+            position: standing.position,
+            driver: standing.Driver,
+            constructor: standing.Constructors[0], // Prendi il primo team (costruttore)
+            points: standing.points
+        };
+    });
+    
+    return driverStandingsWithTeams;
 }
+
 
 export async function getConstructorStandings() {
     const response = await fetch('https://ergast.com/api/f1/current/constructorStandings.json', { cache: "no-store" });
     const data = await response.json();
     return data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+}
+
+export async function getAllRacesInSeason(season) {
+    const response = await fetch(`https://ergast.com/api/f1/${season}.json`, { cache: "no-store" });
+    const data = await response.json();
+    return data.MRData.RaceTable.Races;
+}
+
+export async function getConstructorInfo(constructorId) {
+    const response = await fetch(`https://ergast.com/api/f1/constructors/${constructorId}.json`, { cache: "no-store" });
+    const data = await response.json();
+    return data.MRData.ConstructorTable.Constructors[0];
+}
+
+export async function getDriverInfo(driverId) {
+    const response = await fetch(`https://ergast.com/api/f1/drivers/${driverId}.json`, { cache: "no-store" });
+    const data = await response.json();
+    return data.MRData.DriverTable.Drivers[0];
+}
+
+export async function getCircuitInfo(circuitId) {
+    const response = await fetch(`https://ergast.com/api/f1/circuits/${circuitId}.json`, { cache: "no-store" });
+    const data = await response.json();
+    return data.MRData.CircuitTable.Circuits[0];
+}
+
+export async function getRaceDetails(season, round) {
+    const response = await fetch(`https://ergast.com/api/f1/${season}/${round}.json`, { cache: "no-store" });
+    const data = await response.json();
+    return data.MRData.RaceTable.Races[0];
 }
