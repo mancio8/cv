@@ -7,6 +7,7 @@ import Races from '../components/Races.astro'
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 import StatsComponent from '../components/DriverInfo.astro'
+import StatsComponent2 from '../components/TeamSectionF1.astro'
 import { getDriverInfo, getDriverStats } from '../services/f1Service';
 
 // Array di ID dei piloti
@@ -41,6 +42,8 @@ const driversData = await Promise.all(driverIds.map(async (driverId) => {
           </div>
         ))}
       </div>
+
+     
       
   
     
