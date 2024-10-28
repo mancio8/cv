@@ -96,3 +96,93 @@ export async function getRaceDetails(season, round) {
     const data = await response.json();
     return data.MRData.RaceTable.Races[0];
 }
+
+export async function getDriverStatsAll(driverId: string) {
+    let wins = 0;
+    let podiums = 0;
+    let poles = 0;
+    let championships = 0;
+
+    // 1. Ottieni le stagioni in cui il pilota ha gareggiato
+    const seasonsResponse = await fetch(`https://ergast.com/api/f1/drivers/${driverId}/seasons.json?limit=100`);
+    const seasonsData = await seasonsResponse.json();
+    const seasons = seasonsData.MRData.SeasonTable.Seasons.map((season) => season.season);
+
+    for (const season of seasons) {
+        // 2. Ottieni i risultati per la stagione
+        const seasonResponse = await fetch(`https://ergast.com/api/f1/${season}/drivers/${driverId}/results.json`);
+        const seasonData = await seasonResponse.json();
+        const races = seasonData.MRData.RaceTable.Races;
+
+        for (const race of races) {
+            // Ignora le gare sprint
+            if (race.raceName.toLowerCase().includes('sprint')) continue;
+
+            const position = parseInt(race.Results[0].position, 10);
+            const qualifyingPosition = parseInt(race.Results[0].grid, 10);
+
+            // Conteggia vittorie, podi e pole position solo per le gare non sprint
+            if (position === 1) wins++;
+            if (position >= 1 && position <= 3) podiums++;
+            if (qualifyingPosition === 1) poles++;
+        }
+
+        // 3. Verifica se il pilota ha vinto il campionato in quella stagione
+        const standingsResponse = await fetch(`https://ergast.com/api/f1/${season}/drivers/${driverId}/driverStandings.json`);
+        const standingsData = await standingsResponse.json();
+        const standingsList = standingsData.MRData.StandingsTable.StandingsLists;
+
+        if (standingsList.length > 0 && standingsList[0].DriverStandings[0].position === '1') {
+            championships++;
+        }
+    }
+
+    return {
+        wins,
+        podiums,
+        poles,
+        championships
+    };
+}
+
+export async function getDriverStats(driverId: string) {
+    let wins = 0;
+    let podiums = 0;
+    let poles = 0;
+    let championships = 0;
+
+    // Ottieni i risultati per la stagione 2024
+    const seasonResponse = await fetch(`https://ergast.com/api/f1/2024/drivers/${driverId}/results.json`);
+    const seasonData = await seasonResponse.json();
+    const races = seasonData.MRData.RaceTable.Races;
+
+    for (const race of races) {
+        // Ignora le gare sprint
+        if (race.raceName.toLowerCase().includes('sprint')) continue;
+
+        const position = parseInt(race.Results[0].position, 10);
+        const qualifyingPosition = parseInt(race.Results[0].grid, 10);
+
+        // Conteggia vittorie, podi e pole position solo per le gare non sprint
+        if (position === 1) wins++;
+        if (position >= 1 && position <= 3) podiums++;
+        if (qualifyingPosition === 1) poles++;
+    }
+
+    // Verifica se il pilota ha vinto il campionato nella stagione 2024
+    const standingsResponse = await fetch(`https://ergast.com/api/f1/2024/drivers/${driverId}/driverStandings.json`);
+    const standingsData = await standingsResponse.json();
+    const standingsList = standingsData.MRData.StandingsTable.StandingsLists;
+
+    if (standingsList.length > 0 && standingsList[0].DriverStandings[0].position === '1') {
+        championships = 1;
+    }
+
+    return {
+        wins,
+        podiums,
+        poles,
+        championships
+    };
+}
+

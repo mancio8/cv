@@ -5,6 +5,21 @@ import DriverStandings from '../components/DriverStandings.astro';
 import ConstructorStandings from '../components/ConstructorStandings.astro'
 import Races from '../components/Races.astro'
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+import StatsComponent from '../components/DriverInfo.astro'
+import { getDriverInfo, getDriverStats } from '../services/f1Service';
+
+// Array di ID dei piloti
+const driverIds = ['max_verstappen', 'hamilton', 'leclerc', 'norris', 'sainz', 'piastri'];
+
+const driversData = await Promise.all(driverIds.map(async (driverId) => {
+    const driverInfo = await getDriverInfo(driverId);
+    const driverStats = await getDriverStats(driverId); // Usa la versione per la stagione 2024
+    return {
+        driverData: driverInfo,
+        driverStats: driverStats
+    };
+}));
 ---
 
 
@@ -17,9 +32,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <LastRaceResults />
     <DriverStandings />
     <ConstructorStandings />
-    <Races season="2024" />
-  
     
+    
+    <div class="row">
+        {driversData.map(({ driverData, driverStats }) => (
+          <div class="w-full mb-4">
+            <StatsComponent driverData={driverData} driverStats={driverStats} />
+          </div>
+        ))}
+      </div>
+      
   
     
  

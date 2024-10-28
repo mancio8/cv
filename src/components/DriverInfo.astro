@@ -1,0 +1,37 @@
+---
+// Importa le funzioni e chiama le API nel file che importa questo componente Astro.
+const { driverData, driverStats } = Astro.props;
+---
+
+<div class="stats shadow">
+  
+  <div class="stat">
+    <div class="stat-figure text-primary">
+      
+    </div>
+    <div class="stat-title">Nome Pilota</div>
+    <div class="stat-value text-primary"> {driverData.familyName}</div>
+    <div class="stat-desc">ID: {driverData.driverId}</div>
+  </div>
+  
+  <div class="stat">
+    <div class="stat-title">Numero di 1° Posti</div>
+    <div class="stat-value text-secondary">{driverStats.wins}</div>
+    <div class="stat-desc">Vittorie totali in carriera</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-title">Numero di Podi</div>
+    <div class="stat-value">{driverStats.podiums}</div>
+    <div class="stat-desc">Podi totali in carriera</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-title">Pole Position</div>
+    <div class="stat-value">{driverStats.poles}</div>
+    <div class="stat-desc">Pole position totali</div>
+  </div>
+
+ 
+  
+</div>
