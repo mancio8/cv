@@ -1,7 +1,7 @@
 // src/services/f1Service.ts
 
 export async function getNextRace() {
-    const response = await fetch('https://ergast.com/api/f1/current/next.json');
+    const response = await fetch('https://ergast.com/api/f1/current/next.json', { cache: "no-store" });
     const data = await response.json();
     const race = data.MRData.RaceTable.Races[0];
 
@@ -19,7 +19,7 @@ export async function getNextRace() {
     // Controllo per i risultati delle qualifiche
     let qualifyingResults = [];
     try {
-        const qualResultsResponse = await fetch(`https://ergast.com/api/f1/current/${race.round}/qualifying.json`);
+        const qualResultsResponse = await fetch(`https://ergast.com/api/f1/current/${race.round}/qualifying.json`, { cache: "no-store" });
         const qualResultsData = await qualResultsResponse.json();
         qualifyingResults = qualResultsData.MRData.RaceTable.Races[0].QualifyingResults;
     } catch (error) {
@@ -35,19 +35,19 @@ export async function getNextRace() {
 }
 
 export async function getLastRaceResults() {
-    const response = await fetch('https://ergast.com/api/f1/current/last/results.json');
+    const response = await fetch('https://ergast.com/api/f1/current/last/results.json', { cache: "no-store" });
     const data = await response.json();
     return data.MRData.RaceTable.Races[0].Results;
 }
 
 export async function getDriverStandings() {
-    const response = await fetch('https://ergast.com/api/f1/current/driverStandings.json');
+    const response = await fetch('https://ergast.com/api/f1/current/driverStandings.json', { cache: "no-store" });
     const data = await response.json();
     return data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
 }
 
 export async function getConstructorStandings() {
-    const response = await fetch('https://ergast.com/api/f1/current/constructorStandings.json');
+    const response = await fetch('https://ergast.com/api/f1/current/constructorStandings.json', { cache: "no-store" });
     const data = await response.json();
     return data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
 }
