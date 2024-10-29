@@ -18,10 +18,17 @@ const constructorLogos = {
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="stat mb-3 flex flex-col items-center">
             <img 
-                src={constructorLogos[constructorData.constructorId]} 
-                alt={`${constructorData.name} logo`} 
-                style={{ width: constructorData.constructorId === 'mercedes' || constructorData.constructorId === 'mclaren' || constructorData.constructorId === 'red_bull' ? '90px' : '70px', height: '90px' }} 
-            />
+            src={constructorLogos[constructorData.constructorId]} 
+            alt={`${constructorData.name} logo`} 
+            style={{ 
+                width: constructorData.constructorId === 'mercedes' || constructorData.constructorId === 'mclaren' || constructorData.constructorId === 'red_bull' ? '90px' : '70px', 
+                height: '90px', 
+                backgroundColor: 'white', 
+                padding: '5px',  
+                borderRadius: '4px' 
+            }} 
+        />
+        
         </div>
         
         <div class="stat mb-3 flex flex-col items-center">
