@@ -1,0 +1,55 @@
+---
+const { title, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
+import { Image } from "@astrojs/image/components";
+
+const { constructorData, constructorStats } = Astro.props;
+
+const constructorLogos = {
+    ferrari: 'https://upload.wikimedia.org/wikipedia/it/0/04/Logo_della_Ferrari_S.p.A..svg',
+    red_bull: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Logo_of_Red_bull.svg',
+    mercedes: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Mercedes_AMG_Petronas_F1_Logo.svg',
+    mclaren: 'https://upload.wikimedia.org/wikipedia/en/4/45/McLaren_logo.svg',
+    alpine: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Alpine_F1_Team_Logo.svg',
+    // aggiungi altri costruttori qui
+};
+---
+
+<div class="py-10 sm:py-10">
+    <div class="mx-auto grid max-w-7xl gap-x-8 gap-y-20 px-6 lg:px-8 xl:grid-cols-3">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl text-primary">{constructorData.givenName} {constructorData.familyName}</h2>
+        <p class="mt-6 text-lg leading-8 text-gray-600 text-white"></p>
+      </div>
+      <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
+        <li>
+            <img 
+            src={constructorLogos[constructorData.constructorId]} 
+            alt={`${constructorData.name} logo`} 
+            style={{ width: constructorData.constructorId === 'mercedes' || constructorData.constructorId === 'mclaren' || constructorData.constructorId === 'red_bull' ? '90px' : '70px', height: '90px' }} 
+        />
+        </li>
+        <li>
+          <div class="flex items-center gap-x-6">
+            
+            <div>
+              <h3 class="text-3xl font-semibold leading-7 tracking-tight text-primary">{constructorStats.wins}</h3>
+              <p class="text-sm font-semibold leading-6 text-indigo-600 ">Numero di 1° Posti</p>
+            </div>
+          </div>
+        </li>
+        <li>
+            <div class="flex items-center gap-x-6">
+              
+              <div>
+                <h3 class="text-3xl font-semibold leading-7 tracking-tight text-secondary">{constructorStats.podiums}</h3>
+                <p class="text-sm font-semibold leading-6 text-indigo-600">Numero di Podi</p>
+              </div>
+            </div>
+          </li>
+          
+  
+        <!-- More people... -->
+      </ul>
+    </div>
+  </div>
+  <div class="divider"></div> 
