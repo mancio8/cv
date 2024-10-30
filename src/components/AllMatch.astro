@@ -168,39 +168,42 @@ const findNextEvent = (matches: Match[]): Match | null => {
 const nextEvent = findNextEvent(matches);
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {matches.map((match) => (
-      <div class="card bg-base-100 shadow-xl p-4">
-        <div class="flex flex-col w-full border-opacity-50 py-4">
-          <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-            <div class="flex items-center mr-4">
-              <div class="bg-white p-1 rounded-full shadow">
-                <img
-                  src={findTeamLogo(match.team1)}
-                  alt={`${match.team1} logo`}
-                  class="w-12 h-12"
-                />
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-center mb-4">Calendario</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {matches.map((match) => (
+        <div class="card bg-base-100 shadow-xl p-4">
+          <div class="flex flex-col w-full border-opacity-50 py-4">
+            <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+              <div class="flex items-center mr-4">
+                <div class="bg-white p-1 rounded-full shadow">
+                  <img
+                    src={findTeamLogo(match.team1)}
+                    alt={`${match.team1} logo`}
+                    class="w-12 h-12"
+                  />
+                </div>
+                <span class="font-semibold ml-2">{match.team1}</span>
               </div>
-              <span class="font-semibold ml-2">{match.team1}</span>
             </div>
-          </div>
-          <div class="divider">
-            <span>{match.data}</span>
-          </div>
-          <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-            <div class="flex items-center mr-4">
-              <div class="bg-white p-1 rounded-full shadow">
-                <img
-                  src={findTeamLogo(match.team2)}
-                  alt={`${match.team2} logo`}
-                  class="w-12 h-12"
-                />
+            <div class="divider">
+              <span>{match.data}</span>
+            </div>
+            <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+              <div class="flex items-center mr-4">
+                <div class="bg-white p-1 rounded-full shadow">
+                  <img
+                    src={findTeamLogo(match.team2)}
+                    alt={`${match.team2} logo`}
+                    class="w-12 h-12"
+                  />
+                </div>
+                <span class="font-semibold ml-2">{match.team2}</span>
               </div>
-              <span class="font-semibold ml-2">{match.team2}</span>
             </div>
           </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
   </div>
   

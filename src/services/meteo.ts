@@ -1,0 +1,77 @@
+export interface WeatherCondition {
+    text: string;
+    icon: string;
+  }
+  
+  export interface CurrentWeather {
+    last_updated_epoch: number;
+    last_updated: string;
+    temp_c: number; // This is the current temperature
+    condition: WeatherCondition;
+  }
+  
+  export interface ForecastDay {
+    date: string;
+    day: {
+      maxtemp_c: number;
+      mintemp_c: number;
+      condition: WeatherCondition;
+    };
+  }
+  
+  export interface Weather {
+    current: CurrentWeather;
+    forecast: {
+      forecastday: ForecastDay[];
+    };
+  }
+  
+
+  export async function fetchWeatherForSpecificDate(lat: number, lon: number, date: string): Promise<Weather | null> {
+    try {
+        const apiKey = 'bcafe71c00ed4e1081e142910243010'; // Sostituisci con la tua chiave API
+        const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${lat},${lon}&days=14`);
+    
+      const data = await response.json();
+  
+      // Check if the expected data structure exists
+      if (data.current && data.forecast.forecastday.length > 0) {
+        const forecastData = data.forecast.forecastday[4]; // Get the first day's forecast
+  
+        const weather: Weather = {
+          current: {
+            last_updated_epoch: data.current.last_updated_epoch,
+            last_updated: data.current.last_updated,
+            temp_c: data.current.temp_c,
+            condition: {
+              text: data.current.condition.text,
+              icon: data.current.condition.icon,
+            },
+          },
+          forecast: {
+            forecastday: [
+              {
+                date: forecastData.date,
+                day: {
+                  maxtemp_c: forecastData.day.maxtemp_c,
+                  mintemp_c: forecastData.day.mintemp_c,
+                  condition: {
+                    text: forecastData.day.condition.text,
+                    icon: forecastData.day.condition.icon,
+                  },
+                },
+              },
+            ],
+          },
+        };
+  
+        return weather;
+      } else {
+        return null; // Handle the case where data is not available
+      }
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      return null; // Handle errors appropriately
+    }
+  }
+  

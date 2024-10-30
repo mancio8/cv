@@ -1,8 +1,12 @@
 ---
+import { fetchWeatherForSpecificDate, Weather } from "../services/meteo";
+
 interface Match {
   team1: string;
   team2: string;
   data: string;
+  lat: number;
+  lon: number;
 }
 
 const matches: Match[] = [
@@ -10,85 +14,141 @@ const matches: Match[] = [
     team1: "F.C. GUARDIA SANFR.",
     team2: "AZZURRA PAUPISI NEXT",
     data: "03/11/24 14:30",
+    lat: 41.2564,
+    lon: 14.59851,
   },
-  { team1: "BONEA", team2: "F.C. GUARDIA SANFR.", data: "10/11/24 14:30" },
-  { team1: "F.C. GUARDIA SANFR.", team2: "MOIANO", data: "17/11/24 14:30" },
+  {
+    team1: "BONEA",
+    team2: "F.C. GUARDIA SANFR.",
+    data: "10/11/24 14:30",
+    lat: 1.2564,
+    lon: 1.59851,
+  },
+  {
+    team1: "F.C. GUARDIA SANFR.",
+    team2: "MOIANO",
+    data: "17/11/24 14:30",
+    lat: 41.2564,
+    lon: 14.59851,
+  },
   {
     team1: "FRASSO TELESINO",
     team2: "F.C. GUARDIA SANFR.",
     data: "24/11/24 14:30",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "G. LUCIANO PANNARANO",
     data: "01/12/24 14:30",
+    lat: 41.2564,
+    lon: 14.59851,
   },
   {
     team1: "ALBA DURAZZANO",
     team2: "F.C. GUARDIA SANFR.",
     data: "08/12/24 15:00",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "POL. APOLLOSA",
     data: "15/12/24 14:30",
+    lat: 41.2564,
+    lon: 14.59851,
   },
   {
     team1: "VALLE TELESINA",
     team2: "F.C. GUARDIA SANFR.",
     data: "21/12/24 14:30",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "REAL DUGENTA",
     data: "05/01/25 14:30",
+    lat: 41.2564,
+    lon: 14.59851,
   },
   {
     team1: "FALCHI CAUTANO",
     team2: "F.C. GUARDIA SANFR.",
     data: "19/01/25 15:00",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "AZZURRA PAUPISI NEXT",
     team2: "F.C. GUARDIA SANFR.",
     data: "26/01/25 15:00",
+    lat: 1.2564,
+    lon: 1.59851,
   },
-  { team1: "F.C. GUARDIA SANFR.", team2: "BONEA", data: "02/02/25 15:00" },
-  { team1: "MOIANO", team2: "F.C. GUARDIA SANFR.", data: "08/02/25 14:30" },
+  {
+    team1: "F.C. GUARDIA SANFR.",
+    team2: "BONEA",
+    data: "02/02/25 15:00",
+    lat: 41.2564,
+    lon: 14.59851,
+  },
+  {
+    team1: "MOIANO",
+    team2: "F.C. GUARDIA SANFR.",
+    data: "08/02/25 14:30",
+    lat: 1.2564,
+    lon: 1.59851,
+  },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "FRASSO TELESINO",
     data: "16/02/25 15:00",
+    lat: 41.2564,
+    lon: 14.59851,
   },
   {
     team1: "G. LUCIANO PANNARANO",
     team2: "F.C. GUARDIA SANFR.",
     data: "23/02/25 15:00",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "ALBA DURAZZANO",
     data: "02/03/25 15:00",
+    lat: 41.2564,
+    lon: 14.59851,
   },
   {
     team1: "POL. APOLLOSA",
     team2: "F.C. GUARDIA SANFR.",
     data: "09/03/25 15:00",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "VALLE TELESINA",
     data: "16/03/25 15:00",
+    lat: 41.2564,
+    lon: 14.59851,
   },
   {
     team1: "REAL DUGENTA",
     team2: "F.C. GUARDIA SANFR.",
     data: "22/03/25 14:00",
+    lat: 1.2564,
+    lon: 1.59851,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
     team2: "FALCHI CAUTANO",
     data: "06/04/25 16:00",
+    lat: 41.2564,
+    lon: 14.59851,
   },
 ];
 
@@ -166,45 +226,70 @@ const findNextEvent = (matches: Match[]): Match | null => {
 };
 
 const nextEvent = findNextEvent(matches);
+
+
+
+
+let weather: Weather | null = null;
+
+if (nextEvent && nextEvent.lat && nextEvent.lon) {
+  weather = await fetchWeatherForSpecificDate(nextEvent.lat, nextEvent.lon, nextEvent.data)
+    .catch(error => {
+      console.error('Error:', error);
+      return null; // Handle the error
+    });
+}
 ---
 
-{
-  nextEvent ? (
-    <div class="card bg-base-100 shadow-xl p-4 my-4">
-         <h2 class="card-title py-2">Prossima Partita</h2>
-      <div class="flex flex-col w-full border-opacity-50">
-        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-          <div class="flex items-center mr-4">
-            <div class="bg-white p-1 rounded-full shadow">
-              <img
-                src={findTeamLogo(nextEvent.team1)}
-                alt={`${nextEvent.team1} logo`}
-                class="w-12 h-12"
-              />
+<div class="card bg-base-100 shadow-xl p-4 my-4">
+    {nextEvent ? (
+      <>
+        <h2 class="card-title py-2">Prossima Partita</h2>
+        <div class="flex flex-col w-full border-opacity-50">
+          <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+            <div class="flex items-center mr-4">
+              <div class="bg-white p-1 rounded-full shadow">
+                <img
+                  src={findTeamLogo(nextEvent.team1)}
+                  alt={`${nextEvent.team1} logo`}
+                  class="w-12 h-12"
+                />
+              </div>
+              <span class="font-semibold ml-2">{nextEvent.team1}</span>
             </div>
-            <span class="font-semibold ml-2">{nextEvent.team1}</span>
           </div>
-        </div>
-        <div class="divider">
-          <span>{nextEvent.data}</span>
-        </div>
-        <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-          <div class="flex items-center mr-4">
-            <div class="bg-white p-1 rounded-full shadow">
-              <img
-                src={findTeamLogo(nextEvent.team2)}
-                alt={`${nextEvent.team2} logo`}
-                class="w-12 h-12"
-              />
+          <div class="divider">
+            <span>{nextEvent.data}</span>
+          </div>
+          <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+            <div class="flex items-center mr-4">
+              <div class="bg-white p-1 rounded-full shadow">
+                <img
+                  src={findTeamLogo(nextEvent.team2)}
+                  alt={`${nextEvent.team2} logo`}
+                  class="w-12 h-12"
+                />
+              </div>
+              <span class="font-semibold ml-2">{nextEvent.team2}</span>
             </div>
-            <span class="font-semibold ml-2">{nextEvent.team2}</span>
           </div>
+          {weather && (
+  <div class="mt-4">
+    <h3>Previsioni per {weather.forecast.forecastday[0].date}:</h3>
+    <p>Temperatura attuale: {weather.current.temp_c}°C</p>
+    <p>Descrizione: {weather.current.condition.text}</p>
+    <p>Temperatura massima: {weather.forecast.forecastday[0].day.maxtemp_c}°C</p>
+    <p>Temperatura minima: {weather.forecast.forecastday[0].day.mintemp_c}°C</p>
+    <img src={weather.current.condition.icon} alt="Weather icon" />
+  </div>
+)}
+         
+
         </div>
+      </>
+    ) : (
+      <div class="text-center">
+        <span>Non ci sono eventi futuri.</span>
       </div>
-    </div>
-  ) : (
-    <div class="text-center">
-      <span>Non ci sono eventi futuri.</span>
-    </div>
-  )
-}
+    )}
+  </div>
