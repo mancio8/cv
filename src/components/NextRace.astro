@@ -1,14 +1,25 @@
 ---
 import { getNextRace } from '../services/f1Service';
+import { fetchWeatherForSpecificDateF1, Weather } from "../services/meteo";
 
 const race = await getNextRace();
+
+let weather: Weather | null = null;
+
+
+    
+  weather = await fetchWeatherForSpecificDateF1(race.latitude, race.longitude, race.date)
+
+    
+
 ---
 
 <div class="card bg-base-100 shadow-xl p-4 my-4">
     <h2 class="card-title">Prossima Gara</h2>
+    
     {race ? (
         <>
-            <p>{race.raceName} - {race.Circuit.circuitName}</p>
+            <p>{race.raceName} - {race.Circuit.circuitName} - {race.country}</p>
             <p><strong>Data:</strong> {race.date}</p>
             <p><strong>Qualifiche:</strong> {race.qualTimeInItaly} (ora italiana)</p>
             <p><strong>Gara:</strong> {race.raceTimeInItaly} (ora italiana)</p>
@@ -24,7 +35,18 @@ const race = await getNextRace();
                         ))}
                     </ul>
                 </div>
+                
             )}
+            {weather && (
+  <div class="mt-4">
+    <h3>Previsioni per {weather.forecast.forecastday[0].date}:</h3>
+    <p>Descrizione: {weather.current.condition.text}</p>
+    <p>Temperatura massima: {weather.forecast.forecastday[0].day.maxtemp_c}°C</p>
+    <p>Temperatura minima: {weather.forecast.forecastday[0].day.mintemp_c}°C</p>
+    <img src={weather.current.condition.icon} alt="Weather icon" />
+  </div>
+)}
+            
             
            
         </>

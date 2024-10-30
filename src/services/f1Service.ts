@@ -26,13 +26,24 @@ export async function getNextRace() {
         console.log("Risultati delle qualifiche non ancora disponibili.");
     }
 
+    // Aggiungi latitudine, longitudine e paese se disponibili
+    const circuit = race.Circuit;
+    const latitude = circuit.Location.lat; // latitudine
+    const longitude = circuit.Location.long; // longitudine
+    const country = circuit.Location.country; // paese
+
     return {
         ...race,
         raceTimeInItaly,
         qualTimeInItaly,
-        qualifyingResults
+        qualifyingResults,
+        latitude,
+        longitude,
+        country
     };
 }
+
+
 
 export async function getLastRaceResults() {
     const response = await fetch('https://api.jolpi.ca/ergast/f1/current/last/results.json', { cache: "no-store" });
