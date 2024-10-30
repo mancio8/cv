@@ -233,6 +233,7 @@ const nextEvent = findNextEvent(matches);
 let weather: Weather | null = null;
 
 if (nextEvent && nextEvent.lat && nextEvent.lon) {
+    
   weather = await fetchWeatherForSpecificDate(nextEvent.lat, nextEvent.lon, nextEvent.data)
     .catch(error => {
       console.error('Error:', error);

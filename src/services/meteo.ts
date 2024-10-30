@@ -36,7 +36,9 @@ export interface WeatherCondition {
   
       // Check if the expected data structure exists
       if (data.current && data.forecast.forecastday.length > 0) {
-        const forecastData = data.forecast.forecastday[4]; // Get the first day's forecast
+        const giorni = giorniMancanti(date);
+       
+        const forecastData = data.forecast.forecastday[giorni]; // Get the first day's forecast
   
         const weather: Weather = {
           current: {
@@ -75,3 +77,31 @@ export interface WeatherCondition {
     }
   }
   
+
+  function giorniMancanti(dataString: string): number {
+    // Ottieni la data odierna
+    const oggi = new Date();
+
+    // Estrai il giorno, il mese, l'anno e l'ora dalla stringa
+    const [data, ora] = dataString.split(' ');
+    const [giorno, mese, anno] = data.split('/').map(Number);
+    const [ore, minuti] = ora ? ora.split(':').map(Number) : [0, 0];
+
+    const annoCompleto = 2000 + anno; // Assumiamo che l'anno sia del 2000
+
+    // Crea un oggetto Date per la data fornita
+    const dataFornita = new Date(annoCompleto, mese - 1, giorno, ore, minuti);
+
+    // Calcola la differenza in millisecondi
+    const differenzaMillisecondi = dataFornita.getTime() - oggi.getTime();
+
+    // Calcola il numero di giorni rimanenti
+    const giorniRimanenti = Math.ceil(differenzaMillisecondi / (1000 * 3600 * 24));
+
+    return giorniRimanenti; // Restituisci il numero di giorni
+}
+
+
+
+
+
