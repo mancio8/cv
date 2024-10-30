@@ -21,8 +21,8 @@ const matches: Match[] = [
     team1: "BONEA",
     team2: "F.C. GUARDIA SANFR.",
     data: "10/11/24 14:30",
-    lat: 1.2564,
-    lon: 1.59851,
+    lat: 41.06227,
+    lon: 14.64096,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
@@ -35,8 +35,8 @@ const matches: Match[] = [
     team1: "FRASSO TELESINO",
     team2: "F.C. GUARDIA SANFR.",
     data: "24/11/24 14:30",
-    lat: 1.2564,
-    lon: 1.59851,
+    lat: 41.1578,
+    lon: 14.5288,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
@@ -49,8 +49,8 @@ const matches: Match[] = [
     team1: "ALBA DURAZZANO",
     team2: "F.C. GUARDIA SANFR.",
     data: "08/12/24 15:00",
-    lat: 1.2564,
-    lon: 1.59851,
+    lat: 41.067,
+    lon: 14.450,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
@@ -63,8 +63,8 @@ const matches: Match[] = [
     team1: "VALLE TELESINA",
     team2: "F.C. GUARDIA SANFR.",
     data: "21/12/24 14:30",
-    lat: 1.2564,
-    lon: 1.59851,
+    lat: 41.2185,
+    lon: 14.5288,
   },
   {
     team1: "F.C. GUARDIA SANFR.",
@@ -277,7 +277,6 @@ if (nextEvent && nextEvent.lat && nextEvent.lon) {
           {weather && (
   <div class="mt-4">
     <h3>Previsioni per {weather.forecast.forecastday[0].date}:</h3>
-    <p>Temperatura attuale: {weather.current.temp_c}°C</p>
     <p>Descrizione: {weather.current.condition.text}</p>
     <p>Temperatura massima: {weather.forecast.forecastday[0].day.maxtemp_c}°C</p>
     <p>Temperatura minima: {weather.forecast.forecastday[0].day.mintemp_c}°C</p>
