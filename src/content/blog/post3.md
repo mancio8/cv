@@ -2,7 +2,7 @@
 title: "Visualizzatore Statistiche Motorsport"
 description: "Questo progetto è un'applicazione web a schede sviluppata per mostrare statistiche aggiornate e storiche della Formula 1."
 pubDate: "Oct 29 2024"
-heroImage: "/post_img.webp"
+heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1730307168/2024-10-30_17-47_echhgq.png"
 badge: "F1"
 ---
 
