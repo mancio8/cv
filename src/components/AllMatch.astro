@@ -168,10 +168,9 @@ const findNextEvent = (matches: Match[]): Match | null => {
 const nextEvent = findNextEvent(matches);
 ---
 
-<div class="space-y-4">
-  {
-    matches.map((match) => (
-      <div class="card bg-base-100 shadow-xl p-4 my-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {matches.map((match) => (
+      <div class="card bg-base-100 shadow-xl p-4">
         <div class="flex flex-col w-full border-opacity-50 py-4">
           <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
             <div class="flex items-center mr-4">
@@ -202,6 +201,6 @@ const nextEvent = findNextEvent(matches);
           </div>
         </div>
       </div>
-    ))
-  }
-</div>
+    ))}
+  </div>
+  
