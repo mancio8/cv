@@ -7,42 +7,57 @@ import GenPass from "../components/GenPass.astro";
 import TestaCroce from "../components/TestaCorce.astro";
 import ConvBase64 from "../components/ConvBase64.astro";
 import DiffDate from "../components/DiffDate.astro";
-import NextRace from '../components/NextRace.astro';
-import LastRaceResults from '../components/LastRaceResults.astro';
-import DriverStandings from '../components/DriverStandings.astro';
-import ConstructorStandings from '../components/ConstructorStandings.astro'
-import StatsComponent2 from '../components/TeamSectionF1.astro'
+import NextRace from "../components/NextRace.astro";
+import LastRaceResults from "../components/LastRaceResults.astro";
+import DriverStandings from "../components/DriverStandings.astro";
+import ConstructorStandings from "../components/ConstructorStandings.astro";
+import StatsComponent2 from "../components/TeamSectionF1.astro";
 import TeamSectionCostrF1 from "../components/TeamSectionCostrF1.astro";
+import NextMatch from "../components/NextMatch.astro";
+import AllMatch from "../components/AllMatch.astro"
 
-
-import StatsComponent from '../components/DriverInfo.astro'
-import { getDriverInfo, getDriverStats, getConstructorInfo, getConstructorStats } from '../services/f1Service';
+import StatsComponent from "../components/DriverInfo.astro";
+import {
+  getDriverInfo,
+  getDriverStats,
+  getConstructorInfo,
+  getConstructorStats,
+} from "../services/f1Service";
 
 // Array di ID dei piloti
-const driverIds = ['max_verstappen', 'hamilton', 'leclerc', 'norris', 'sainz', 'piastri'];
+const driverIds = [
+  "max_verstappen",
+  "hamilton",
+  "leclerc",
+  "norris",
+  "sainz",
+  "piastri",
+];
 
-const driversData = await Promise.all(driverIds.map(async (driverId) => {
+const driversData = await Promise.all(
+  driverIds.map(async (driverId) => {
     const driverInfo = await getDriverInfo(driverId);
     const driverStats = await getDriverStats(driverId); // Usa la versione per la stagione 2024
     return {
-        driverData: driverInfo,
-        driverStats: driverStats
+      driverData: driverInfo,
+      driverStats: driverStats,
     };
-}));
-
+  })
+);
 
 // Array di ID dei costruttori
-const constructorIds = ['mercedes', 'red_bull', 'ferrari', 'mclaren', 'alpine'];
+const constructorIds = ["mercedes", "red_bull", "ferrari", "mclaren", "alpine"];
 
-const constructorsData = await Promise.all(constructorIds.map(async (constructorId) => {
+const constructorsData = await Promise.all(
+  constructorIds.map(async (constructorId) => {
     const constructorInfo = await getConstructorInfo(constructorId); // Funzione per ottenere informazioni sul costruttore
     const constructorStats = await getConstructorStats(constructorId); // Usa la versione per la stagione 2024
     return {
-        constructorData: constructorInfo,
-        constructorStats: constructorStats
+      constructorData: constructorInfo,
+      constructorStats: constructorStats,
     };
-}));
-
+  })
+);
 ---
 
 <BaseLayout sideBarActiveItemID="utility">
@@ -51,7 +66,6 @@ const constructorsData = await Promise.all(constructorIds.map(async (constructor
     <div class="collapse-title text-xl font-medium">Generatore di QR Code</div>
     <div class="collapse-content">
       <QRCodeGenerator />
-      
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
@@ -62,7 +76,6 @@ const constructorsData = await Promise.all(constructorIds.map(async (constructor
 
     <div class="collapse-content">
       <GenPass />
-      
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
@@ -70,7 +83,6 @@ const constructorsData = await Promise.all(constructorIds.map(async (constructor
     <div class="collapse-title text-xl font-medium">Gioco Testa o Croce</div>
     <div class="collapse-content">
       <TestaCroce />
-      
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
@@ -79,7 +91,7 @@ const constructorsData = await Promise.all(constructorIds.map(async (constructor
       Converti Base64 in Immagine o PDF
     </div>
     <div class="collapse-content">
-      <ConvBase64/>
+      <ConvBase64 />
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
@@ -88,15 +100,19 @@ const constructorsData = await Promise.all(constructorIds.map(async (constructor
       Calcolatore di Differenza tra Date
     </div>
     <div class="collapse-content">
-      <DiffDate/>
+      <DiffDate />
     </div>
   </div>
   <div class="collapse collapse-arrow bg-base-200">
     <input type="radio" name="my-accordion-2" />
     <div class="collapse-title text-xl font-medium">
       <div style="display: flex; align-items: center;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="Logo F1" style="width: 100px; height: auto; margin-right: 10px;">
-        <h1 style="margin: 0;">Statistiche Formula 1 </h1>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg"
+          alt="Logo F1"
+          style="width: 100px; height: auto; margin-right: 10px;"
+        />
+        <h1 style="margin: 0;">Statistiche Formula 1</h1>
       </div>
     </div>
     <div class="collapse-content">
@@ -110,46 +126,101 @@ const constructorsData = await Promise.all(constructorIds.map(async (constructor
     <input type="radio" name="my-accordion-2" />
     <div class="collapse-title text-xl font-medium">
       <div style="display: flex; align-items: center;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="Logo F1" style="width: 100px; height: auto; margin-right: 10px;">
-        <h1 style="margin: 0;">Statistiche Piloti Formula 1 </h1>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg"
+          alt="Logo F1"
+          style="width: 100px; height: auto; margin-right: 10px;"
+        />
+        <h1 style="margin: 0;">Statistiche Piloti Formula 1</h1>
       </div>
     </div>
     <div class="collapse-content">
-        <!-- Inizio componente -->
-        <div class="row bg-base-100">
-          {driversData.map(({ driverData, driverStats }) => (
+      <!-- Inizio componente -->
+      <div class="row bg-base-100">
+        {
+          driversData.map(({ driverData, driverStats }) => (
             <div class="w-full mb-4">
-              <StatsComponent2 driverData={driverData} driverStats={driverStats} />
+              <StatsComponent2
+                driverData={driverData}
+                driverStats={driverStats}
+              />
             </div>
-          ))}
-        </div>
-        <!-- Fine componente -->
+          ))
+        }
+      </div>
+      <!-- Fine componente -->
     </div>
     <div class="collapse collapse-arrow bg-base-200">
       <input type="radio" name="my-accordion-2" />
       <div class="collapse-title text-xl font-medium">
         <div style="display: flex; align-items: center;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg" alt="Logo F1" style="width: 100px; height: auto; margin-right: 10px;">
-          <h1 style="margin: 0;">Statistiche Costruttori Formula 1 </h1>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg"
+            alt="Logo F1"
+            style="width: 100px; height: auto; margin-right: 10px;"
+          />
+          <h1 style="margin: 0;">Statistiche Costruttori Formula 1</h1>
         </div>
       </div>
       <div class="collapse-content">
-          <!-- Inizio componente -->
-          <div class="row">
-            {constructorsData.map(({ constructorData, constructorStats }) => (
-                <div class="w-full mb-4">
-                    <TeamSectionCostrF1 constructorData={constructorData} constructorStats={constructorStats} />
-                </div>
-            ))}
+        <!-- Inizio componente -->
+        <div class="row">
+          {
+            constructorsData.map(({ constructorData, constructorStats }) => (
+              <div class="w-full mb-4">
+                <TeamSectionCostrF1
+                  constructorData={constructorData}
+                  constructorStats={constructorStats}
+                />
+              </div>
+            ))
+          }
         </div>
-          <!-- Fine componente -->
+        <!-- Fine componente -->
       </div>
-</div>
-
-
- 
-  
-
-
+      <div class="collapse collapse-arrow bg-base-200">
+        <input type="radio" name="my-accordion-2" />
+        <div class="collapse-title text-xl font-medium">
+          <div style="display: flex; align-items: center;">
+            <div class="bg-white rounded-full p-1  shadow">
+              <img
+                src="https://content-s3.tuttocampo.it/Teams/Original/1007985.png?v=4&_gl=1*4qx18c*_ga*NzM3NjA1MjMzLjE3Mjc0NDgyMTY.*_ga_K7D43T92X5*MTczMDI4Mjg3MC41LjEuMTczMDI4NDcxMy4zNi4wLjA."
+                alt="Logo Guardia S."
+                style="width: 70px; height: auto; margin-right: 10px;"
+              />
+            </div>
+            <h1 style="margin: 0;">
+              Prossima partita F.C. Guardia Sanframondi
+            </h1>
+          </div>
+        </div>
+        <div class="collapse-content">
+          <!-- Inizio componente -->
+          <NextMatch />
+          <!-- Fine componente -->
+        </div>
+      </div>
+      <div class="collapse collapse-arrow bg-base-200">
+        <input type="radio" name="my-accordion-2" />
+        <div class="collapse-title text-xl font-medium">
+          <div style="display: flex; align-items: center;">
+            <div class="bg-white rounded-full p-1  shadow">
+              <img
+                src="https://content-s3.tuttocampo.it/Teams/Original/1007985.png?v=4&_gl=1*4qx18c*_ga*NzM3NjA1MjMzLjE3Mjc0NDgyMTY.*_ga_K7D43T92X5*MTczMDI4Mjg3MC41LjEuMTczMDI4NDcxMy4zNi4wLjA."
+                alt="Logo Guardia S."
+                style="width: 70px; height: auto; margin-right: 10px;"
+              />
+            </div>
+            <h1 style="margin: 0;">
+              Calendario F.C. Guardia Sanframondi
+            </h1>
+          </div>
+        </div>
+        <div class="collapse-content">
+          <!-- Inizio componente -->
+          <AllMatch />
+          <!-- Fine componente -->
+        </div>
+      </div>
+  </div>
 </BaseLayout>
-
