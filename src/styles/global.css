@@ -12,3 +12,21 @@
 .team-haasf1team { border: 2px solid #D7D7D7; }
 .team-rbf1team { border: 2px solid #C8C8C8; }
 .team-williams { border: 2px solid #00BFFF; }
+
+.border-pramac { border-color: #4e008e; }    /* Prima Pramac Racing */
+.border-ducati { border-color: #D9001B; }    /* Ducati Lenovo Team */
+.border-yamaha { border-color: #003DA5; }    /* Monster Energy Yamaha */
+.border-honda { border-color: #D83D14; }     /* Repsol Honda Team */
+.border-suzuki { border-color: #0071B5; }     /* Team Suzuki Ecstar */
+.border-aprilia { border-color: #3B1E23; }    /* Aprilia Racing */
+.border-lcr { border-color: #B7B1A3; }        /* LCR Honda */
+.border-gresini { border-color: #9baee4 ; }    /* Gresini Racing */
+.border-ktm { border-color: #F66A1D; }        /* KTM Factory Racing */
+.border-vr46 { border-color: #FFD700; }       /* VR46 Racing Team */
+.border-tech3 { border-color: #f00 ; }   /* Petronas Sprinta Racing */
+.border-trackhouse { border-color: #CCCCCC; }     /* Mooney VR46 */
+.border-default { border-color: #CCCCCC; }     /* Colore di default */
+ 
+  
+  /* Aggiungi altre squadre se necessario */
+  

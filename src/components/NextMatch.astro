@@ -275,14 +275,24 @@ if (nextEvent && nextEvent.lat && nextEvent.lon) {
             </div>
           </div>
           {weather && (
-  <div class="mt-4">
-    <h3>Previsioni per {weather.forecast.forecastday[0].date}:</h3>
-    <p>Descrizione: {weather.current.condition.text}</p>
-    <p>Temperatura massima: {weather.forecast.forecastday[0].day.maxtemp_c}°C</p>
-    <p>Temperatura minima: {weather.forecast.forecastday[0].day.mintemp_c}°C</p>
-    <img src={weather.current.condition.icon} alt="Weather icon" />
-  </div>
-)}
+    
+            <h3 class="text-xl font-semibold py-4">
+                Previsioni per {weather.forecast.forecastday[0].date}:
+            </h3>
+            <div class="flex items-center justify-between">
+                <p >
+                    <strong>Descrizione:</strong> {weather.current.condition.text}
+                </p>
+                
+                <img src={weather.current.condition.icon} alt="Weather icon" class="mt-4 w-16 h-16" />
+            </div>
+                <p >
+                    <strong>Temperatura massima:</strong> {weather.forecast.forecastday[0].day.maxtemp_c}°C
+                </p>
+                <p >
+                    <strong>Temperatura minima:</strong> {weather.forecast.forecastday[0].day.mintemp_c}°C
+                </p>
+        )}
          
 
         </div>

@@ -1,57 +1,121 @@
 ---
-import { getNextRace } from '../services/f1Service';
+import { getNextRace } from "../services/f1Service";
 import { fetchWeatherForSpecificDateF1, Weather } from "../services/meteo";
 
 const race = await getNextRace();
 
 let weather: Weather | null = null;
 
+weather = await fetchWeatherForSpecificDateF1(
+  race.latitude,
+  race.longitude,
+  race.date
+);
 
-    
-  weather = await fetchWeatherForSpecificDateF1(race.latitude, race.longitude, race.date)
+const countryFlags = [
+  { team: "Australia", logo: "https://flagcdn.com/au.svg" },
+  { team: "Bahrain", logo: "https://flagcdn.com/bh.svg" },
+  { team: "China", logo: "https://flagcdn.com/cn.svg" },
+  { team: "Europe", logo: "https://flagcdn.com/eu.svg" }, // Europe is a continent, not a country
+  { team: "France", logo: "https://flagcdn.com/fr.svg" },
+  { team: "Germany", logo: "https://flagcdn.com/de.svg" },
+  { team: "Hungary", logo: "https://flagcdn.com/hu.svg" },
+  { team: "Italy", logo: "https://flagcdn.com/it.svg" },
+  { team: "Japan", logo: "https://flagcdn.com/jp.svg" },
+  { team: "Malaysia", logo: "https://flagcdn.com/my.svg" },
+  { team: "Mexico", logo: "https://flagcdn.com/mx.svg" },
+  { team: "Monaco", logo: "https://flagcdn.com/mc.svg" },
+  { team: "Netherlands", logo: "https://flagcdn.com/nl.svg" },
+  { team: "Saudi Arabia", logo: "https://flagcdn.com/sa.svg" },
+  { team: "Singapore", logo: "https://flagcdn.com/sg.svg" },
+  { team: "South Africa", logo: "https://flagcdn.com/za.svg" },
+  { team: "South Korea", logo: "https://flagcdn.com/kr.svg" },
+  { team: "Spain", logo: "https://flagcdn.com/es.svg" },
+  { team: "United Arab Emirates", logo: "https://flagcdn.com/ae.svg" },
+  { team: "United States", logo: "https://flagcdn.com/us.svg" },
+  { team: "United Kingdom", logo: "https://flagcdn.com/gb.svg" },
+  { team: "Canada", logo: "https://flagcdn.com/ca.svg" },
+  { team: "Austria", logo: "https://flagcdn.com/at.svg" },
+  { team: "Brazil", logo: "https://flagcdn.com/br.svg" },
+  { team: "Portugal", logo: "https://flagcdn.com/pt.svg" },
+  { team: "Russia", logo: "https://flagcdn.com/ru.svg" },
+  { team: "Turkey", logo: "https://flagcdn.com/tr.svg" },
+  { team: "Vietnam", logo: "https://flagcdn.com/vn.svg" },
+];
 
-    
-
+const findTeamLogo = (team: string) => {
+  const teamLogo = countryFlags.find((t) => t.team === team);
+  return teamLogo ? teamLogo.logo : null;
+};
 ---
 
 <div class="card bg-base-100 shadow-xl p-4 my-4">
-    <h2 class="card-title">Prossima Gara</h2>
+  <h2 class="card-title">Prossima Gara</h2>
+
+  {
+    race ? (
+      <>
+        <div class="flex items-center justify-between">
+          <p class="flex-1">
+            {race.raceName} - {race.Circuit.circuitName} - {race.country}
+          </p>
+          <img
+            src={findTeamLogo(race.country)}
+            alt={`${race.country} logo`}
+            class="flag rounded-full w-16 h-16 my-2 ml-4"
+          />
+        </div>
+
+        <p>
+          <strong>Data:</strong> {race.date}
+        </p>
+        <p>
+          <strong>Qualifiche:</strong> {race.qualTimeInItaly} (ora italiana)
+        </p>
+        <p>
+          <strong>Gara:</strong> {race.raceTimeInItaly} (ora italiana)
+        </p>
+
+        {race.qualifyingResults.length > 0 && (
+          <div class="my-4">
+            <h3 class="text-lg font-semibold">Risultati Qualifiche</h3>
+            <ul>
+              {race.qualifyingResults.map((result) => (
+                <li>
+                  {result.position}. {result.Driver.givenName}{" "}
+                  {result.Driver.familyName} - {result.Constructor.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {weather && (
     
-    {race ? (
-        <>
-            <p>{race.raceName} - {race.Circuit.circuitName} - {race.country}</p>
-            <p><strong>Data:</strong> {race.date}</p>
-            <p><strong>Qualifiche:</strong> {race.qualTimeInItaly} (ora italiana)</p>
-            <p><strong>Gara:</strong> {race.raceTimeInItaly} (ora italiana)</p>
-
-            {race.qualifyingResults.length > 0 && (
-                <div class="my-4">
-                    <h3 class="text-lg font-semibold">Risultati Qualifiche</h3>
-                    <ul>
-                        {race.qualifyingResults.map(result => (
-                            <li>
-                                {result.position}. {result.Driver.givenName} {result.Driver.familyName} - {result.Constructor.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                
-            )}
-            {weather && (
-  <div class="mt-4">
-    <h3>Previsioni per {weather.forecast.forecastday[0].date}:</h3>
-    <p>Descrizione: {weather.current.condition.text}</p>
-    <p>Temperatura massima: {weather.forecast.forecastday[0].day.maxtemp_c}°C</p>
-    <p>Temperatura minima: {weather.forecast.forecastday[0].day.mintemp_c}°C</p>
-    <img src={weather.current.condition.icon} alt="Weather icon" />
-  </div>
+        <h3 class="text-xl font-semibold">
+            Previsioni per {weather.forecast.forecastday[0].date}:
+        </h3>
+        <div class="mt-2">
+            <div class="flex items-center justify-between">
+                <p >
+                <strong>Descrizione:</strong> {weather.current.condition.text}
+                </p>
+                <img src={weather.current.condition.icon} alt="Weather icon" class="mt-4 w-16 h-16" />
+            </div>
+            
+            <p >
+                <strong>Temperatura massima:</strong> {weather.forecast.forecastday[0].day.maxtemp_c}°C
+            </p>
+            <p >
+                <strong>Temperatura minima:</strong> {weather.forecast.forecastday[0].day.mintemp_c}°C
+            </p>
+        </div>
+        
+    
 )}
-            
-            
-           
-        </>
-    ) : (
-        <p>Caricamento...</p>
-    )}
-</div>
 
+      </>
+    ) : (
+      <p>Caricamento...</p>
+    )
+  }
+</div>

@@ -7,15 +7,8 @@ import GenPass from "../components/GenPass.astro";
 import TestaCroce from "../components/TestaCorce.astro";
 import ConvBase64 from "../components/ConvBase64.astro";
 import DiffDate from "../components/DiffDate.astro";
-import NextRace from "../components/NextRace.astro";
-import LastRaceResults from "../components/LastRaceResults.astro";
-import DriverStandings from "../components/DriverStandings.astro";
-import ConstructorStandings from "../components/ConstructorStandings.astro";
-import StatsComponent2 from "../components/TeamSectionF1.astro";
-import TeamSectionCostrF1 from "../components/TeamSectionCostrF1.astro";
-import NextMatch from "../components/NextMatch.astro";
-import AllMatch from "../components/AllMatch.astro"
-
+import MotoGpEvents from "../components/MotoGpEvents.astro";
+import MotoGpClassifica from "../components/MotoGpClassifica.astro";
 import StatsComponent from "../components/DriverInfo.astro";
 import {
   getDriverInfo,
@@ -104,7 +97,8 @@ const constructorsData = await Promise.all(
     </div>
   </div>
 
- 
+  <MotoGpEvents />
+  <MotoGpClassifica />
     
       
   </div>
