@@ -1,0 +1,89 @@
+---
+const fetchTeamDetails = async () => {
+  const apiKey = "4acfad952abc4a30b36823342558bdb5"; // Assicurati di avere la chiave API nelle variabili d'ambiente
+  const response = await fetch('https://api.football-data.org/v4/teams/100', {
+    headers: {
+      'X-Auth-Token': apiKey
+    }
+  });
+
+  if (!response.ok) {
+    console.error('Errore nella richiesta delle informazioni della squadra:', response.statusText);
+    return null;
+  }
+
+  const teamData = await response.json();
+  return teamData;
+};
+
+
+const teamDetails = await fetchTeamDetails();
+
+
+const fetchNextMatch = async () => {
+  const apiKey = "4acfad952abc4a30b36823342558bdb5"; // Assicurati di avere la chiave API
+  const response = await fetch('https://api.football-data.org/v4/teams/100/matches?status=SCHEDULED', { // Usa il parametro 'status' per ottenere solo le partite future
+    headers: {
+      'X-Auth-Token': apiKey
+    }
+  });
+
+  if (!response.ok) {
+    console.error('Errore nella richiesta delle informazioni della prossima partita:', response.statusText);
+    return null;
+  }
+
+  const data = await response.json();
+  const nextMatch = data.matches.find(match => new Date(match.utcDate) > new Date());
+  
+  return nextMatch || null; // Restituisce null se non trova la prossima partita
+};
+
+const nextMatch = await fetchNextMatch();
+---
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">Dettagli della AS Roma</h2>
+    
+    {teamDetails ? (
+      <>
+        <img src={teamDetails.crest} alt={`Crest di ${teamDetails.name}`} class="w-24 h-24" />
+        <h3>{teamDetails.name} ({teamDetails.shortName})</h3>
+        <p>Fondato: {teamDetails.founded}</p>
+        <p>Indirizzo: {teamDetails.address}</p>
+        <p>Sito Web: <a href={teamDetails.website} target="_blank" rel="noopener noreferrer">{teamDetails.website}</a></p>
+        <p>Colori del Club: {teamDetails.clubColors}</p>
+        <p>Stadio: {teamDetails.venue}</p>
+
+        <h4>Competizioni in Corso:</h4>
+        <ul>
+          {teamDetails.runningCompetitions.map(competition => (
+            <li>
+              <img src={competition.emblem} alt={`Emblema ${competition.name}`} class="inline w-8 h-8 mr-2" />
+              {competition.name}
+            </li>
+          ))}
+        </ul>
+      </>
+    ) : (
+      <p>Nessun dato disponibile.</p>
+    )}
+  </div>
+</div>
+
+<div class="card mt-4">
+  <div class="card-body">
+    <h2 class="card-title">Prossima Partita</h2>
+    
+    {nextMatch ? (
+      <div>
+        <h3>{nextMatch.homeTeam.name} vs {nextMatch.awayTeam.name}</h3>
+        <p>Data: {new Date(nextMatch.utcDate).toLocaleString()}</p>
+        <p>Competizione: {nextMatch.competition.name}</p>
+      </div>
+    ) : (
+      <p>Nessuna prossima partita trovata.</p>
+    )}
+  </div>
+</div>

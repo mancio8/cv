@@ -9,6 +9,7 @@ import ConvBase64 from "../components/ConvBase64.astro";
 import DiffDate from "../components/DiffDate.astro";
 import MotoGpEvents from "../components/MotoGpEvents.astro";
 import MotoGpClassifica from "../components/MotoGpClassifica.astro";
+import NextRomaMatch from "../components/NextRomaMatch.astro";
 import StatsComponent from "../components/DriverInfo.astro";
 import {
   getDriverInfo,
@@ -96,7 +97,7 @@ const constructorsData = await Promise.all(
       <DiffDate />
     </div>
   </div>
-
+  <NextRomaMatch />
   <MotoGpEvents />
   <MotoGpClassifica />
     
