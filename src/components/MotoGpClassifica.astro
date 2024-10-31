@@ -67,23 +67,34 @@ function getTeamClass(teamName) {
 ---
 
 <div class="card w-full bg-base-200 shadow-xl">
-  <div class="card-body">
-    <h2 class="card-title">Classifica Piloti MotoGP 2024</h2>
-
-    {
-      standings.length > 0 ? (
-      <ul class="list-inside">
-  {standings.map((pilot, index) => (
-    <li class={`mb-4 border-4 ${getTeamClass(pilot.team.name)}`}>
-      <h3 class="text-lg font-bold">{index + 1}. {pilot.rider.full_name} - {pilot.points}</h3>
-      <p>Paese: {pilot.rider.country.name}</p>
-      <p>Team: {pilot.team.name} - {pilot.constructor.name}</p>
-    </li>
-  ))}
-</ul>
-      ) : (
-        <p>Nessun dato disponibile</p>
-      )
-    }
-  </div>
+    <div class="card-body">
+        <h2 class="card-title">Classifica Piloti MotoGP 2024</h2>
+      
+        {
+          standings.length > 0 ? (
+            <table class="table w-full">
+              <thead>
+                <tr>
+                 
+                  <th class="text-left">Nome Pilota</th>
+                  <th class="text-left">Team</th>
+                  <th class="text-left">Punti</th>
+                </tr>
+              </thead>
+              <tbody>
+                {standings.map((pilot, index) => (
+                  <tr class={`${getTeamClass(pilot.team.name)}`}>
+                    <td>{index + 1} - {pilot.rider.full_name}</td>
+                    <td>{pilot.team.name} - {pilot.constructor.name}</td>
+                    <td>{pilot.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>Nessun dato disponibile</p>
+          )
+        }
+      </div>
+      
 </div>
