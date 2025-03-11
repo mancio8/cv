@@ -252,7 +252,7 @@ ogni lettera dell'alfabeto ha un colore specifico.
 Nel setup(), si inizializza la striscia LED e si imposta la luminosità:
 
 
-```ccp
+```cpp
 void setup() {
     FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);
     FastLED.setBrightness(BRIGHTNESS);
