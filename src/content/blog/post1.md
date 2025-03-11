@@ -198,3 +198,334 @@ F= \frac{2 \cdot Precision \cdot Recall}{Precision + Recall}
 $$
 
 L'uso dell'F-score è utile perché bilancia la precisione e il richiamo, fornendo una valutazione complessiva delle prestazioni del modello di instance segmentation. Un punteggio F elevato indica una buona capacità del modello di identificare e distinguere le istanze di oggetti, mentre un punteggio basso può indicare problemi di sovrapposizione, sotto-segmentazione o sovra-segmentazione delle istanze.
+
+
+# Soluzione proposta
+\label{cap:soluzioneProposta}
+\lhead{\textbf{\rightmark}}
+
+.
+
+## Architettura
+\label{sec:architettura}
+![arc](path_to_image/arc.png)
+
+Come primo blocco dell'architettura si ha l'inserimento di un video in input, i video utilizzati fanno parte del Dataset CARLA Binary Single Pedestrian. Nel secondo blocco si effettua l'analisi del video tramite la CNN, nel nostro caso utilizzeremo Mask R-CNN. Un componente fondamentale di Mask R-CNN è la Region Proposal Network, la sua funzione è quella di esaminare la mappa delle caratteristiche e proporre regioni che potrebbero contenere oggetti (Region of Interest o RoI).  
+Queste proposte di regioni vengono poi passate al resto della rete per la classificazione e la regressione del box delimitatore. Quindi, RPN svolge un ruolo cruciale nel determinare quali parti dell’immagine dovrebbero essere esaminate più attentamente per il rilevamento degli oggetti.  
+L'operazione di ROI Align estrae una piccola mappa delle caratteristiche da ogni RoI (Region of Interest) nei compiti di rilevamento e segmentazione.  
+RoIAlign rimuove la quantizzazione severa, allineando correttamente le caratteristiche estratte con l’input.  
+L'output del ROI Align verrà passato ai diversi layer ed avremo:
+
+- **Il layer di classificazione** è responsabile della previsione della classe di un oggetto proposto. Questo layer utilizza queste caratteristiche per prevedere la classe dell’oggetto.
+- **Il layer di regressione** è responsabile della previsione del box delimitatore per un oggetto proposto. Questo layer utilizza queste caratteristiche per prevedere le coordinate del box delimitatore.
+- **Il layer di segmentazione** è responsabile della generazione di una maschera per ogni regione di interesse (RoI), segmentando così un’immagine in modo pixel per pixel. Questo layer fornisce una mappa delle caratteristiche per ogni RoI e utilizza queste caratteristiche per generare una maschera.
+
+
+## Dataset CARLA
+\label{sec:datasetCarla}
+
+Il Dataset di CARLA utilizzato è il Binary Single Pedestrian che contiene 400 video, ciascuno della durata di 30 secondi. I dati sono stati generati utilizzando il simulatore CARLA 0.9.13. I video rappresentano quadri di simulazione realistici che possono offrire molti vantaggi rispetto ai dati reali.
+
+Uno dei vantaggi è che è relativamente facile generare una grande quantità di campioni, mentre i dati del mondo reale sono spesso limitati e, per forza di cose, sbilanciati. Di solito le situazioni più pericolose si verificano raramente, e la raccolta di un numero sufficiente di esempi per garantire che il sistema le gestisca correttamente può essere molto difficile.  
+Quanto spesso si riesce a registrare un bambino che gioca con il cane accanto alla strada? La generazione di questi casi angolari e contraddittori è l'ambito in cui i metodi di simulazione possono essere più utili. Tuttavia, anche i risultati più "tipici" della simulazione possono essere utili, immaginare di avere una quantità illimitata di dati da utilizzare per l'addestramento preliminare dei modelli o la convalida del flusso.
+
+![Fotogramma di uno dei video del dataset](path_to_image/DatasetCarla.png)  
+*Figura 1: Fotogramma di uno dei video del dataset*
+
+---
+
+## MS COCO
+\label{sec:msCOCO}
+
+Il dataset MS COCO (Microsoft Common Objects in Context) è un dataset su larga scala per il rilevamento di oggetti, la segmentazione, il rilevamento di punti chiave e la creazione di didascalie. Il dataset è composto da 328K immagini.  
+La prima versione del dataset MS COCO è stata rilasciata nel 2014. Conteneva 164K immagini suddivise in training (83K), validation (41K) e test (41K).  
+
+Sulla base del feedback della comunità, nel 2017 la suddivisione training/validation è stata modificata da 83K/41K a 118K/5K. La nuova suddivisione utilizza le stesse immagini e annotazioni e contiene un nuovo set di dati non annotato di 123K immagini.
+
+Il set di dati contiene annotazioni per rilevamento degli oggetti: bounding box e maschere di segmentazione per istanza con 80 categorie di oggetti, segmentazione completa della scena, con 80 categorie di cose (come persona, bicicletta, elefante) e un sottoinsieme di 91 categorie di cose (erba, cielo, strada).  
+Per l'addestramento del nostro dataset sono stati utilizzati i pesi pre-addestrati del dataset COCO, noto anche come “fine-tuning”, un processo comune nel machine learning e nella visione artificiale. Ecco come funziona:
+
+- **Caricamento dei pesi pre-addestrati:** i pesi pre-addestrati del dataset COCO vengono caricati nel modello. Questi pesi sono il risultato dell’addestramento del modello su un grande numero di immagini contenute nel dataset COCO.
+- **Adattamento del modello:** il modello viene quindi adattato per lavorare con il nuovo dataset. Questo può includere la modifica dell’ultimo strato della rete per corrispondere al numero di classi nel nuovo dataset.
+- **Fine-tuning:** il modello viene quindi addestrato sul nuovo dataset, ma invece di iniziare con pesi casuali, il modello inizia con i pesi pre-addestrati del dataset COCO. Durante questo processo di addestramento, i pesi del modello vengono aggiornati in modo da minimizzare l’errore sul nuovo dataset.
+
+L’uso dei pesi pre-addestrati del dataset COCO può aiutare a migliorare le prestazioni del modello, specialmente quando il nuovo dataset è relativamente piccolo. Questo perché i pesi pre-addestrati contengono già informazioni utili apprese dal modello durante l’addestramento sul grande e vario dataset COCO.
+
+
+## Object Detection
+\label{sec:objectDetection}
+
+Il rilevamento degli oggetti esegue la classificazione e la localizzazione anche di immagini con più oggetti di classi diverse. L'attività di localizzazione si ottiene disegnando dei riquadri intorno agli oggetti, generalmente definiti in termini di centro, larghezza e altezza.
+
+All'interno di ciascun riquadro, l'oggetto viene anche classificato.
+
+![Fotogramma del video restituito dal simulatore CARLA](path_to_image/sequence61.png)  
+*Figura 1: Fotogramma del video restituito dal simulatore CARLA*
+
+---
+
+## Processi
+\label{sec:processi}
+
+Prima di arrivare al risultato finale con l'individuazione dell'oggetto, ci sono diversi processi che il software effettua. I processi che permettono l'individuazione dell'oggetto sono:
+
+1. Anchor Sorting
+2. Bounding Box Refinement
+3. Mask Generation
+4. Layer activations
+5. Risultato finale
+
+### Anchor Sorting
+\label{sec:anchor}
+
+![Anchor sorting di un fotogramma estratto dai video analizzati](path_to_image/anchor2.png)  
+*Figura 2: Anchor sorting di un fotogramma estratto dai video analizzati*
+
+Gli algoritmi di rilevamento degli oggetti di solito campionano un gran numero di regioni nell'immagine di input, determinano se queste regioni contengono oggetti di interesse e regolano i confini delle regioni in modo da prevedere con maggiore precisione i riquadri di delimitazione degli oggetti. Diversi modelli possono adottare diversi schemi di campionamento delle regioni. L'anchor sorting genera più caselle di delimitazione con scale e rapporti di aspetto diversi, centrate su ciascun pixel.  
+Gli anchor vengono ordinati e filtrati durante la fase di Region Proposal Network (RPN). Questo processo visualizza ogni passo della prima fase della RPN e mostra gli anchor positivi e negativi insieme alla rifinitura del box dell’anchor.
+
+Gli anchor “positivi” sono quelli che hanno un’intersezione su unione (IoU) elevata con un ground truth box, o che hanno la massima IoU con un ground truth box. Questi sono considerati come contenenti l’oggetto di interesse.
+
+Gli anchor “negativi” sono quelli che hanno una bassa IoU con tutti i ground truth box. Questi sono considerati come non contenenti l’oggetto di interesse.
+
+La rifinitura del box dell’anchor è un processo in cui le coordinate degli anchor vengono leggermente modificate per adattarsi meglio all’oggetto di interesse.
+
+### Bounding Box Refinement
+\label{sec:boundingB}
+
+La fase di "Bounding Box Refinement" in Mask R-CNN è una parte del processo di rilevazione degli oggetti ed è responsabile di perfezionare le posizioni delle bounding box inizialmente proposte dal modello per ciascuna istanza dell'oggetto rilevato. Questa fase è una delle caratteristiche chiave di Mask R-CNN ed è utile per migliorare la precisione della localizzazione degli oggetti.
+
+![Bounding Box Refinement di un fotogramma estratto dai video analizzati](path_to_image/bounding2.png)  
+*Figura 3: Bounding Box Refinement di un fotogramma estratto dai video analizzati*
+
+### Mask Generation
+\label{sec:maskG}
+
+La fase di "mask generation" in un modello Mask R-CNN si riferisce al processo in cui il modello genera maschere binarie pixel-wise per ciascuna istanza dell'oggetto rilevato nell'immagine. Questa è una parte fondamentale del processo di "instance segmentation", che combina la rilevazione degli oggetti con la segmentazione pixel-wise.  
+La capacità di generare maschere pixel-wise per le istanze degli oggetti è ciò che distingue Mask R-CNN da altri modelli di rilevazione degli oggetti. Questo è particolarmente utile in applicazioni in cui è necessario distinguere e analizzare oggetti sovrapposti o vicini, come nell'ambito della visione artificiale avanzata e dell'analisi delle immagini mediche.
+
+![Mask Generation di un fotogramma estratto dai video analizzati](path_to_image/maskG.png)  
+*Figura 4: Mask Generation di un fotogramma estratto dai video analizzati*
+
+---
+
+### Layer activations
+\label{sec:layer}
+
+![Layer activations di un fotogramma estratto dai video analizzati](path_to_image/layer.png)  
+*Figura 5: Layer activations di un fotogramma estratto dai video analizzati*
+
+Le attivazioni di un layer in Mask R-CNN rappresentano le informazioni estratte dall'immagine in punti specifici del processo di elaborazione. Queste informazioni sono fondamentali per il rilevamento degli oggetti e per la segmentazione, poiché contengono dettagli sulle caratteristiche degli oggetti nell'immagine.
+
+---
+
+### Risultato finale
+\label{sec:risultatoFinale}
+
+Alla fine, il modello fornisce il risultato finale che comprende le seguenti informazioni per ciascuna regione proposta:
+
+- La classe dell'oggetto rilevato.
+- Le coordinate della bounding box che circonda l'oggetto.
+- La maschera di segmentazione pixel-per-pixel che identifica l'area esatta dell'oggetto nell'immagine.
+
+![Risultato finale di un fotogramma estratto dai video analizzati](path_to_image/FinalMask.png)  
+*Figura 6: Risultato finale di un fotogramma estratto dai video analizzati*
+
+## Risultati ed analisi
+\label{cap:risultatieAnalisi}
+\lhead{\textbf{\rightmark}}
+
+### Introduzione
+
+La validazione di qualsiasi approccio di segmentazione delle istanze è un passo fondamentale nella valutazione della sua efficacia e robustezza, in particolare se applicato ad ambienti complessi e dinamici. Nel campo della visione artificiale, la segmentazione delle istanze è un compito fondamentale che coinvolge non solo l'identificazione di oggetti all'interno di un flusso di immagini o video, ma anche la differenziazione delle singole istanze di tali oggetti. Questa distinzione è cruciale per numerose applicazioni del mondo reale, tra cui la guida autonoma, la sorveglianza e la robotica, dove la localizzazione e il tracciamento precisi degli oggetti svolgono un ruolo centrale nei sistemi decisionali e di controllo.
+
+In questo capitolo presentiamo i risultati della nostra valutazione completa di un approccio di segmentazione delle istanze, particolarmente adattato alle sfide uniche degli scenari dinamici in tempo reale. Per valutare rigorosamente le prestazioni di questo approccio, utilizziamo due distinti set di dati comprendenti sequenze video generate utilizzando il simulatore CARLA. La scelta di utilizzare CARLA deriva dal fatto che, oltre ad essere una piattaforma di simulazione open-source, consente di ricreare ambienti urbani complessi con interazioni realistiche di veicoli e pedoni, rendendola la scelta ideale per valutare modelli di segmentazione delle istanze in contesti dinamici e reali.
+
+L'obiettivo di questa valutazione è valutare la capacità del nostro approccio alla segmentazione delle istanze di rilevare e segmentare in modo accurato ed efficiente gli oggetti nelle scene complesse del simulatore CARLA. Valutiamo le sue prestazioni in termini di precisione, richiamo e identificazione delle istanze, con un focus specifico sulla sua adattabilità a diversi scenari, come condizioni meteorologiche variabili, diversi ambienti di illuminazione e un'ampia gamma di tipi di oggetti e interazioni.
+
+Questo capitolo è organizzato come segue: introduciamo innanzitutto in dettaglio i due set di dati utilizzati per la valutazione, sottolineando l’importanza di scenari diversi e stimolanti. Descriviamo quindi la nostra configurazione sperimentale e le metriche di valutazione impiegate per quantificare le prestazioni dell'approccio. Infine, presentiamo e discutiamo i risultati della valutazione, traendo conclusioni sui punti di forza e sui limiti dell’approccio di segmentazione delle istanze e sulle sue potenziali implicazioni per le applicazioni del mondo reale nella guida autonoma ed oltre. L'obiettivo di questa valutazione è fornire preziose informazioni sullo stato dell'arte della segmentazione delle istanze per scenari dinamici e reali.
+
+### Creazione Dataset
+\label{sec:creazioneDataset}
+
+I dataset contengono ognuno 80 frame per ogni video analizzato, sono stati analizzati 4 video per Dataset, il primo dataset contiene frame di eventi quotidiani ed il secondo contiene dei frame dove il software ha avuto delle difficoltà nel riconoscimento dell'oggetto, come il passaggio delle persone dietro altri oggetti.  
+Le annotazioni di verità sono state create tramite VIA (VGG Image Annotator).  
+I dati sono stati divisi in due set: il set di addestramento (train) e il set di validazione (val), come di seguito specificato:
+
+1. **Train set**: Questa contiene la maggior parte dei dati ed è utilizzata per addestrare il modello. Include le caratteristiche (features) e le etichette (labels) dei dati.
+2. **Validation set**: Questa contiene una porzione più piccola di dati che non viene utilizzata durante l’addestramento. Serve per validare le prestazioni del modello durante e dopo l’addestramento. Anche qui, sono presenti sia le caratteristiche che le etichette.
+
+Nella tabella seguente sono elencati tutti i dati dei Dataset:
+
+| Dati               | Dataset "Facile" | Dataset "Complesso" |
+|--------------------|------------------|---------------------|
+| **Video analizzati** | 4                | 4                   |
+| **Durata singolo video** | 30 sec          | 30 sec              |
+| **Frame per video** | 80               | 80                  |
+| **Numero Label**    | 3                | 4                   |
+| **Label**           | BG, person, car  | BG, traffic-light, car, person |
+| **Immagini totali** | 320              | 320                 |
+
+
+## Divisione del Dataset
+
+La divisione dei dati in questi due set aiuta a prevenire il sovradattamento (overfitting), che si verifica quando un modello impara così bene i dati di addestramento da non riuscire a generalizzare bene su nuovi dati. Nei dataset creati, la cartella **Train** contiene 320 immagini e la cartella **Val** contiene 70 immagini per ciascun dataset. Il dataset "complesso" contiene immagini in cui gli oggetti sono presenti in forme e situazioni più complesse da riconoscere. 
+
+### Immagini Essemplificative
+Nelle Figure 1-2 sono mostrate alcune immagini esemplificative del dataset "facile", mentre nelle Figure 3-4 sono mostrate alcune immagini esemplificative del dataset "complesso".
+
+#### Dataset "Facile"
+![Immagine del Dataset "facile"](figure/sequence289.jpg)
+*Figura 1: Immagine del Dataset "facile"*
+
+![Immagine del Dataset "facile"](figure/sequence77.jpg)
+*Figura 2: Immagine del Dataset "facile"*
+
+#### Dataset "Complesso"
+![Immagine del Dataset "complesso"](figure/sequence47.jpg)
+*Figura 3: Immagine del Dataset "complesso"*
+
+![Immagine del Dataset "complesso"](figure/sequence62.jpg)
+*Figura 4: Immagine del Dataset "complesso"*
+
+## Training
+
+Il processo di training di una rete neurale per la segmentazione di istanza è un compito complesso che mira a identificare oggetti individuali in un'immagine e assegnare loro un'etichetta unica, creando una maschera di segmentazione per ciascun oggetto. Questo è un passo fondamentale in applicazioni di computer vision come il riconoscimento degli oggetti e la guida autonoma. Ecco una panoramica del processo di training:
+
+1. **Raccolta dei dati**: Il primo passo è raccogliere un ampio dataset di addestramento che contenga immagini etichettate con maschere di segmentazione per oggetti individuali. Ogni istanza di oggetto deve essere etichettata in modo univoco.
+
+2. **Preparazione dei dati**: Le immagini e le etichette di segmentazione devono essere preparate per l'addestramento. Questo può includere la riduzione delle dimensioni delle immagini, la normalizzazione dei dati e la divisione del dataset in insiemi di addestramento, convalida e test.
+
+3. **Scelta dell'architettura della rete**: Si seleziona un'architettura di rete neurale profonda adatta al compito di segmentazione di istanza. Le reti neurali convoluzionali (CNN) sono comunemente utilizzate per questo scopo. Un'architettura popolare è la **Mask R-CNN**.
+
+4. **Inizializzazione dei pesi**: I pesi della rete vengono inizializzati, solitamente utilizzando pesi preaddestrati da modelli di riconoscimento degli oggetti o segmentazione semantica.
+
+5. **Definizione della funzione di perdita**: Viene definita una funzione di perdita che misura l'errore tra le maschere di segmentazione predette e quelle reali. La funzione di perdita include spesso termini per la segmentazione dell'oggetto e per la localizzazione dell'oggetto.
+
+6. **Addestramento**: La rete viene addestrata utilizzando il dataset di addestramento. Durante l'addestramento, i pesi della rete vengono aggiornati mediante ottimizzazione, solitamente tramite algoritmi come il gradiente stocastico discendente (SGD).
+
+7. **Validazione**: Periodicamente, la rete viene valutata su un insieme di dati di convalida per monitorare le prestazioni e l'addestramento può essere interrotto quando il modello raggiunge un livello accettabile di precisione.
+
+8. **Test**: Dopo l'addestramento, il modello viene valutato su un insieme di dati di test per valutare le sue prestazioni in modo imparziale.
+
+9. **Iperparametri**: Durante il processo di training, è possibile ottimizzare gli iperparametri del modello, come il tasso di apprendimento e il batch size, per migliorare le prestazioni.
+
+10. **Inferenza**: Una volta addestrata, la rete può essere utilizzata per effettuare l'inferenza su nuove immagini, identificando e segmentando oggetti di istanza.
+
+11. **Post-elaborazione**: In alcuni casi, possono essere applicate tecniche di post-elaborazione per migliorare ulteriormente la precisione delle maschere di segmentazione.
+
+Come si vede, il processo di training di una rete per la segmentazione di istanza richiede tempo, dati di alta qualità e potenza di calcolo. Tuttavia, quando addestrata con successo, una rete di questo tipo può essere utilizzata in una varietà di applicazioni di computer vision per identificare e segmentare oggetti in immagini in modo accurato.
+
+
+## Parametri Significativi per l'Addestramento di un Modello Mask R-CNN
+
+I parametri più significativi per l'addestramento di un modello Mask R-CNN sono:
+
+1. **RPN ANCHOR SCALES**: Questi sono i rapporti di aspetto degli anchor box utilizzati nella Rete di Proposta di Regioni (RPN). Questi possono essere regolati in base alle dimensioni degli oggetti che si prevede di rilevare.
+2. **TRAIN ROIS PER IMAGE**: Questo è il numero di Regioni di Interesse (RoI) da utilizzare per l'addestramento per immagine. Un numero maggiore può migliorare l'accuratezza, ma aumenterà anche il tempo di addestramento.
+3. **MAX GT INSTANCES**: Questo è il numero massimo di istanze Ground Truth per immagine.
+4. **POST NMS ROIS INFERENCE e POST NMS ROIS TRAINING**: Questi sono il numero di RoI da mantenere dopo la Non-Maximum Suppression (NMS) durante l’inferenza e l’addestramento, rispettivamente.
+5. **Batch size, learning rate e momentum**: Questi parametri del SGD optimizer possono avere un impatto significativo sulle prestazioni del modello.
+
+Nell'immagine seguente sono elencati tutti i parametri utilizzati.
+
+![Parametri Utilizzati per il Training](figure/training)
+*Figura 1: Parametri utilizzati per il training*
+
+## Training
+
+Ciascun modello ottenuto in questa fase è stato ottenuto dopo 100 epoche di training, ciascuna avente 100 steps per epoca.
+
+### Codice del Training
+
+```python
+# Codice del training
+def train(model):   
+    """Train the model."""
+    # Training dataset.
+    dataset_train = CustomDataset()
+    dataset_train.load_custom("/home/vincenzo/Mask-R-CNN-using-Tensorflow2
+        /Dataset", "train")
+    dataset_train.prepare()
+    # Validation dataset
+    dataset_val = CustomDataset()
+    dataset_val.load_custom("/home/vincenzo/Mask-R-CNN-using-Tensorflow2
+        /Dataset", "val")
+    dataset_val.prepare()   
+    model.train(dataset_train, dataset_val,
+                learning_rate=config.LEARNING_RATE,
+                epochs=100,
+                layers='heads', #layers='all', 
+                augmentation = imgaug.augmenters.Sequential([ 
+                imgaug.augmenters.Fliplr(1), 
+                imgaug.augmenters.Flipud(1), 
+                imgaug.augmenters.Affine(rotate=(-45, 45)), 
+                imgaug.augmenters.Affine(rotate=(-90, 90)), 
+                imgaug.augmenters.Affine(scale=(0.5, 1.5)),
+                imgaug.augmenters.Crop(px=(0, 10)),
+                imgaug.augmenters.Grayscale(alpha=(0.0, 1.0)),
+                imgaug.augmenters.AddToHueAndSaturation((-20, 20)), # change hue and saturation
+                imgaug.augmenters.Add((-10, 10), per_channel=0.5), # change brightness of images (by -10 to 10 of original value)
+                imgaug.augmenters.Invert(0.05, per_channel=True), # invert color channels
+                imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images  
+                ]
+                ))
+
+## Analisi delle Performance dei Modelli Ottenuti
+
+Le metriche prese in considerazione per la valutazione delle performance sono le medesime utilizzate per misurare le performance del già citato MS-COCO, ovvero **Intersection over Union (IoU)**, **Precision** e **Recall**, utilizzate per calcolare i valori di **Average Precision** e **Average Recall**.
+
+I dataset considerati per valutare le performance di ciascun modello sono il **validation set** e il **test set**. Pertanto, sarà necessario confrontare le **bounding box** e le **segmentation masks** ottenute per ciascuna istanza con i loro valori **ground truth**.
+
+
+## Calcolo Precision-Recall Curve
+\label{sec:precisionRC}
+
+Nella figura sottostante è mostrato il codice che permette il plot della **Precision-Recall curve**.  
+L'**Average Precision** è stata calcolata con il valore di **IoU** impostato al 50%. Nel primo dataset è possibile vedere che si ha l'**Average Precision** uguale a 0.667, mentre nel secondo dataset, composto da video con situazioni complesse per l'identificazione degli oggetti, si ha l'**Average Precision** uguale a 0.333.
+
+```python
+def compute_ap(gt_boxes, gt_class_ids, gt_masks,
+               pred_boxes, pred_class_ids, pred_scores, pred_masks,
+               iou_threshold=0.5):
+    """Compute Average Precision at a set IoU threshold (default 0.5).
+
+    Returns:
+    mAP: Mean Average Precision
+    precisions: List of precisions at different class score thresholds.
+    recalls: List of recall values at different class score thresholds.
+    overlaps: [pred_boxes, gt_boxes] IoU overlaps.
+    """
+    # Get matches and overlaps
+    gt_match, pred_match, overlaps = utils.compute_matches(
+        gt_boxes, gt_class_ids, gt_masks,
+        pred_boxes, pred_class_ids, pred_scores, pred_masks,
+        iou_threshold)
+
+    # Compute precision and recall at each prediction box step
+    precisions = np.cumsum(pred_match > -1) / (np.arange(len(pred_match)) + 1)
+    recalls = np.cumsum(pred_match > -1).astype(np.float32) / len(gt_match)
+
+    # Pad with start and end values to simplify the math
+    precisions = np.concatenate([[0], precisions, [0]])
+    recalls = np.concatenate([[0], recalls, [1]])
+
+    # Ensure precision values decrease but don't increase. This way, the
+    # precision value at each recall threshold is the maximum it can be
+    # for all following recall thresholds, as specified by the VOC paper.
+    for i in range(len(precisions) - 2, -1, -1):
+        precisions[i] = np.maximum(precisions[i], precisions[i + 1])
+
+    # Compute mean AP over recall range
+    indices = np.where(recalls[:-1] != recalls[1:])[0] + 1
+    mAP = np.sum((recalls[indices] - recalls[indices - 1]) *
+                 precisions[indices])
+
+    return mAP, precisions, recalls, overlaps
+
+AP, precisions, recalls, overlaps = utils.compute_ap(gt_bbox, gt_class_id, gt_mask,
+                                          r['rois'], r['class_ids'], r['scores'], r['masks'])
+visualize.plot_precision_recall(AP, precisions, recalls)
+
+
+In questo caso, il codice Python mostra come calcolare la Precision-Recall curve e come ottenere l'Average Precision per un dato valore di IoU. La funzione compute_ap calcola le metriche di precisione e recall per ciascun box di previsione, e il grafico finale viene creato utilizzando la funzione visualize.plot_precision_recall.
