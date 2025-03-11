@@ -21,7 +21,7 @@ Gli approcci di instance segmentation basati su vari algoritmi sono stati compar
 
 ## Carla Simulator
 
-![](CarlaImage)
+![Carla](https://res.cloudinary.com/dqh1pnrdx/image/upload/v1741710387/Tesi/carlaSim_iy6cib.jpg)
 
 CARLA è un simulatore open source per la ricerca sulla guida autonoma.
 
@@ -63,7 +63,7 @@ Uno dei problemi del Deep Learning riguarda la complessità del modello: infatti
 
 ## Reti neurali
 
-![](reteNeurale)
+![reteNeurale](https://res.cloudinary.com/dqh1pnrdx/image/upload/v1741710387/Tesi/reteNeurale_gujpgd.png)
 
 Una **rete neurale artificiale** è un modello matematico ispirato a una rete neurale biologica, con l'obiettivo di riprodurre le funzioni tipiche del cervello umano. Una rete di questo tipo è realizzata, così come quella biologica, da unità semplici chiamate neuroni artificiali, caratterizzati dal fatto di avere molti ingressi e una sola uscita, calcolata dalla somma pesata degli input.
 
@@ -91,7 +91,7 @@ Utilizzeremo il termine **riconoscimento di oggetti** in senso ampio, includendo
 
 ## Mask R-CNN
 
-![]()
+![R-CNN](https://res.cloudinary.com/dqh1pnrdx/image/upload/v1741710387/Tesi/maskRCNN_rlsrk8.png)
 
 Nel 2014 fu proposta una rete neurale, la **Region-based Convolutional Neural Network** (R-CNN), che permetteva di risolvere problemi di object detection. Nel corso degli anni, R-CNN venne notevolmente migliorata, con l'introduzione di **Fast R-CNN** e **Faster R-CNN**, che hanno superato la versione originale sia in termini di performance che di accuratezza.
 
