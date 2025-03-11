@@ -470,7 +470,7 @@ def train(model):
                 imgaug.augmenters.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images  
                 ]
                 ))
-
+```
 ## Analisi delle Performance dei Modelli Ottenuti
 
 Le metriche prese in considerazione per la valutazione delle performance sono le medesime utilizzate per misurare le performance del già citato MS-COCO, ovvero **Intersection over Union (IoU)**, **Precision** e **Recall**, utilizzate per calcolare i valori di **Average Precision** e **Average Recall**.
@@ -527,5 +527,6 @@ AP, precisions, recalls, overlaps = utils.compute_ap(gt_bbox, gt_class_id, gt_ma
                                           r['rois'], r['class_ids'], r['scores'], r['masks'])
 visualize.plot_precision_recall(AP, precisions, recalls)
 
+```
 
 In questo caso, il codice Python mostra come calcolare la Precision-Recall curve e come ottenere l'Average Precision per un dato valore di IoU. La funzione compute_ap calcola le metriche di precisione e recall per ciascun box di previsione, e il grafico finale viene creato utilizzando la funzione visualize.plot_precision_recall.
