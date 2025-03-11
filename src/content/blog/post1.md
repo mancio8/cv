@@ -201,13 +201,12 @@ L'uso dell'F-score è utile perché bilancia la precisione e il richiamo, fornen
 
 
 # Soluzione proposta
-\label{cap:soluzioneProposta}
-\lhead{\textbf{\rightmark}}
+
 
 .
 
 ## Architettura
-\label{sec:architettura}
+
 ![arc](path_to_image/arc.png)
 
 Come primo blocco dell'architettura si ha l'inserimento di un video in input, i video utilizzati fanno parte del Dataset CARLA Binary Single Pedestrian. Nel secondo blocco si effettua l'analisi del video tramite la CNN, nel nostro caso utilizzeremo Mask R-CNN. Un componente fondamentale di Mask R-CNN è la Region Proposal Network, la sua funzione è quella di esaminare la mappa delle caratteristiche e proporre regioni che potrebbero contenere oggetti (Region of Interest o RoI).  
@@ -222,7 +221,7 @@ L'output del ROI Align verrà passato ai diversi layer ed avremo:
 
 
 ## Dataset CARLA
-\label{sec:datasetCarla}
+
 
 Il Dataset di CARLA utilizzato è il Binary Single Pedestrian che contiene 400 video, ciascuno della durata di 30 secondi. I dati sono stati generati utilizzando il simulatore CARLA 0.9.13. I video rappresentano quadri di simulazione realistici che possono offrire molti vantaggi rispetto ai dati reali.
 
@@ -235,7 +234,7 @@ Quanto spesso si riesce a registrare un bambino che gioca con il cane accanto al
 ---
 
 ## MS COCO
-\label{sec:msCOCO}
+
 
 Il dataset MS COCO (Microsoft Common Objects in Context) è un dataset su larga scala per il rilevamento di oggetti, la segmentazione, il rilevamento di punti chiave e la creazione di didascalie. Il dataset è composto da 328K immagini.  
 La prima versione del dataset MS COCO è stata rilasciata nel 2014. Conteneva 164K immagini suddivise in training (83K), validation (41K) e test (41K).  
@@ -253,7 +252,7 @@ L’uso dei pesi pre-addestrati del dataset COCO può aiutare a migliorare le pr
 
 
 ## Object Detection
-\label{sec:objectDetection}
+
 
 Il rilevamento degli oggetti esegue la classificazione e la localizzazione anche di immagini con più oggetti di classi diverse. L'attività di localizzazione si ottiene disegnando dei riquadri intorno agli oggetti, generalmente definiti in termini di centro, larghezza e altezza.
 
@@ -265,7 +264,7 @@ All'interno di ciascun riquadro, l'oggetto viene anche classificato.
 ---
 
 ## Processi
-\label{sec:processi}
+
 
 Prima di arrivare al risultato finale con l'individuazione dell'oggetto, ci sono diversi processi che il software effettua. I processi che permettono l'individuazione dell'oggetto sono:
 
@@ -276,7 +275,7 @@ Prima di arrivare al risultato finale con l'individuazione dell'oggetto, ci sono
 5. Risultato finale
 
 ### Anchor Sorting
-\label{sec:anchor}
+
 
 ![Anchor sorting di un fotogramma estratto dai video analizzati](path_to_image/anchor2.png)  
 *Figura 2: Anchor sorting di un fotogramma estratto dai video analizzati*
@@ -291,7 +290,7 @@ Gli anchor “negativi” sono quelli che hanno una bassa IoU con tutti i ground
 La rifinitura del box dell’anchor è un processo in cui le coordinate degli anchor vengono leggermente modificate per adattarsi meglio all’oggetto di interesse.
 
 ### Bounding Box Refinement
-\label{sec:boundingB}
+
 
 La fase di "Bounding Box Refinement" in Mask R-CNN è una parte del processo di rilevazione degli oggetti ed è responsabile di perfezionare le posizioni delle bounding box inizialmente proposte dal modello per ciascuna istanza dell'oggetto rilevato. Questa fase è una delle caratteristiche chiave di Mask R-CNN ed è utile per migliorare la precisione della localizzazione degli oggetti.
 
@@ -299,7 +298,7 @@ La fase di "Bounding Box Refinement" in Mask R-CNN è una parte del processo di 
 *Figura 3: Bounding Box Refinement di un fotogramma estratto dai video analizzati*
 
 ### Mask Generation
-\label{sec:maskG}
+
 
 La fase di "mask generation" in un modello Mask R-CNN si riferisce al processo in cui il modello genera maschere binarie pixel-wise per ciascuna istanza dell'oggetto rilevato nell'immagine. Questa è una parte fondamentale del processo di "instance segmentation", che combina la rilevazione degli oggetti con la segmentazione pixel-wise.  
 La capacità di generare maschere pixel-wise per le istanze degli oggetti è ciò che distingue Mask R-CNN da altri modelli di rilevazione degli oggetti. Questo è particolarmente utile in applicazioni in cui è necessario distinguere e analizzare oggetti sovrapposti o vicini, come nell'ambito della visione artificiale avanzata e dell'analisi delle immagini mediche.
@@ -310,7 +309,7 @@ La capacità di generare maschere pixel-wise per le istanze degli oggetti è ci�
 ---
 
 ### Layer activations
-\label{sec:layer}
+
 
 ![Layer activations di un fotogramma estratto dai video analizzati](path_to_image/layer.png)  
 *Figura 5: Layer activations di un fotogramma estratto dai video analizzati*
@@ -320,7 +319,7 @@ Le attivazioni di un layer in Mask R-CNN rappresentano le informazioni estratte 
 ---
 
 ### Risultato finale
-\label{sec:risultatoFinale}
+
 
 Alla fine, il modello fornisce il risultato finale che comprende le seguenti informazioni per ciascuna regione proposta:
 
@@ -332,8 +331,7 @@ Alla fine, il modello fornisce il risultato finale che comprende le seguenti inf
 *Figura 6: Risultato finale di un fotogramma estratto dai video analizzati*
 
 ## Risultati ed analisi
-\label{cap:risultatieAnalisi}
-\lhead{\textbf{\rightmark}}
+
 
 ### Introduzione
 
@@ -346,7 +344,7 @@ L'obiettivo di questa valutazione è valutare la capacità del nostro approccio 
 Questo capitolo è organizzato come segue: introduciamo innanzitutto in dettaglio i due set di dati utilizzati per la valutazione, sottolineando l’importanza di scenari diversi e stimolanti. Descriviamo quindi la nostra configurazione sperimentale e le metriche di valutazione impiegate per quantificare le prestazioni dell'approccio. Infine, presentiamo e discutiamo i risultati della valutazione, traendo conclusioni sui punti di forza e sui limiti dell’approccio di segmentazione delle istanze e sulle sue potenziali implicazioni per le applicazioni del mondo reale nella guida autonoma ed oltre. L'obiettivo di questa valutazione è fornire preziose informazioni sullo stato dell'arte della segmentazione delle istanze per scenari dinamici e reali.
 
 ### Creazione Dataset
-\label{sec:creazioneDataset}
+
 
 I dataset contengono ognuno 80 frame per ogni video analizzato, sono stati analizzati 4 video per Dataset, il primo dataset contiene frame di eventi quotidiani ed il secondo contiene dei frame dove il software ha avuto delle difficoltà nel riconoscimento dell'oggetto, come il passaggio delle persone dietro altri oggetti.  
 Le annotazioni di verità sono state create tramite VIA (VGG Image Annotator).  
@@ -479,7 +477,7 @@ I dataset considerati per valutare le performance di ciascun modello sono il **v
 
 
 ## Calcolo Precision-Recall Curve
-\label{sec:precisionRC}
+
 
 Nella figura sottostante è mostrato il codice che permette il plot della **Precision-Recall curve**.  
 L'**Average Precision** è stata calcolata con il valore di **IoU** impostato al 50%. Nel primo dataset è possibile vedere che si ha l'**Average Precision** uguale a 0.667, mentre nel secondo dataset, composto da video con situazioni complesse per l'identificazione degli oggetti, si ha l'**Average Precision** uguale a 0.333.
@@ -532,7 +530,7 @@ visualize.plot_precision_recall(AP, precisions, recalls)
 In questo caso, il codice Python mostra come calcolare la Precision-Recall curve e come ottenere l'Average Precision per un dato valore di IoU. La funzione compute_ap calcola le metriche di precisione e recall per ciascun box di previsione, e il grafico finale viene creato utilizzando la funzione visualize.plot_precision_recall.
 
 ## Confusion Matrix
-\label{sec:ConfusionM}
+
 
 Per la **confusion matrix** è stata utilizzata la funzione **multilabel confusion matrix** della libreria `scikit-learn`, che calcola una matrice di confusione per ogni classe o campione. Questa funzione restituisce una matrice di confusione 2x2 corrispondente a ciascun output in input.
 
