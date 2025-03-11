@@ -1,6 +1,6 @@
 ---
 title: "Luci di Stranger Things con WS2811 e Arduino Nano"
-description: "Ricrea le iconiche luci della serie con LED WS2811 e Arduino Nano! ✨ Controlla ogni pixel per illuminare lettere e creare messaggi personalizzati, proprio come nella serie. 🔴🟢🔵 Scopri il progetto!
+description: "Ricrea le iconiche luci della serie con LED WS2811 e Arduino Nano! ✨ Controlla ogni pixel per illuminare lettere e creare messaggi personalizzati, proprio come nella serie. 🔴🟢🔵 Scopri il progetto!"
 pubDate: "Mar 11 2025"
 heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1741706481/Arci/Progetto_senza_titolo_1_ybpdhq.png"
 badge: "Arduino"
