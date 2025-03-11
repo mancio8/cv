@@ -530,3 +530,231 @@ visualize.plot_precision_recall(AP, precisions, recalls)
 ```
 
 In questo caso, il codice Python mostra come calcolare la Precision-Recall curve e come ottenere l'Average Precision per un dato valore di IoU. La funzione compute_ap calcola le metriche di precisione e recall per ciascun box di previsione, e il grafico finale viene creato utilizzando la funzione visualize.plot_precision_recall.
+
+## Confusion Matrix
+\label{sec:ConfusionM}
+
+Per la **confusion matrix** è stata utilizzata la funzione **multilabel confusion matrix** della libreria `scikit-learn`, che calcola una matrice di confusione per ogni classe o campione. Questa funzione restituisce una matrice di confusione 2x2 corrispondente a ciascun output in input.
+
+```python
+from sklearn.metrics import multilabel_confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
+# Calcola la confusion matrix per ogni classe
+confusion_matrices = multilabel_confusion_matrix(gt_tot, pred_tot)
+
+# Visualizza ogni confusion matrix
+for confusion_matrix in confusion_matrices:
+    disp = ConfusionMatrixDisplay(confusion_matrix, display_labels=gt_tot)
+    disp.plot(include_values=True, cmap="ocean_r", ax=None, xticks_rotation="vertical")
+    plt.show()
+
+# Dataset di esempio
+datasets = {
+    'Dataset 1': {
+        "class Bg" : np.array([[269, 41], [42, 0]]),
+        "class Person" : np.array([[235, 0], [1, 116]]),
+        "class Car" : np.array([[117, 42], [40, 153]]) 
+    },
+    'Dataset 2': {
+        "class Bg" : np.array([[32, 67], [40, 0]]),
+        "class Traffic_light" : np.array([[124, 0], [15, 0]]),
+        "class Car" : np.array([[109, 0], [30, 0]]),
+        "class Person" : np.array([[45, 40], [22, 30]])
+    }
+}
+print(datasets)
+
+# Calcola la Precision, Recall e F1-Score per ogni classe
+for (l,d) in datasets.items():
+    print(l)
+    p_avg=[]
+    r_avg=[]
+    f_avg=[]
+    for elem in d.keys():
+        print("\t"+elem)
+        cm = d.get(elem)
+        tp = cm[0][0] + cm[1][1]
+        tpfp = tp + cm[0][1]
+        tpfn = tp + cm[1][0]
+        prec = tp / tpfp
+        p_avg.append(prec)
+        rec = tp / tpfn
+        r_avg.append(rec)
+        f1score = 2*prec*rec/(prec+rec)
+        f_avg.append(f1score)
+        print ('\tPrecision: {}\n\tRecall: {}\n\tF1-score:{}'.format(prec, rec, f1score))
+        print(50*'-')
+    print("Precision average:", np.average(p_avg))
+    print("Recall average:", np.average(r_avg))
+    print("F1-Score average:", np.average(f_avg))
+    print()
+```
+
+### Immagini delle Precision-Recall Curve
+
+Di seguito sono riportate le curve Precision-Recall per i due dataset:
+
+![Precision Recall curve ed AP del primo dataset](figure/PrecisionRecallFinal.png)
+
+*Figura 1: Precision Recall curve ed AP del primo dataset*
+
+![Precision Recall curve ed AP del secondo dataset](mAp)
+
+*Figura 2: Precision Recall curve ed AP del secondo dataset*
+
+
+
+Questo codice Python calcola la **precision**, **recall**, e **F1-score** per ogni classe nei due dataset, quindi visualizza queste metriche e le **confusion matrices**. Viene anche calcolata la media di queste metriche per ogni dataset, permettendo una valutazione complessiva delle performance del modello per ciascun set di dati.
+
+In aggiunta, puoi usare le immagini delle **Precision-Recall curve** per rappresentare visivamente i risultati ottenuti per i due dataset.
+
+
+- Per la label **BG** del primo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix BG del primo dataset](figure/bgdt1.png)
+
+*Figura 1: Confusion Matrix BG del primo dataset*
+
+Per la label BG si ha:
+1. Precision: 0.867
+2. Recall: 0.864
+3. F1-score: 0.866
+
+---
+
+- Per la label **Person** del primo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix Person del primo dataset](figure/persondt1.png)
+
+*Figura 2: Confusion Matrix Person del primo dataset*
+
+Per la label Person si ha:
+1. Precision: 1.0
+2. Recall: 0.997
+3. F1-score: 0.998
+
+---
+
+- Per la label **Car** del primo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix Car del primo dataset](figure/cardt1.png)
+
+*Figura 3: Confusion Matrix Car del primo dataset*
+
+Per la label Car si ha:
+1. Precision: 0.865
+2. Recall: 0.870
+3. F1-score: 0.868
+
+---
+
+Adesso a seguire ci saranno le confusion matrix del **secondo dataset**.
+
+1. Per la label **BG** del secondo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix BG del secondo dataset](figure/dataset2multi4.png)
+
+*Figura 4: Confusion Matrix BG del secondo dataset*
+
+Per la label BG si ha:
+1. Precision: 0.323
+2. Recall: 0.444
+3. F1-score: 0.374
+
+---
+
+2. Per la label **traffic-light** del secondo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix traffic-light del secondo dataset](figure/traffic_lightdt2.png)
+
+*Figura 5: Confusion Matrix traffic-light del secondo dataset*
+
+Per la label traffic-light si ha:
+1. Precision: 1
+2. Recall: 0.892
+3. F1-score: 0.942
+
+
+
+- Per la label **Car** del secondo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix Car del secondo dataset](figure/datasetmulti2.png)
+
+*Figura 6: Confusion Matrix Car del secondo dataset*
+
+Per la label Car si ha:
+1. Precision: 1
+2. Recall: 0.784
+3. F1-score: 0.879
+
+---
+
+- Per la label **Person** del secondo dataset la confusion matrix è la seguente:
+
+![Confusion Matrix Person del secondo dataset](figure/dataset2multi.png)
+
+*Figura 7: Confusion Matrix Person del secondo dataset*
+
+Per la label Person si ha:
+1. Precision: 0.652
+2. Recall: 0.773
+3. F1-score: 0.707
+
+---
+
+## Calcolo F-score
+Nel codice sottostante viene mostrato il metodo per il calcolo del F-score, della mean Average Precision (mAP) e della mean Average Recall (mAR).
+
+```python
+def evaluate_model2(dataset, model, cfg):
+        APs = list();
+        ARs = list();
+        F1_scores = list();
+        for image_id in dataset.image_ids:
+            image, image_meta, gt_class_id, gt_bbox, gt_mask = load_image_gt(dataset, cfg, image_id)
+            scaled_image = mold_image(image, cfg)
+            sample = expand_dims(scaled_image, 0)
+            yhat = model.detect(sample, verbose=0)
+            r = yhat[0]
+            AP, precisions, recalls, overlaps = compute_ap(gt_bbox, gt_class_id, gt_mask, r["rois"], r["class_ids"], r["scores"], r['masks'])
+            AR, positive_ids = compute_recall(r["rois"], gt_bbox, iou=0.2)
+            ARs.append(AR)
+            F1_scores.append((2* (np.mean(precisions) * np.mean(recalls)))/(np.mean(precisions) + np.mean(recalls)))
+            APs.append(AP)
+
+        mAP = np.mean(APs)
+        mAR = np.mean(ARs)
+        return mAP, mAR, F1_scores
+
+
+mAP, mAR, F1_scores= evaluate_model2(dataset, model, config)
+print("mAP: %.3f" % mAP)
+print("mAR: %.3f" % mAR)
+print("first way calculate f1-score: ", np.mean(F1_scores))
+
+F1_score_2 = (2 * mAP * mAR)/(mAP + mAR)
+print('second way calculate f1-score_2: ', F1_score_2)
+```
+
+Per il primo dataset i risultati sono stati:
+
+- mAP: 0.554
+- mAR: 0.699
+- f-score: 0.6182087488839708
+
+
+Invece per il secondo dataset sono stati:
+
+- mAP: 0.307
+- mAR: 0.364
+- f-score: 0.3332826754404349
+
+## Conclusione
+Nel corso di questa tesi, abbiamo condotto un'analisi approfondita di due dataset distinti. Il primo dataset, che abbiamo definito come 'facile', ha presentato caratteristiche più semplici e meno variabili. Il secondo dataset, definito come 'complesso', era più complesso e presentava una maggiore variabilità nei dati.
+
+Attraverso l'uso di vari modelli di machine learning, abbiamo calcolato l'F-score per entrambi i dataset. Come previsto, il dataset 'facile' ha mostrato un F-score significativamente più alto rispetto al dataset 'complesso'. Questo suggerisce che il modello ha avuto meno difficoltà a fare previsioni accurate sul dataset 'facile'.
+
+Tuttavia, nonostante la differenza negli F-score, entrambi i modelli hanno fornito intuizioni preziose. L'analisi del dataset 'complesso' ha rivelato aree in cui il modello potrebbe essere migliorato, fornendo una direzione preziosa per la ricerca futura.
+
+In conclusione, questa tesi ha dimostrato l'importanza dell'analisi dei dati e della valutazione del modello nel campo del machine learning. Nonostante le sfide presentate dal dataset 'complesso', i risultati ottenuti offrono un punto di partenza promettente per ulteriori miglioramenti e ricerche.
