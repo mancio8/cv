@@ -202,96 +202,175 @@ void flicker() {                          //-m9-FLICKER EFFECT
 
 ## Come funziona?
 
-### Definizione dei parametri principali
+# Spiegazione del codice FastLED
 
-Qui si impostano i parametri principali:
+## Introduzione
+Questo codice utilizza la libreria [FastLED](https://github.com/FastLED/FastLED) per controllare una striscia di LED WS2811 con effetti di illuminazione basati su lettere e parole.
 
-- **NUM_LEDS** → Numero di LED collegati (in questo caso, 50).
-- **DATA_PIN** → Il pin digitale di Arduino a cui è collegata la striscia LED.
-- **BRIGHTNESS** → Imposta la luminosità massima dei LED (255 = massimo).
+---
 
+## Configurazione iniziale
 ```cpp
-#define NUM_LEDS 50  
-#define DATA_PIN 11  
-#define BRIGHTNESS 255
-```
-
-### Dichiarazione della striscia LED
-
-Si crea un array per memorizzare i colori di ogni LED:
-
-```cpp
+#include "FastLED.h"
+#define NUM_LEDS 50
+#define DATA_PIN    11
+#define BRIGHTNESS  255
 CRGB leds[NUM_LEDS];
 ```
+Definiamo il numero di LED nella striscia (`NUM_LEDS`), il pin dati (`DATA_PIN`) e la luminosità massima (`BRIGHTNESS`). L'array `leds` contiene lo stato di ogni LED.
 
-### Mappatura delle lettere e dei colori
+---
 
-Il codice usa due stringhe:
-
-   - letterIndex → Indica la posizione di ogni lettera sulla striscia LED.
-   - colorLetterIndex → Contiene l'alfabeto dalla A alla Z.
-
-Poi definisce un array di colori per ogni lettera:
-
+## Mappatura lettere e colori
 ```cpp
-uint32_t colorIndex[26] = {  
-    0xFFF0C4, // A (bianco caldo)  
-    0x0000FF, // B (blu)  
-    0xFF00FF, // C (magenta)  
-    0x00FFB9, // D (ciano)  
-    0xFCEE21, // F (giallo)  
-    0xFF0000  // G (rosso)  
-    // ... altri colori per tutte le lettere  
-};
-
+String letterIndex = "---IHGFEDCBA---------JKLMNOPQRST---------ZYXWVU--";
+String colorLetterIndex = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 ```
-ogni lettera dell'alfabeto ha un colore specifico.
+`letterIndex` rappresenta la disposizione fisica delle lettere sui LED, mentre `colorLetterIndex` è l'alfabeto per mappare i colori.
 
-### Configurazione iniziale di Arduino
+Definiamo un array di colori associati a ciascuna lettera:
+```cpp
+uint32_t colorIndex[26] = {
+  0xFFF0C4, 0x0000FF, 0xFF00FF, 0x00FFB9, 0x0000FF, 0xFCEE21, 0xFF0000, 
+  0x00FFB9, 0x00FFB9, 0xFF00FF, 0x0000FF, 0x00FFB9, 0xFCEE21, 0xFF0000, 
+  0xFF00FF, 0x00FFB9, 0xFF00FF, 0x00FFB9, 0xFFF0C4, 0xFCEE21, 0x0000FF, 
+  0xFF0000, 0x00FFB9, 0xFCEE21, 0xFF00FF, 0xFF0000
+};
+```
+Questo array assegna un colore specifico a ogni lettera.
 
-Nel setup(), si inizializza la striscia LED e si imposta la luminosità:
+---
 
-
+## Setup
 ```cpp
 void setup() {
-    FastLED.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);
-    FastLED.setBrightness(BRIGHTNESS);
+  delay(3000);
+  FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
 }
 ```
+Inizializziamo la libreria FastLED e impostiamo la luminosità.
 
-Questo dice ad Arduino che i LED usano il protocollo WS2811 e che i colori sono nel formato GRB (verde, rosso, blu).
+---
 
-### Loop principale: Illuminazione dei messaggi
-
-Il codice accende le lettere secondo un messaggio predefinito, per esempio "RUN":
-
-```cpp
-void mostraMessaggio(String messaggio) {
-    for (int i = 0; i < messaggio.length(); i++) {
-        char lettera = messaggio[i];
-        int pos = colorLetterIndex.indexOf(lettera); // Trova la posizione della lettera
-        if (pos != -1) {
-            leds[pos] = colorIndex[pos]; // Assegna il colore alla lettera
-        }
-    }
-    FastLED.show();
-    delay(1000); // Tempo di visualizzazione
-}
-```
-Il codice cerca ogni lettera del messaggio nella mappatura e accende il LED corrispondente con il colore assegnato.
-
-### Loop infinito per far lampeggiare le lettere
-
+## Loop principale
 ```cpp
 void loop() {
-    mostraMessaggio("RUN");
-    delay(2000);
+  turnOnAll();
+  delay(2000);
+  fill_solid( leds, NUM_LEDS, CRGB::Black);
+  writeWord("MASCHERARCI", 1000, 300);
+  delay(3000);
+  turnOnAll();
+  flickerLeds(100);
+  allToFullBright();
+  turnOnAll();
+  delay(2000);
 }
 ```
+Nel loop principale:
+1. Accendiamo tutti i LED.
+2. Spegniamo i LED e scriviamo la parola "MASCHERARCI" con effetti.
+3. Facciamo lampeggiare i LED per 100 volte.
+4. Portiamo tutti i LED alla massima luminosità.
+
+---
+
+## Funzione `turnOnAll()`
+```cpp
+void turnOnAll() {
+  for (int i = 0; i < letterIndex.length(); i++) {
+    if (letterIndex[i] != '-') {
+      turnOnLetter(String(letterIndex[i]));
+    }
+  }
+  FastLED.show();
+}
+```
+Accende tutti i LED associati alle lettere definite in `letterIndex`.
+
+---
+
+## Funzione `turnOnLetter(String theLetter)`
+```cpp
+void turnOnLetter(String theLetter) {
+  int lightIndex = letterIndex.indexOf(theLetter);
+  int colorIndexValue = colorLetterIndex.indexOf(theLetter);
+  uint32_t colorValue = colorIndex[colorIndexValue];
+  leds[lightIndex] = colorValue;
+}
+```
+Accende il LED corrispondente alla lettera specificata con il colore appropriato.
+
+---
+
+## Scrittura di parole sui LED
+```cpp
+void writeWord(String theword, int letterDuration, int letterSpacing) {
+  for (int i = 0; i < theword.length(); i++) {
+    displayLetter(String(theword[i]), letterDuration);
+    delay(letterSpacing);
+  }
+}
+```
+Mostra una parola lettera per lettera con un ritardo tra ciascuna lettera.
+
+```cpp
+void displayLetter(String theLetter, int letterDuration) {
+  int lightIndex = letterIndex.indexOf(theLetter);
+  int colorIndexValue = colorLetterIndex.indexOf(theLetter);
+  uint32_t colorValue = colorIndex[colorIndexValue];
+  lightLED(lightIndex, colorValue, letterDuration);
+}
+```
+Accende un singolo LED per il tempo specificato.
+
+```cpp
+void lightLED(int ledIndex, uint32_t colorValue, int duration) {
+  leds[ledIndex] = colorValue;
+  FastLED.show();
+  delay(duration);
+  leds[ledIndex] = CRGB::Black;
+  FastLED.show();
+}
+```
+Gestisce l'accensione e lo spegnimento di un LED dopo un intervallo di tempo.
+
+---
+
+## Effetti di flickering
+```cpp
+void flickerLeds(int numTimes) {
+  for (int i = 0; i < numTimes; i++) {
+    flicker();
+  }
+}
+```
+Chiama la funzione `flicker()` più volte per creare un effetto lampeggiante.
+
+```cpp
+void flicker() {
+  int random_bright = random(0, 255);
+  int random_delay = random(10, 100);
+  int randomFullLight = random(0, 2);
+
+  for (int i = 0; i < letterIndex.length(); i++) {
+    if (letterIndex[i] != '-') {
+      if (randomFullLight == 0) {
+        leds[i].maximizeBrightness();
+      }
+      leds[i].fadeLightBy(random_bright);
+    }
+  }
+  FastLED.show();
+  delay(random_delay);
+}
+```
+Il flickering modifica casualmente la luminosità dei LED per un effetto realistico.
+
+---
 
 
-
-In questo caso, la parola "RUN" si illumina ogni 2 secondi, simulando l'effetto del messaggio di Stranger Things.
 
 ## Conclusione
 
