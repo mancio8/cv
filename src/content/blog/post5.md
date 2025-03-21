@@ -62,6 +62,34 @@ sudo certbot certonly --standalone -d tuodominio.com
 ```
 Dopo aver ottenuto il certificato, configuralo con un reverse proxy come Nginx o Caddy.
 
+### Configurare un disco esterno per l'archiviazione
+Se vuoi usare un disco esterno per i tuoi file e container Docker:
+1. Collega il disco al tuo OrangePi.
+2. Verifica che venga riconosciuto:
+   ```sh
+   lsblk
+   ```
+3. Monta il disco (supponiamo sia `/dev/sda1`):
+   ```sh
+   sudo mkdir /mnt/disco
+   sudo mount /dev/sda1 /mnt/disco
+   ```
+4. Per montarlo automaticamente all'avvio, aggiungi una riga al file `/etc/fstab`:
+   ```sh
+   /dev/sda1  /mnt/disco  ext4  defaults  0  2
+   ```
+
+### Backup automatico delle configurazioni
+Per evitare la perdita di dati, puoi impostare un backup automatico della cartella di CasaOS:
+```sh
+mkdir -p /mnt/disco/backup_casaos
+rsync -av --delete /etc/casaos /mnt/disco/backup_casaos/
+```
+Puoi automatizzare il backup con cron aggiungendo questa riga con `crontab -e`:
+```sh
+0 3 * * * rsync -av --delete /etc/casaos /mnt/disco/backup_casaos/
+```
+
 ## 5. Installazione di Docker e container personalizzati
 CasaOS utilizza Docker per gestire le app. Puoi installare manualmente un container con:
 ```sh
@@ -69,5 +97,19 @@ docker run -d --name nginx -p 8080:80 nginx
 ```
 Oppure puoi usare l'interfaccia web per aggiungere e gestire container facilmente.
 
+### Esempio: Installare un server Nextcloud
+Se vuoi ospitare un'istanza di Nextcloud per la gestione dei file:
+```sh
+docker run -d --name nextcloud -p 8081:80 -v /mnt/disco/nextcloud:/var/www/html nextcloud
+```
+Ora Nextcloud sarà disponibile su `http://IP_DEL_TUO_ORANGEPI:8081`.
+
 ## Conclusione
 CasaOS è un'ottima soluzione per trasformare il tuo OrangePi in un server domestico. Con pochi passaggi puoi installarlo, configurarlo e iniziare a gestire i tuoi servizi personali con una UI semplice e intuitiva.
+
+### Possibili espansioni
+- Configurare un server VPN (WireGuard o OpenVPN) per accedere ai tuoi servizi in sicurezza.
+- Integrare Home Assistant per la domotica.
+- Usare Pi-hole come DNS adblocker per la rete di casa.
+
+Con queste personalizzazioni, il tuo OrangePi diventerà un vero e proprio hub per la gestione dei tuoi servizi digitali! 🚀
