@@ -2,7 +2,7 @@
 title: "Installazione e Configurazione di CasaOS su OrangePi"
 description: "CasaOS è un sistema operativo leggero progettato per l'hosting di servizi personali su dispositivi come Raspberry Pi, OrangePi e mini-PC. In questa guida vedremo come installarlo e configurarlo su un OrangePi."
 pubDate: "Mar 21 2025"
-heroImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9T_cQQWJD5VTM5RX7qDrakwbbqsoGOrM3FA&s"
+heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1743086977/Cv/casaos_zizfz6.png"
 badge: "Server"
 ---
 # Installazione e Configurazione di CasaOS su OrangePi

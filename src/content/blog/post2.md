@@ -2,7 +2,7 @@
 title: "Sito Web Dinamico"
 description: "sito web dinamico arciguardia.online"
 pubDate: "Sep 11 2024"
-heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1720615023/2024-07-10_14-35_zr5xqc.png"
+heroImage: "hhttps://res.cloudinary.com/dqh1pnrdx/image/upload/v1743086976/Cv/Arci_Guardia_ph7ypc.png"
 ---
 
 ## Sito Web Dinamico per ArciGuardia
