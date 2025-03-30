@@ -2,11 +2,13 @@
 import { parseStringPromise } from "xml2js";
 import HorizontalCard from "../components/HorizontalCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "@astrojs/image/components";
 
 const RSS_FEED = "https://www.spreaker.com/show/4070003/episodes/feed"; // Sostituisci con il feed corretto
 const response = await fetch(RSS_FEED);
 const text = await response.text();
 const data = await parseStringPromise(text);
+
 
 // Estrarre episodi dall'RSS
 const episodes = data.rss.channel[0].item.map((ep) => ({
@@ -16,6 +18,7 @@ const episodes = data.rss.channel[0].item.map((ep) => ({
   description: ep.description[0],
   imageUrl: ep["itunes:image"][0].$.href, // Estrarre l'immagine per ogni episodio
 }));
+
 
 // Estrarre l'immagine del podcast (facoltativo)
 const podcastImage = data.rss.channel[0].image[0].url[0];
@@ -47,12 +50,7 @@ const podcastImage = data.rss.channel[0].image[0].url[0];
 
   <h1 class="text-3xl font-bold text-center mb-6">🎙 Podcast</h1>
 
-  <select class="select select-ghost" id="rssfeed">
-    <option selected value="">Haxking</option>
-    <option>Inter</option>
-    <option>Poppins</option>
-    <option>Raleway</option>
-  </select>
+ 
 
 
 
@@ -61,17 +59,33 @@ const podcastImage = data.rss.channel[0].image[0].url[0];
     <img src={podcastImage} alt="Podcast Image" class="rounded-lg shadow-lg w-1/3 max-w-xs" />
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
+  <div class="rounded-lg bg-base-100 ">
     <!-- Check se ci sono episodi -->
     {episodes.length > 0 ? (
       episodes.map((ep, index) => (
-          <div class="card bg-base-100 shadow-xl p-4 rounded-lg hover:shadow-2xl transition-all duration-300">
-          <!-- Immagine specifica per ogni episodio -->
-          <img src={ep.imageUrl} alt={`Immagine per ${ep.title}`} class="rounded-lg shadow-md mb-4" />
-          <h2 class="text-xl font-semibold">{ep.title}</h2>
-          <p class="text-gray-500 text-sm">{ep.date}</p>
-          <!-- Descrizione con contenuto HTML sicuro -->
-          <p class="text-sm mt-2" dangerouslySetInnerHTML={{ __html: ep.description }}></p>
+      
+    <div class="hero-content flex-col md:flex-row">
+          {
+              (
+              <Image
+                src={ep.imageUrl} class="rounded-lg shadow-md mb-4"
+                aspectRatio="16:9"
+                width={750}
+                format="webp"
+                alt={`Immagine per ${ep.title}`} 
+                class="max-w-full md:max-w-[13rem] rounded-lg"
+              />
+            )
+          }
+      
+      <div class="grow w-full">
+        <h1 class="text-xl font-bold">
+          {ep.title}
+          
+        </h1>
+        <p class="text-gray-500 text-sm">{ep.date}</p>
+        <p class="py-1 text-1xl line-clamp-4"set:html={ep.description}></p>
+        
           <div id={`audio-container-${index}`} class="mt-4">
             <button 
               class="btn btn-primary w-full"
@@ -80,7 +94,11 @@ const podcastImage = data.rss.channel[0].image[0].url[0];
               Play
             </button>
           </div>
-        </div>
+    
+      </div>
+    </div>
+  
+        
       ))
     ) : (
       <p class="col-span-full text-center">Nessun episodio disponibile.</p>
