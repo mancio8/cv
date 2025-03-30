@@ -47,6 +47,15 @@ const podcastImage = data.rss.channel[0].image[0].url[0];
 
   <h1 class="text-3xl font-bold text-center mb-6">🎙 Podcast</h1>
 
+  <select class="select select-ghost" id="rssfeed">
+    <option selected value="">Haxking</option>
+    <option>Inter</option>
+    <option>Poppins</option>
+    <option>Raleway</option>
+  </select>
+
+
+
   <!-- Mostra l'immagine del podcast generale -->
   <div class="flex justify-center mb-6">
     <img src={podcastImage} alt="Podcast Image" class="rounded-lg shadow-lg w-1/3 max-w-xs" />
