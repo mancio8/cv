@@ -1,0 +1,80 @@
+---
+import { parseStringPromise } from "xml2js";
+import HorizontalCard from "../components/HorizontalCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const RSS_FEED = "https://www.spreaker.com/show/4070003/episodes/feed"; // Sostituisci con il feed corretto
+const response = await fetch(RSS_FEED);
+const text = await response.text();
+const data = await parseStringPromise(text);
+
+// Estrarre episodi dall'RSS
+const episodes = data.rss.channel[0].item.map((ep) => ({
+  title: ep.title[0],
+  date: new Date(ep.pubDate[0]).toLocaleDateString(),
+  audioUrl: ep.enclosure[0].$.url,
+  description: ep.description[0],
+  imageUrl: ep["itunes:image"][0].$.href, // Estrarre l'immagine per ogni episodio
+}));
+
+// Estrarre l'immagine del podcast (facoltativo)
+const podcastImage = data.rss.channel[0].image[0].url[0];
+---
+
+
+
+<BaseLayout sideBarActiveItemID="home">
+  
+
+  <script>
+    // Funzione per caricare l'audio quando il pulsante "Play" viene cliccato
+    window.loadAudio = function loadAudio(button, audioUrl) {
+      const container = button.parentElement;
+      // Nascondi il pulsante
+      button.style.display = "none";
+      // Crea l'elemento audio con preload impostato sui metadati
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.preload = "metadata";
+      audio.className = "mt-2 w-full";
+      const source = document.createElement("source");
+      source.src = audioUrl;
+      source.type = "audio/mpeg";
+      audio.appendChild(source);
+      container.appendChild(audio);
+    };
+  </script>
+
+  <h1 class="text-3xl font-bold text-center mb-6">🎙 Podcast</h1>
+
+  <!-- Mostra l'immagine del podcast generale -->
+  <div class="flex justify-center mb-6">
+    <img src={podcastImage} alt="Podcast Image" class="rounded-lg shadow-lg w-1/3 max-w-xs" />
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
+    <!-- Check se ci sono episodi -->
+    {episodes.length > 0 ? (
+      episodes.map((ep, index) => (
+          <div class="card bg-base-100 shadow-xl p-4 rounded-lg hover:shadow-2xl transition-all duration-300">
+          <!-- Immagine specifica per ogni episodio -->
+          <img src={ep.imageUrl} alt={`Immagine per ${ep.title}`} class="rounded-lg shadow-md mb-4" />
+          <h2 class="text-xl font-semibold">{ep.title}</h2>
+          <p class="text-gray-500 text-sm">{ep.date}</p>
+          <!-- Descrizione con contenuto HTML sicuro -->
+          <p class="text-sm mt-2" dangerouslySetInnerHTML={{ __html: ep.description }}></p>
+          <div id={`audio-container-${index}`} class="mt-4">
+            <button 
+              class="btn btn-primary w-full"
+              onclick={`loadAudio(this, '${ep.audioUrl}')`}
+            >
+              Play
+            </button>
+          </div>
+        </div>
+      ))
+    ) : (
+      <p class="col-span-full text-center">Nessun episodio disponibile.</p>
+    )}
+  </div>
+</BaseLayout>

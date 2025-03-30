@@ -21,7 +21,8 @@
     "daisyui": "^3.1.7",
     "dayjs": "^1.11.9",
     "qrcode": "^1.5.4",
-    "sharp": "^0.32.1"
+    "sharp": "^0.32.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9"
