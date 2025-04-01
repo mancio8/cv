@@ -1,6 +1,6 @@
 ---
 title: "Creazione di una Pagina per Podcast con DaisyUI e Astro"
-description: "In questo progetto, ho sviluppato una pagina per la visualizzazione e l'ascolto di podcast, utilizzando **Astro** e **DaisyUI**. L'idea di base era creare una soluzione automatica per caricare i podcast da un feed RSS e generare dinamicamente delle card per ogni episodio, consentendo agli utenti di ascoltarli facilmente."
+description: "In questo progetto, ho sviluppato una pagina per la visualizzazione e l'ascolto di podcast, utilizzando Astro e DaisyUI. L'idea di base era creare una soluzione automatica per caricare i podcast da un feed RSS e generare dinamicamente delle card per ogni episodio, consentendo agli utenti di ascoltarli facilmente."
 pubDate: "Mar 30 2025"
 heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1743363800/Cv/podcast_rhzwas.png"
 badge: "Astro"
