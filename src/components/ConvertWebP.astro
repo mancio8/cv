@@ -1,0 +1,62 @@
+<!-- image-converter.html or as part of your Astro component -->
+<input class="file-input file-input-accent" type="file" id="imageInput" accept="image/*" />
+<button class="btn btn-outline btn-primary" id="downloadBtn" disabled>Scarica WebP</button>
+<img id="preview" style="max-width: 300px; margin-top: 1rem;" />
+
+
+<script>
+    // image-converter.ts
+const input = document.getElementById("imageInput") as HTMLInputElement;
+const downloadBtn = document.getElementById("downloadBtn") as HTMLButtonElement;
+const preview = document.getElementById("preview") as HTMLImageElement;
+
+let webpBlob: Blob | null = null;
+
+input.addEventListener("change", async () => {
+  const file = input.files?.[0];
+  if (!file) return;
+
+  const img = new Image();
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    if (typeof reader.result === "string") {
+      img.src = reader.result;
+    }
+  };
+
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.drawImage(img, 0, 0);
+
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) return;
+        webpBlob = blob;
+        downloadBtn.disabled = false;
+        preview.src = URL.createObjectURL(blob);
+      },
+      "image/webp",
+      0.8 // qualità tra 0 e 1
+    );
+  };
+
+  reader.readAsDataURL(file);
+});
+
+downloadBtn.addEventListener("click", () => {
+  if (!webpBlob) return;
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(webpBlob);
+  a.download = "converted.webp";
+  a.click();
+});
+
+</script>
