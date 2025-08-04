@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const links = [
+  { label: "GitHub", url: "https://github.com/mancio8", icon: "🐙" },
+  { label: "Portfolio", url: "/cv", icon: "🌐" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/vincenzo-mancinelli", icon: "💼" },
+  { label: "Articoli", url: "/blog", icon: "✍️" },
+];
+---
+<BaseLayout sideBarActiveItemID="home">
+
+
+    <div class="text-center mt-8">
+      
+      <h1 class="text-2xl font-bold">Vincenzo Mancinelli</h1>
+      <p class="text-sm text-gray-500">Developer </p>
+    </div>
+
+    <div class="mt-6 w-full max-w-xs space-y-3">
+      {links.map((link) => (
+        <a href={link.url} class="btn btn-primary w-full shadow-md hover:scale-105 transition">
+          {link.icon} {link.label}
+        </a>
+      ))}
+    </div>
+</BaseLayout>
+
+
