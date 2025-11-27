@@ -11,12 +11,15 @@ const data = await parseStringPromise(text);
 
 
 // Estrarre episodi dall'RSS
-const episodes = data.rss.channel[0].item.map((ep) => ({
-  title: ep.title[0],
-  date: new Date(ep.pubDate[0]).toLocaleDateString(),
-  audioUrl: ep.enclosure[0].$.url,
-  description: ep.description[0],
-  imageUrl: ep["itunes:image"][0].$.href, // Estrarre l'immagine per ogni episodio
+const channel = data?.rss?.channel?.[0];
+const items = channel?.item || []; // se non ci sono item, array vuoto
+
+const episodes = items.map((ep) => ({
+  title: ep.title?.[0] || "Titolo mancante",
+  date: ep.pubDate ? new Date(ep.pubDate[0]).toLocaleDateString() : "",
+  audioUrl: ep.enclosure?.[0]?.$.url || "",
+  description: ep.description?.[0] || "",
+  imageUrl: ep["itunes:image"]?.[0]?.$.href || "/default-podcast-image.png", // fallback immagine
 }));
 
 
