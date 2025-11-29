@@ -1,60 +1,115 @@
 ---
 title: "Arci Quiz: il backend dietro il quiz interattivo"
-description: "In questo progetto ho lavorato sul backend di un quiz interattivo a squadre, utilizzando Django containerizzato con Docker, PostgreSQL e Redis, implementando autenticazione sicura con Authentik e integrando pulsanti fisici tramite ESP32 con WebSocket per aggiornamenti in tempo reale."
-pubDate: "Nov 27 2025"
+description: "Backend containerizzato per un quiz interattivo con Django, PostgreSQL, Redis, WebSocket, Authentik e ESP32."
+pubDate: "2025-11-27"
 heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1764078768/Arci/ArciQuiz_oxzuog.webp"
 badge: "Django"
 ---
 
-
 # Arci Quiz: il backend dietro il quiz interattivo
 
 **Ruolo:** Backend Developer  
-**Tecnologie principali:** Django, Docker, PostgreSQL, Redis, Authentik, WebSocket, ESP32  
+**Stack:** Django • Docker • PostgreSQL • Redis • Authentik • WebSocket • ESP32
 
 ---
 
 ## La sfida
 
-Quando ho iniziato a lavorare su **Arci Quiz**, l'obiettivo era creare un'esperienza interattiva per eventi e quiz a squadre: non solo domande e punteggi, ma anche la possibilità di prenotare pulsanti fisici e avere aggiornamenti in tempo reale su ogni azione.  
+Arci Quiz nasce dall’esigenza di creare un quiz a squadre realmente interattivo: pulsanti fisici, stato sincronizzato in tempo reale, timer e punteggi aggiornati istantaneamente.
 
-La sfida principale? Integrare un backend robusto con componenti hardware e garantire sicurezza, scalabilità e fluidità nelle interazioni.
+La difficoltà maggiore è stata coordinare backend, frontend realtime e hardware mantenendo sicurezza, affidabilità e tempi di risposta bassissimi.
+
+---
+
+## Architettura del sistema
+
+```plantuml
+@startuml
+title Arci Quiz - Architecture Overview
+
+component "Web Client
+(Frontend)" as FE
+component "Django Backend
+(WS + REST)" as BE
+component "PostgreSQL" as DB
+component "Redis
+(pub/sub, cache)" as REDIS
+node "ESP32 Devices" as ESP
+component "Authentik
+(IdP/OAuth2)" as AUTH
+
+FE --> BE : WebSocket + HTTP
+BE --> DB : SQL
+BE --> REDIS : pub/sub
+ESP --> BE : HTTP (POST buzz)
+BE --> ESP : HTTP (commands)
+FE --> AUTH : OAuth2 login
+BE --> AUTH : Token validation
+
+@enduml
+```
 
 ---
 
 ## Il mio contributo
 
-Mi sono occupato principalmente del **backend**:
+### Architettura containerizzata
+- Container Django
+- PostgreSQL
+- Redis
+- Docker Compose
 
-- **Architettura containerizzata con Docker**  
-  Ho configurato i servizi principali del progetto in container: Django per il backend, PostgreSQL per la gestione dei dati e Redis per il realtime e la gestione dei timer.  
-  
+---
 
-- **Autenticazione sicura con Authentik**  
-  Ho integrato Authentik per gestire login, permessi e autorizzazioni in modo centralizzato, così da garantire sicurezza e controllo degli accessi.  
-  
+### Autenticazione con Authentik
+Sistema OAuth2/OIDC con ruoli e token verificati lato backend.
 
-- **Comunicazione in tempo reale con WebSocket**  
-  Per aggiornare punteggi, timer e stato dei pulsanti, ho utilizzato WebSocket, garantendo un flusso dati costante e immediato tra server e client web.  
-  
+---
 
-- **Integrazione hardware con ESP32**  
-  I pulsanti fisici dei partecipanti erano connessi tramite ESP32. Ho sviluppato le chiamate dal backend verso questi dispositivi, permettendo di prenotare i pulsanti e aggiornare immediatamente l'interfaccia web.  
-  
+### Realtime con WebSocket + Redis
+
+```plantuml
+@startuml
+title WebSocket realtime flow
+
+actor Player
+actor Conductor
+
+participant FE as "Frontend"
+participant WS as "Django WebSocket Server"
+participant REDIS as "Redis (pub/sub)"
+
+Player -> FE : buzz / comando
+Conductor -> FE : inizia domanda / reset
+FE -> WS : WebSocket message
+WS -> REDIS : publish event
+REDIS -> WS : broadcast
+WS -> FE : aggiornamento realtime
+
+@enduml
+```
+
+---
+
+### Integrazione ESP32
+POST per il buzz, comandi di reset/lock, latenza bassissima.
 
 ---
 
 ## Risultati
-
-- Sistema backend completamente containerizzato, pronto per produzione.  
-- Autenticazione centralizzata e sicura.  
-- Quiz interattivo in tempo reale, con gestione dei timer e dei punteggi.  
-- Integrazione hardware-software funzionante, che ha migliorato l’esperienza degli utenti agli eventi.  
-
----
-
-Arci Quiz è stata una grande occasione per combinare **backend, realtime e IoT**, imparando a far comunicare servizi diversi e a gestire dati in tempo reale in modo affidabile.  
+- Backend pronto produzione  
+- Realtime stabile  
+- Sicurezza avanzata  
+- Integrazione hardware ottima  
 
 ---
 
+## Next Steps
+- Dashboard pubblica live  
+- Statistiche quiz  
+- Nuovi dispositivi (MQTT/BLE)  
+- Modalità torneo
 
+---
+
+Arci Quiz unisce backend, realtime e IoT per un’esperienza immersiva.
