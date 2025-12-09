@@ -1,115 +1,110 @@
 ---
-title: "Arci Quiz: il backend dietro il quiz interattivo"
-description: "Backend containerizzato per un quiz interattivo con Django, PostgreSQL, Redis, WebSocket, Authentik e ESP32."
-pubDate: "2025-11-27"
+title: "Arci Quiz: Architettura backend per un quiz interattivo in tempo reale"
+slug: "arci-quiz-backend-quiz-interattivo-tempo-reale"
+description: "Analisi tecnica del backend di Arci Quiz: un sistema containerizzato con Django, PostgreSQL e Redis, autenticazione sicura via Authentik, e integrazione hardware con ESP32 e WebSocket per aggiornamenti in tempo reale."
+pubDate: "Nov 27 2025"
 heroImage: "https://res.cloudinary.com/dqh1pnrdx/image/upload/v1764078768/Arci/ArciQuiz_oxzuog.webp"
 badge: "Django"
+
 ---
 
-# Arci Quiz: il backend dietro il quiz interattivo
+# Arci Quiz: Architettura backend per un quiz interattivo in tempo reale
 
 **Ruolo:** Backend Developer  
-**Stack:** Django • Docker • PostgreSQL • Redis • Authentik • WebSocket • ESP32
+**Tecnologie principali:** Django, Docker, PostgreSQL, Redis, Authentik, WebSocket, ESP32  
 
 ---
 
-## La sfida
+## Panoramica del progetto
 
-Arci Quiz nasce dall’esigenza di creare un quiz a squadre realmente interattivo: pulsanti fisici, stato sincronizzato in tempo reale, timer e punteggi aggiornati istantaneamente.
-
-La difficoltà maggiore è stata coordinare backend, frontend realtime e hardware mantenendo sicurezza, affidabilità e tempi di risposta bassissimi.
+Arci Quiz è un sistema backend progettato per gestire quiz interattivi a squadre durante eventi live. Il backend supporta la prenotazione e la gestione di pulsanti fisici utilizzati dai partecipanti, garantendo aggiornamenti in tempo reale su punteggi, timer e stato degli input, integrando software e componenti hardware in un’architettura scalabile e sicura.
 
 ---
 
-## Architettura del sistema
+## Sfide tecniche affrontate
 
-```plantuml
-@startuml
-title Arci Quiz - Architecture Overview
+L’obiettivo era creare un backend in grado di:
 
-component "Web Client
-(Frontend)" as FE
-component "Django Backend
-(WS + REST)" as BE
-component "PostgreSQL" as DB
-component "Redis
-(pub/sub, cache)" as REDIS
-node "ESP32 Devices" as ESP
-component "Authentik
-(IdP/OAuth2)" as AUTH
-
-FE --> BE : WebSocket + HTTP
-BE --> DB : SQL
-BE --> REDIS : pub/sub
-ESP --> BE : HTTP (POST buzz)
-BE --> ESP : HTTP (commands)
-FE --> AUTH : OAuth2 login
-BE --> AUTH : Token validation
-
-@enduml
-```
+- Gestire con stabilità l'interazione tra componenti software e hardware
+- Assicurare sicurezza nei processi di autenticazione e autorizzazione
+- Offrire aggiornamenti in tempo reale su tutte le azioni degli utenti
+- Scalare agevolmente tramite componentizzazione containerizzata
 
 ---
 
-## Il mio contributo
+## Architettura e soluzioni implementate
 
-### Architettura containerizzata
-- Container Django
-- PostgreSQL
-- Redis
-- Docker Compose
+### Containerizzazione con Docker
 
----
+L'intero backend è orchestrato tramite Docker, con servizi separati per:
 
-### Autenticazione con Authentik
-Sistema OAuth2/OIDC con ruoli e token verificati lato backend.
+- **Django:** gestione principale delle logiche applicative
+- **PostgreSQL:** archiviazione dati relazionali
+- **Redis:** supporto al realtime e gestione dei timer
 
----
+Questa configurazione consente facilità di distribuzione, isolamento e scalabilità.
 
-### Realtime con WebSocket + Redis
+### Autenticazione centralizzata con Authentik
 
-```plantuml
-@startuml
-title WebSocket realtime flow
+Authentik è stato integrato per gestire:
 
-actor Player
-actor Conductor
+- Login e logout
+- Controllo di permessi e autorizzazioni
 
-participant FE as "Frontend"
-participant WS as "Django WebSocket Server"
-participant REDIS as "Redis (pub/sub)"
+In questo modo è stato garantito un livello elevato di sicurezza e controllo degli accessi.
 
-Player -> FE : buzz / comando
-Conductor -> FE : inizia domanda / reset
-FE -> WS : WebSocket message
-WS -> REDIS : publish event
-REDIS -> WS : broadcast
-WS -> FE : aggiornamento realtime
+### Comunicazione in tempo reale via WebSocket
 
-@enduml
-```
+Attraverso WebSocket si è realizzato un canale di comunicazione bidirezionale per sincronizzare:
 
----
+- Punteggi aggiornati
+- Timer in corso
+- Stato dei pulsanti fisici
 
-### Integrazione ESP32
-POST per il buzz, comandi di reset/lock, latenza bassissima.
+Assicurando così una risposta immediata tra server, client web e dispositivi hardware.
+
+### Integrazione hardware con ESP32
+
+I pulsanti fisici, collegati tramite microcontrollori ESP32, sono gestiti dal backend mediante chiamate specifiche:
+
+- Prenotazione dei pulsanti da parte dei partecipanti
+- Aggiornamento istantaneo degli stati sull'interfaccia web
 
 ---
 
-## Risultati
-- Backend pronto produzione  
-- Realtime stabile  
-- Sicurezza avanzata  
-- Integrazione hardware ottima  
+## Risultati ottenuti
+
+- Backend completamente containerizzato e pronto per ambienti di produzione
+- Sistema di autenticazione sicuro e centralizzato
+- Esperienza quiz interattiva fluida, con aggiornamenti realtime di timer e punteggi
+- Integrazione stabile tra software e componenti hardware, migliorando l’interazione durante gli eventi
 
 ---
 
-## Next Steps
-- Dashboard pubblica live  
-- Statistiche quiz  
-- Nuovi dispositivi (MQTT/BLE)  
-- Modalità torneo
+## Considerazioni finali
+
+Il progetto Arci Quiz ha rappresentato un’opportunità significativa per integrare competenze di backend, comunicazione realtime e IoT, dimostrando come sistemi diversi possano collaborare efficacemente per offrire un’esperienza interattiva e affidabile.
 
 ---
 
-Arci Quiz unisce backend, realtime e IoT per un’esperienza immersiva.
+## Domande frequenti (FAQ)
+
+### Quali tecnologie backend sono state utilizzate per Arci Quiz?
+
+Il backend si basa su Django, containerizzato con Docker, integrando PostgreSQL per il database e Redis per funzionalità realtime e gestione dei timer.
+
+### Come viene garantita la sicurezza nell'accesso al sistema?
+
+L'autenticazione e la gestione dei permessi sono affidate a Authentik, che fornisce un controllo centralizzato e sicuro degli accessi.
+
+### In che modo avvengono gli aggiornamenti in tempo reale?
+
+Gli aggiornamenti di punteggi, timer e stato dei pulsanti fisici sono gestiti tramite WebSocket, che permette una comunicazione bidirezionale istantanea tra server e client.
+
+### Come sono integrati i pulsanti fisici al sistema?
+
+I pulsanti sono connessi tramite microcontrollori ESP32; il backend gestisce la loro prenotazione e aggiorna lo stato in tempo reale sull’interfaccia web.
+
+### Quali vantaggi offre la containerizzazione tramite Docker?
+
+Docker consente di isolare i servizi, semplificare la distribuzione e scalare indipendentemente i componenti del sistema, migliorandone robustezza e manutenzione.
