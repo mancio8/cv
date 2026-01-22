@@ -3,7 +3,7 @@ import { parseStringPromise } from "xml2js";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image } from "@astrojs/image/components";
 
-const RSS_FEED = "https://www.spreaker.com/show/4070003/episodes/feed";
+const RSS_FEED = "https://feeds.megaphone.fm/GLT8247080596";
 
 const response = await fetch(RSS_FEED);
 const text = await response.text();
@@ -13,17 +13,20 @@ const data = await parseStringPromise(text);
 const channel = data?.rss?.channel?.[0];
 const items = channel?.item || [];
 
-const episodes = items.map((ep) => ({
-  title: ep?.title?.[0] || "Titolo mancante",
-  date: ep?.pubDate ? new Date(ep.pubDate[0]).toLocaleDateString("it-IT", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  }) : "",
-  audioUrl: ep?.enclosure?.[0]?.$.url || "",
-  description: ep?.description?.[0] || "",
-  imageUrl: ep?.["itunes:image"]?.[0]?.$.href || "/default-podcast-image.png",
-}));
+const episodes = items
+  .slice(0, 5)
+  .map((ep) => ({
+    title: ep?.title?.[0] || "Titolo mancante",
+    date: ep?.pubDate ? new Date(ep.pubDate[0]).toLocaleDateString("it-IT", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }) : "",
+    audioUrl: ep?.enclosure?.[0]?.$.url || "",
+    description: ep?.description?.[0] || "",
+    imageUrl: ep?.["itunes:image"]?.[0]?.$.href || "/default-podcast-image.png",
+  }));
+
 
 // Immagine generale del podcast con fallback
 const podcastImage = channel?.image?.[0]?.url?.[0] || "/default-podcast-image.png";
@@ -59,7 +62,7 @@ const podcastImage = channel?.image?.[0]?.url?.[0] || "/default-podcast-image.pn
       episodes.map((ep, index) => (
         <div class="hero-content flex-col md:flex-row mb-6" key={index}>
           <Image
-            src={ep.imageUrl}
+            src={podcastImage}
             aspectRatio="16:9"
             width={750}
             format="webp"
