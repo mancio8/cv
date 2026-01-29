@@ -1,12 +1,45 @@
-<input
-  class="input input-bordered input-primary w-full max-w-xs"
-  type="text"
-  id="input-text"
-  placeholder="Inserisci il link o il testo"
-/>
-<button class="btn btn-outline btn-primary" id="generate">Genera QR Code</button
->
-<div id="qrcode-container"></div>
+<div class="flex justify-center mt-10">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body text-center">
+
+      <!-- Titolo -->
+      <h2 class="card-title justify-center text-xl">
+        📱 Genera QR Code
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        Inserisci un link o un testo e genera il QR Code
+      </p>
+
+      <!-- Input testo/link -->
+      <input
+        id="input-text"
+        type="text"
+        placeholder="Inserisci il link o il testo"
+        class="input input-bordered input-primary w-ful mb-4 text-center"
+      />
+
+      <!-- Bottone genera QR -->
+      <div class="card-actions justify-center mt-4">
+         <button
+          id="generate"
+          class="btn btn-primary btn-wide mb-4"
+        >
+          Genera QR Code
+        </button>
+      </div>
+     
+
+      <!-- QR Code display -->
+      <div
+        id="qrcode-container"
+        class="bg-base-200 p-4 rounded-lg flex justify-center items-center min-h-[150px]"
+      >
+        <span class="text-sm text-base-content/70">Il QR Code apparirà qui</span>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
   import QRCode from "qrcode";

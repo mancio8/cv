@@ -1,20 +1,51 @@
-<!-- Input per base64 -->
-<textarea
-  class="textarea textarea-primary"
-  id="base64-input"
-  rows="10"
-  cols="35"
-  placeholder="Inserisci il Base64 qui..."></textarea>
-<div class="row">
-  <!-- Bottone per convertire in immagine -->
-  <button id="convert-image-button">Converti in Immagine</button>
+<div class="flex justify-center mt-10">
+  <div class="card w-full max-w-lg bg-base-100 shadow-xl">
+    <div class="card-body text-center">
 
-  <!-- Bottone per convertire in PDF -->
-  <button id="convert-pdf-button">Converti in PDF</button>
+      <!-- Titolo -->
+      <h2 class="card-title justify-center text-xl">
+        📝 Convertitore Base64
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        Inserisci il Base64 qui sotto e converti in immagine o PDF
+      </p>
+
+      <!-- Textarea Base64 -->
+      <textarea
+        id="base64-input"
+        rows="8"
+        placeholder="Inserisci il Base64 qui..."
+        class="textarea textarea-primary w-full mb-4 resize-none"
+      ></textarea>
+
+      <!-- Bottoni -->
+      <div class="flex flex-col sm:flex-row justify-center gap-4 mb-4">
+        <button
+          id="convert-image-button"
+          class="btn btn-primary w-full sm:w-auto"
+        >
+          Converti in Immagine
+        </button>
+        <button
+          id="convert-pdf-button"
+          class="btn btn-secondary w-full sm:w-auto"
+        >
+          Converti in PDF
+        </button>
+      </div>
+
+      <!-- Container output -->
+      <div
+        id="output-container"
+        class="bg-base-200 rounded-lg p-4 min-h-[150px] flex justify-center items-center"
+      >
+        <span class="text-base-content/70">L’output apparirà qui</span>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<!-- Dove mostrerà l'immagine o il PDF -->
-<div id="output-container"></div>
 
 <script>
   // Funzione per convertire Base64 in un'immagine

@@ -1,27 +1,69 @@
-<input
-  class="input input-bordered input-primary w-full max-w-xs"
-  type="number"
-  id="password-length"
-  placeholder="Lunghezza password"
-/>
-<button class="btn btn-outline btn-primary" id="generate-password"
-  >Genera Password</button
->
-<button class="btn btn-wide btn-outline btn-secondary" id="copy-password"
-  ><a id="password-container"></a><span id="default-icon">
-    <svg
-      class="w-3.5 h-3.5"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-      viewBox="0 0 18 20"
-    >
-      <path
-        d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"
-      ></path>
-    </svg>
-  </span></button
->
+<div class="flex justify-center mt-10">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body text-center">
+
+      <!-- Titolo -->
+      <h2 class="card-title justify-center text-xl">
+        🔑 Generatore di Password
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        Inserisci la lunghezza desiderata e genera una password sicura
+      </p>
+
+      <!-- Input lunghezza password -->
+      <input
+        id="password-length"
+        type="number"
+        min="4"
+        max="64"
+        placeholder="Lunghezza password"
+        class="input input-bordered input-primary w-full text-center "
+      />
+
+      <!-- Bottone genera password -->
+       <div class="card-actions justify-center mt-4">
+          <button
+            id="generate-password"
+            class="btn btn-primary btn-wide"
+          >
+            Genera Password
+          </button>
+       </div>
+      
+
+      <!-- Password display + copia -->
+      <div class="flex items-center w-full bg-base-200 rounded-lg p-2 justify-center mt-4">
+        <span
+          id="password-container"
+          class="break-words font-mono text-sm"
+        >
+          Nessuna password
+        </span>
+
+        <button
+          id="copy-password"
+          class="btn btn-outline btn-sm ml-2"
+          title="Copia negli appunti"
+        >
+          <svg
+            class="w-4 h-4"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 18 20"
+          >
+            <path
+              d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 
 <script>
   function generatePassword(length: number): string {

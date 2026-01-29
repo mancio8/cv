@@ -1,8 +1,44 @@
-<!-- image-converter.html or as part of your Astro component -->
-<input class="file-input file-input-accent" type="file" id="imageInput" accept="image/*" />
-<button class="btn btn-outline btn-primary" id="downloadBtn" disabled>Scarica WebP</button>
-<img id="preview" style="max-width: 300px; margin-top: 1rem;" />
+<div class="flex justify-center mt-10">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body text-center">
 
+      <!-- Titolo -->
+      <h2 class="card-title justify-center text-xl">
+        🖼️ Convertitore Immagini
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        Carica un'immagine e scaricala in formato WebP
+      </p>
+
+      <!-- Input file -->
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        class="file-input file-input-accent w-full max-w-xs mb-4"
+      />
+
+      <!-- Bottone download -->
+      <button
+        id="downloadBtn"
+        class="btn btn-primary w-full max-w-xs mb-4"
+        disabled
+      >
+        Scarica WebP
+      </button>
+
+      <!-- Preview immagine -->
+      <div class="overflow-hidden rounded-lg bg-base-200 p-2">
+        <img
+          id="preview"
+          style="max-width: 100%; max-height: 300px; margin-top: 0.5rem;"
+          alt="Preview immagine"
+        />
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
     // image-converter.ts
