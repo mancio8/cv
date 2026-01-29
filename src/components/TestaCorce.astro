@@ -1,7 +1,48 @@
-<button class="btn btn-outline btn-primary" id="toss-button">Lancia la Moneta</button>
-<div id="result">Risultato:</div>
-<h2>Storia dei Lanci</h2>
-<ul id="history-list"></ul>
+<div class="flex justify-center mt-10">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body text-center">
+
+      <h2 class="card-title justify-center text-xl">
+        🪙 Lancia la Moneta
+      </h2>
+      
+      <p class="text-base-content/70 mb-4">
+        Premi il bottone per vedere se esce Testa o Croce
+      </p>
+
+      <!-- Risultato -->
+      <div
+        id="result"
+        class="alert alert-info font-semibold text-lg justify-center mb-4"
+      >
+        Risultato: -
+      </div>
+
+      <!-- Bottone -->
+      <div class="card-actions justify-center mb-4">
+        <button
+          id="toss-button"
+          class="btn btn-primary btn-wide"
+        >
+          Lancia la Moneta
+        </button>
+      </div>
+
+      <!-- Storia dei lanci -->
+      <div class="collapse collapse-arrow bg-base-200">
+        <input type="checkbox" />
+        <div class="collapse-title font-medium">
+          📜 Storia dei Lanci
+        </div>
+        <div class="collapse-content">
+          <ul id="history-list" class="list-disc list-inside"></ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {

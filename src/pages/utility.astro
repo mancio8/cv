@@ -6,6 +6,7 @@ import TestaCroce from "../components/TestaCorce.astro";
 import ConvBase64 from "../components/ConvBase64.astro";
 import DiffDate from "../components/DiffDate.astro";
 import ConvertWebP from "../components/ConvertWebP.astro";
+import Destinazione from "../components/Destinazione.astro";
 
 ---
 
@@ -50,6 +51,15 @@ import ConvertWebP from "../components/ConvertWebP.astro";
     </div>
     <div class="collapse-content">
       <ConvertWebP />
+    </div>
+  </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="my-accordion-2" />
+    <div class="collapse-title text-xl font-medium">
+      Nuova Destinazione
+    </div>
+    <div class="collapse-content">
+      <Destinazione />
     </div>
   </div>
 

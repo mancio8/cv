@@ -1,0 +1,160 @@
+<div class="flex justify-center mt-10">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body text-center">
+      
+      <h2 class="card-title justify-center text-xl">
+        ✈️ Destinazione di oggi
+      </h2>
+
+      <p class="text-base-content/70">
+        Scopri una città europea da visitare
+      </p>
+
+      <div class="divider"></div>
+
+      <div
+        id="resultDest"
+        class="alert alert-info text-lg font-semibold justify-center"
+      >
+        🌍 Nessuna destinazione selezionata
+      </div>
+
+      <div class="card-actions justify-center mt-4">
+        <button
+          id="destination-button"
+          class="btn btn-primary btn-wide"
+        >
+          Scegli destinazione
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const destinationButton =
+      document.getElementById("destination-button");
+
+    const resultDisplay =
+      document.getElementById("resultDest");
+
+    
+
+    const destinations = [
+        /* =======================
+        CAPITALI EUROPEE
+        ======================= */
+        "Roma (Italia)",
+        "Parigi (Francia)",
+        "Madrid (Spagna)",
+        "Lisbona (Portogallo)",
+        "Vienna (Austria)",
+        "Berlino (Germania)",
+        "Praga (Repubblica Ceca)",
+        "Budapest (Ungheria)",
+        "Varsavia (Polonia)",
+        "Lubiana (Slovenia)",
+        "Bratislava (Slovacchia)",
+        "Zagabria (Croazia)",
+        "Atene (Grecia)",
+        "Sofia (Bulgaria)",
+        "Bucarest (Romania)",
+        "Tallinn (Estonia)",
+        "Riga (Lettonia)",
+        "Vilnius (Lituania)",
+        "Helsinki (Finlandia)",
+        "Stoccolma (Svezia)",
+        "Copenaghen (Danimarca)",
+        "Amsterdam (Paesi Bassi)",
+        "Bruxelles (Belgio)",
+        "Dublino (Irlanda)",
+        "Nicosia (Cipro)",
+        "Valletta (Malta)",
+
+        /* =======================
+        CITTÀ EUROPEE (NON CAPITALI)
+        ======================= */
+        "Barcellona (Spagna)",
+        "Valencia (Spagna)",
+        "Siviglia (Spagna)",
+        "Porto (Portogallo)",
+        "Lione (Francia)",
+        "Marsiglia (Francia)",
+        "Nizza (Francia)",
+        "Monaco di Baviera (Germania)",
+        "Amburgo (Germania)",
+        "Colonia (Germania)",
+        "Cracovia (Polonia)",
+        "Danzica (Polonia)",
+        "Breslavia (Polonia)",
+        "Salonicco (Grecia)",
+        "Napoli (Italia)",
+        "Firenze (Italia)",
+        "Bologna (Italia)",
+        "Torino (Italia)",
+        "Milano (Italia)",
+        "Palermo (Italia)",
+        "Catania (Italia)",
+        "Cagliari (Italia)",
+
+        /* =======================
+        METE SOTTOVALUTATE / ALTERNATIVE
+        ======================= */
+        "Plovdiv (Bulgaria)",
+        "Veliko Tarnovo (Bulgaria)",
+        "Cluj-Napoca (Romania)",
+        "Timișoara (Romania)",
+        "Sibiu (Romania)",
+        "Novi Sad (Serbia – carta d’identità)",
+        "Belgrado (Serbia – carta d’identità)",
+        "Kotor (Montenegro – carta d’identità)",
+        "Budva (Montenegro – carta d’identità)",
+        "Sarajevo (Bosnia – carta d’identità)",
+        "Mostar (Bosnia – carta d’identità)",
+        "Skopje (Macedonia del Nord – carta d’identità)",
+        "Ohrid (Macedonia del Nord – carta d’identità)",
+        "Brno (Repubblica Ceca)",
+        "Olomouc (Repubblica Ceca)",
+        "Graz (Austria)",
+        "Innsbruck (Austria)",
+        "Trieste (Italia)",
+        "Bolzano (Italia)",
+        "Trento (Italia)",
+        "Matera (Italia)",
+        "Lecce (Italia)",
+        "Bari (Italia)",
+        "Rijeka / Fiume (Croazia)",
+        "Spalato (Croazia)",
+        "Dubrovnik (Croazia)",
+        "Piran (Slovenia)",
+        "Maribor (Slovenia)",
+        "Tartu (Estonia)",
+        "Kaunas (Lituania)",
+        "Turku (Finlandia)",
+        "Tampere (Finlandia)",
+        "Aarhus (Danimarca)",
+        "Odense (Danimarca)",
+        "Groningen (Paesi Bassi)",
+        "Utrecht (Paesi Bassi)",
+        "Gent (Belgio)",
+        "Bruges (Belgio)"
+    ];
+
+  
+
+
+    destinationButton?.addEventListener("click", () => {
+      const randomIndex = Math.floor(Math.random() * destinations.length);
+      const destination = destinations[randomIndex];
+
+      if (resultDisplay) {
+        resultDisplay.textContent = `Destinazione: ${destination}`;
+      }
+
+    
+    });
+  });
+</script>
