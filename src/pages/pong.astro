@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🍺 Beer Pong</title>
+
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #18181c;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --text: #f0eee8;
+    --muted: #6b6b7a;
+    --bevi:    #22c55e;
+    --penalita:#ef4444;
+    --sfida:   #f59e0b;
+    --social:  #3b82f6;
+    --raro:    #a855f7;
+    --bevi-bg:    #052e16;
+    --penalita-bg:#450a0a;
+    --sfida-bg:   #451a03;
+    --social-bg:  #0c1a3a;
+    --raro-bg:    #2e1065;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  /* Font stack senza Google Fonts (funziona offline/SES) */
+  @font-face {
+    font-family: 'DisplayFont';
+    src: local('Impact'), local('Anton'), local('Arial Black');
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Grana noise di sfondo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  #countBadge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ---- CARD ---- */
+  .card-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    gap: 24px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    min-height: 240px;
+    justify-content: center;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, var(--accent-glow, transparent) 0%, transparent 70%);
+    pointer-events: none;
+    transition: background 0.4s;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .badge.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #eventoText {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+    line-height: 1.15;
+    text-align: center;
+    letter-spacing: 1px;
+    color: var(--text);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* categoria colori applicati alla card */
+  .cat-bevi    { --accent: var(--bevi);    --accent-bg: var(--bevi-bg);    --accent-glow: rgba(34,197,94,0.08); }
+  .cat-penalita{ --accent: var(--penalita);--accent-bg: var(--penalita-bg);--accent-glow: rgba(239,68,68,0.08); }
+  .cat-sfida   { --accent: var(--sfida);   --accent-bg: var(--sfida-bg);   --accent-glow: rgba(245,158,11,0.08); }
+  .cat-social  { --accent: var(--social);  --accent-bg: var(--social-bg);  --accent-glow: rgba(59,130,246,0.08); }
+  .cat-raro    { --accent: var(--raro);    --accent-bg: var(--raro-bg);    --accent-glow: rgba(168,85,247,0.12); }
+
+  .card.cat-bevi,
+  .card.cat-penalita,
+  .card.cat-sfida,
+  .card.cat-social,
+  .card.cat-raro {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, var(--surface) 60%, var(--accent-bg) 100%);
+  }
+
+  .badge.cat-bevi     { color: var(--bevi);    background: var(--bevi-bg);    border-color: var(--bevi); }
+  .badge.cat-penalita { color: var(--penalita);background: var(--penalita-bg);border-color: var(--penalita); }
+  .badge.cat-sfida    { color: var(--sfida);   background: var(--sfida-bg);   border-color: var(--sfida); }
+  .badge.cat-social   { color: var(--social);  background: var(--social-bg);  border-color: var(--social); }
+  .badge.cat-raro     { color: var(--raro);    background: var(--raro-bg);    border-color: var(--raro); }
+
+  /* shake animation on reveal */
+  @keyframes pop {
+    0%   { transform: scale(0.94); opacity: 0; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+  @keyframes shakeCard {
+    0%,100% { transform: rotate(0deg); }
+    20%  { transform: rotate(-1.5deg); }
+    40%  { transform: rotate(1.5deg); }
+    60%  { transform: rotate(-1deg); }
+    80%  { transform: rotate(0.8deg); }
+  }
+  @keyframes rarePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(168,85,247,0); }
+    50%     { box-shadow: 0 0 40px 8px rgba(168,85,247,0.35); }
+  }
+
+  .card.animate-pop  { animation: pop 0.35s cubic-bezier(.22,1,.36,1) forwards; }
+  .card.animate-shake{ animation: shakeCard 0.4s ease forwards; }
+  .card.cat-raro     { animation: rarePulse 1.8s ease-in-out infinite; }
+
+  /* ---- BOTTONE ---- */
+  .btn-sfida {
+    width: 100%;
+    padding: 18px;
+    background: var(--text);
+    color: var(--bg);
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-sfida:active { transform: scale(0.97); opacity: 0.85; }
+  .btn-sfida:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ---- SLOT ANIMATION TEXT ---- */
+  .slot-char {
+    display: inline-block;
+    animation: slotFlip 0.06s ease;
+  }
+  @keyframes slotFlip {
+    0%   { transform: translateY(-4px); opacity: 0; }
+    100% { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    padding: 16px;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- RARO OVERLAY ---- */
+  .raro-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    animation: confettiFall 1.2s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">🍺 Beer Pong</span>
+  <span id="countBadge">Sfida #0</span>
+</header>
+
+<div class="card-wrap">
+  <div class="card" id="card">
+    <span class="badge" id="badgeCategoria"></span>
+    <div id="eventoText">Premi il tasto!</div>
+  </div>
+
+  <button class="btn-sfida" id="btnSfida">
+    🎰 NUOVA SFIDA
+  </button>
+</div>
+
+<footer>beer pong digital · bevi responsabilmente</footer>
+<div class="raro-overlay" id="raroOverlay"></div>
+
+<script>
+const eventi = {
+  bevi: [
+    "Bevi 1 sorso",
+    "Bevi 2 sorsi",
+    "Bevi 3 sorsi",
+    "Bevi per 3 secondi",
+    "Bevi per 5 secondi",
+    "Bevi con il braccio sinistro",
+    "Bevi mentre fai 5 squat",
+    "Bevi senza guardare il bicchiere",
+    "Bevi in un solo respiro",
+    "Bevi tenendo il bicchiere con due dita",
+    "Bevi ridendo senza fermarti",
+    "Bevi incrociando le braccia con il giocatore alla tua destra",
+    "Finisci il bicchiere se ne hai meno della metà",
+    "Bevi usando solo la mano non dominante",
+    "Bevi in piedi su un piede solo",
+    "Bevi tenendo il mignolo alzato come un lord inglese",
+    "Bevi di schiena (voltati e bevi senza guardare il tavolo)",
+    "Bevi mentre dici 'cin cin' in 3 lingue diverse",
+    "Bevi con gli occhi chiusi",
+    "Bevi e poi fai il verso di un animale a scelta",
+    "Bevi mentre mantieni il contatto visivo con qualcuno al tavolo",
+    "Bevi in modalità slow motion esagerata",
+  ],
+  penalita: [
+    "Bevi 4 sorsi",
+    "Bevi senza mani (solo la bocca!)",
+    "Bevi mentre fai 10 jumping jack",
+    "Bevi e poi fai 5 flessioni",
+    "Bevi e canta una strofa di una canzone",
+    "Bevi e mostra il tuo schermo del telefono a tutti",
+    "Bevi tutto d'un fiato",
+    "Bevi e racconta l'ultima cosa imbarazzante che ti è capitata",
+    "Bevi e dai il telefono a qualcuno per 30 secondi",
+    "Bevi e fai 10 secondi di ballo imbarazzante",
+    "Bevi e cambia posto con qualcuno",
+    "Bevi e fai un complimento sincero a ognuno al tavolo",
+    "Bevi e fai vedere la tua galleria foto agli ultimi 10 scatti",
+    "Bevi e ammetti la cosa più stupida che hai fatto nell'ultimo mese",
+    "Bevi e leggi ad alta voce l'ultimo messaggio che hai inviato",
+    "Bevi e fai una dichiarazione drammatica al gruppo",
+    "Bevi e invia un messaggio dettato dal gruppo a un contatto a caso",
+    "Bevi e chiedi scusa a qualcuno al tavolo (motivo: inventato dal gruppo)",
+    "Bevi e racconta il tuo sogno più strano degli ultimi tempi",
+    "Bevi e fai 15 secondi di stand-up comedy improvvisata",
+  ],
+  sfida: [
+    "Fai 10 squat",
+    "Canta una canzone per 20 secondi",
+    "Imita qualcuno al tavolo: gli altri indovinano chi è",
+    "Fai 5 flessioni o bevi 2 sorsi",
+    "Di' una rima entro 10 secondi o bevi",
+    "Racconta una barzelletta: se fa ridere almeno uno, sei salvo",
+    "Mantieni la faccia seria per 30 secondi mentre tutti ti fanno ridere",
+    "Indovina il numero (1-10) pensato dal giocatore alla tua sinistra o bevi",
+    "Fai la voce di un personaggio famoso per 15 secondi",
+    "Descrivi un film senza dire il titolo: se qualcuno indovina, beve lui",
+    "Mima un'emozione senza parlare: chi la indovina, assegna 1 sorso",
+    "Di' 5 parole in inglese in 5 secondi o bevi 2 sorsi",
+    "Fai 10 salti sul posto",
+    "Costruisci una frase con le iniziali di tutti i nomi al tavolo",
+    "Parla con un accento straniero per il prossimo turno",
+    "Fai una mossa di danza e il gruppo deve imitarla subito",
+    "Descrivi qualcuno al tavolo usando solo aggettivi di animali",
+    "Fai il mimo di un mestiere: chi indovina beve",
+    "Racconta una storia di 30 secondi che inizia con 'Era una notte buia...'",
+    "Scegli due persone: devono fare un duetto canoro improvvisato per 15 secondi",
+    "Fai 3 espressioni facciali diverse in 3 secondi: felice, arrabbiato, sorpreso",
+    "Di' l'alfabeto al contrario il più veloce possibile",
+    "Imita un personaggio Disney senza dirne il nome: chi indovina sceglie chi beve",
+    "Urla una frase a caso più forte che puoi",
+    "Fai vedere la tua migliore mossa di karate (o quello che ti pare)",
+    "Disegna con il dito nell'aria un animale: il gruppo deve indovinarlo in 10 secondi",
+    "Pronunci 5 parole difficili (papavero, precipitevolissimevolmente, cacciucco) o bevi",
+    "Fai 20 secondi di monologo teatrale drammatico su un oggetto qualsiasi",
+    "Conta fino a 20 in un'altra lingua o bevi",
+    "Stai fermo come una statua per 20 secondi mentre il gruppo cerca di farti muovere",
+  ],
+  social: [
+    "Scegli qualcuno che beve 2 sorsi",
+    "Tutti bevono 1 sorso",
+    "Fai brindare tutti",
+    "Il giocatore alla tua sinistra beve",
+    "Il giocatore alla tua destra beve",
+    "Scegli 2 persone: devono bere insieme",
+    "Chi ha le scarpe più grandi beve",
+    "Chi ha il telefono con meno batteria beve",
+    "La persona più alta beve",
+    "La persona più bassa beve",
+    "Chi ha bevuto meno questa sera beve 3 sorsi",
+    "Distribuisci 4 sorsi come vuoi tra i giocatori",
+    "Scegli qualcuno: scambiate il bicchiere per il prossimo turno",
+    "Tutti che non hanno ancora bevuto questa sfida: bevono",
+    "Nomina una regola valida per il prossimo turno (es. tutti bevono con la sinistra)",
+    "Chi ride per primo nei prossimi 30 secondi beve",
+    "Votazione: chi è il più rumoroso del gruppo? Quel giocatore beve",
+    "Il gruppo vota: chi ha detto la cosa più stupida stasera? Quel giocatore beve 2 sorsi",
+    "Scegli qualcuno: dovete fare un brindisi personale inventato sul momento",
+    "Tutti quelli con i capelli scuri bevono",
+    "Chi ha il nome più corto al tavolo beve",
+    "Scegli 3 persone: devono bere in ordine alfabetico di nome",
+    "Chi controlla il telefono per primo dopo questa carta beve 3 sorsi",
+    "Il giocatore con più follower su Instagram beve (mostrate il profilo)",
+    "Chi è andato a dormire più tardi ieri notte beve",
+    "Tutti quelli con occhiali bevono",
+    "Chi ha più messaggi non letti beve",
+    "Il più giovane al tavolo beve",
+    "Il più vecchio al tavolo beve",
+    "Scegli qualcuno: deve dirti un segreto (piccolo) all'orecchio, poi tu decidi se beve o no",
+    "Il gruppo vota la storia più assurda sentita stasera: il narratore assegna 2 sorsi a chi vuole",
+  ],
+};
+
+const eventiRari = [
+  { testo: "💣 TUTTI BEVONO 3 SORSI", emoji: "💣" },
+  { testo: "👑 RE DEL TAVOLO: tutti devono obbedire al tuo prossimo ordine (entro 30 sec)", emoji: "👑" },
+  { testo: "🛡 CARTA SALVA: conserva questa carta, puoi usarla per rifiutare qualsiasi sfida", emoji: "🛡" },
+  { testo: "🎯 DOPPIO TURNO: premi ancora, vale doppio (sorsi e sfide)", emoji: "🎯" },
+  { testo: "🔄 SWAP: scambia il bicchiere con chiunque tu voglia, senza spiegazioni", emoji: "🔄" },
+  { testo: "🃏 JOLLY: inventa tu una sfida per qualcuno, il gruppo decide se è abbastanza folle", emoji: "🃏" },
+  { testo: "⚡ SPEED ROUND: tutti bevono ogni volta che qualcuno dice 'sì' per 1 minuto", emoji: "⚡" },
+  { testo: "🌀 CAOS TOTALE: tutti si alzano, cambiano posto e il giro riparte da capo", emoji: "🌀" },
+  { testo: "🎤 KARAOKE FORZATO: tutti cantano insieme per 20 secondi la stessa canzone (scelta dal gruppo)", emoji: "🎤" },
+  { testo: "📸 SELFIE DI GRUPPO: tutti nella foto entro 10 secondi o si beve!", emoji: "📸" },
+  { testo: "🃏 VERITÀ O BEVI: scegli qualcuno, fai una domanda scomoda — risponde o beve 3 sorsi", emoji: "🃏" },
+  { testo: "🏆 CAMPIONE: il giocatore alla tua sinistra non beve per i prossimi 2 turni", emoji: "🏆" },
+  { testo: "🔥 CATENA: ognuno beve un sorso a turno finché qualcuno si rifiuta — quel giocatore beve 4", emoji: "🔥" },
+  { testo: "🎲 DADO UMANO: tutti gridano un numero da 1 a 6, chi indovina il totale assegna 3 sorsi", emoji: "🎲" },
+];
+
+const coloriCategoria = {
+  bevi:     "cat-bevi",
+  penalita: "cat-penalita",
+  sfida:    "cat-sfida",
+  social:   "cat-social",
+  raro:     "cat-raro",
+};
+
+const labelCategoria = {
+  bevi:     "🍺 Bevi",
+  penalita: "💀 Penalità",
+  sfida:    "🎯 Sfida",
+  social:   "👥 Social",
+  raro:     "⭐ EVENTO RARO",
+};
+
+let contatore = 0;
+let inCorso = false;
+
+function randomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const categoriaStyles = {
+  bevi:     { border: '#22c55e', bg: 'linear-gradient(135deg, #18181c 60%, #052e16 100%)', glow: 'rgba(34,197,94,0.08)',   badgeColor: '#22c55e', badgeBg: '#052e16' },
+  penalita: { border: '#ef4444', bg: 'linear-gradient(135deg, #18181c 60%, #450a0a 100%)', glow: 'rgba(239,68,68,0.08)',   badgeColor: '#ef4444', badgeBg: '#450a0a' },
+  sfida:    { border: '#f59e0b', bg: 'linear-gradient(135deg, #18181c 60%, #451a03 100%)', glow: 'rgba(245,158,11,0.08)',  badgeColor: '#f59e0b', badgeBg: '#451a03' },
+  social:   { border: '#3b82f6', bg: 'linear-gradient(135deg, #18181c 60%, #0c1a3a 100%)', glow: 'rgba(59,130,246,0.08)', badgeColor: '#3b82f6', badgeBg: '#0c1a3a' },
+  raro:     { border: '#a855f7', bg: 'linear-gradient(135deg, #18181c 60%, #2e1065 100%)', glow: 'rgba(168,85,247,0.12)', badgeColor: '#a855f7', badgeBg: '#2e1065' },
+};
+
+function setCard(categoria, testo, animate) {
+  const card     = document.getElementById("card");
+  const badge    = document.getElementById("badgeCategoria");
+  const eventoEl = document.getElementById("eventoText");
+  const s        = categoriaStyles[categoria];
+
+  // Applica stili direttamente — niente affidamento a CSS var inheritance tra classi
+  card.style.borderColor = s.border;
+  card.style.background  = s.bg;
+  card.style.animation   = categoria === "raro" ? "rarePulse 1.8s ease-in-out infinite" : "";
+
+  badge.style.color       = s.badgeColor;
+  badge.style.background  = s.badgeBg;
+  badge.style.borderColor = s.badgeColor;
+  badge.style.opacity     = "1";
+  badge.style.transform   = "translateY(0)";
+  badge.textContent       = labelCategoria[categoria];
+
+  eventoEl.textContent = testo;
+
+  if (animate) {
+    card.style.animation = "";
+    void card.offsetWidth; // force reflow
+    card.style.animation = categoria === "raro"
+      ? "pop 0.35s cubic-bezier(.22,1,.36,1) forwards, rarePulse 1.8s ease-in-out 0.35s infinite"
+      : "pop 0.35s cubic-bezier(.22,1,.36,1) forwards";
+  }
+
+  if (categoria === "raro") spawnConfetti();
+}
+
+async function slotAnimation() {
+  const card     = document.getElementById("card");
+  const eventoEl = document.getElementById("eventoText");
+  const badge    = document.getElementById("badgeCategoria");
+  const categorie = Object.keys(eventi);
+  const FRAMES   = 14;
+
+  card.style.animation = "shakeCard 0.4s ease forwards";
+
+  for (let i = 0; i < FRAMES; i++) {
+    const c = randomItem(categorie);
+    const e = randomItem(eventi[c]);
+    const s = categoriaStyles[c];
+
+    card.style.borderColor = s.border;
+    card.style.background  = s.bg;
+    badge.style.color       = s.badgeColor;
+    badge.style.background  = s.badgeBg;
+    badge.style.borderColor = s.badgeColor;
+    badge.style.opacity     = "1";
+    badge.style.transform   = "translateY(0)";
+    badge.textContent = labelCategoria[c];
+    eventoEl.textContent = e;
+
+    const delay = 50 + i * 10;
+    await new Promise(r => setTimeout(r, delay));
+  }
+}
+
+async function genera() {
+  if (inCorso) return;
+  inCorso = true;
+
+  const btn = document.getElementById("btnSfida");
+  btn.disabled = true;
+
+  await slotAnimation();
+
+  // Ora assegna il risultato FINALE
+  let categoria, testo;
+  if (Math.random() < 0.08) {
+    categoria = "raro";
+    const raro = randomItem(eventiRari);
+    testo = raro.testo;
+  } else {
+    const categorie = Object.keys(eventi);
+    categoria = randomItem(categorie);
+    testo = randomItem(eventi[categoria]);
+  }
+
+  setCard(categoria, testo, true);
+
+  contatore++;
+  document.getElementById("countBadge").textContent = `Sfida #${contatore}`;
+
+  btn.disabled = false;
+  inCorso = false;
+}
+
+function spawnConfetti() {
+  const overlay = document.getElementById("raroOverlay");
+  overlay.style.display = "block";
+  overlay.innerHTML = "";
+  const colors = ["#a855f7","#f59e0b","#22c55e","#ef4444","#3b82f6","#f0eee8"];
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.top  = "-20px";
+    el.style.background = randomItem(colors);
+    el.style.animationDelay = Math.random() * 0.6 + "s";
+    el.style.animationDuration = (0.8 + Math.random() * 0.8) + "s";
+    overlay.appendChild(el);
+  }
+  setTimeout(() => {
+    overlay.style.display = "none";
+    overlay.innerHTML = "";
+  }, 2200);
+}
+
+// Collega eventi senza attributi inline (compatibile con SES/Lockdown)
+document.getElementById("btnSfida").addEventListener("click", genera);
+document.addEventListener("DOMContentLoaded", genera);
+</script>
+</body>
+</html>
