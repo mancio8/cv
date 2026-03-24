@@ -292,6 +292,34 @@
 <div class="raro-overlay" id="raroOverlay"></div>
 
 <script>
+// ── PALETTE STILI per categoria (usata da JS direttamente) ──────────────────
+const categoriaStyles = {
+  bevi:       { border: '#22c55e', bg: 'linear-gradient(135deg,#18181c 60%,#052e16 100%)',  badgeColor: '#22c55e', badgeBg: '#052e16' },
+  penalita:   { border: '#ef4444', bg: 'linear-gradient(135deg,#18181c 60%,#450a0a 100%)',  badgeColor: '#ef4444', badgeBg: '#450a0a' },
+  sfida:      { border: '#f59e0b', bg: 'linear-gradient(135deg,#18181c 60%,#451a03 100%)',  badgeColor: '#f59e0b', badgeBg: '#451a03' },
+  social:     { border: '#3b82f6', bg: 'linear-gradient(135deg,#18181c 60%,#0c1a3a 100%)',  badgeColor: '#3b82f6', badgeBg: '#0c1a3a' },
+  minigioco:  { border: '#06b6d4', bg: 'linear-gradient(135deg,#18181c 60%,#082f3e 100%)',  badgeColor: '#06b6d4', badgeBg: '#082f3e' },
+  skill:      { border: '#f97316', bg: 'linear-gradient(135deg,#18181c 60%,#431407 100%)',  badgeColor: '#f97316', badgeBg: '#431407' },
+  regola:     { border: '#ec4899', bg: 'linear-gradient(135deg,#18181c 60%,#4a0d2e 100%)',  badgeColor: '#ec4899', badgeBg: '#4a0d2e' },
+  alleanza:   { border: '#84cc16', bg: 'linear-gradient(135deg,#18181c 60%,#1a2e05 100%)',  badgeColor: '#84cc16', badgeBg: '#1a2e05' },
+  raro:       { border: '#a855f7', bg: 'linear-gradient(135deg,#18181c 60%,#2e1065 100%)',  badgeColor: '#a855f7', badgeBg: '#2e1065' },
+  ultrararo:  { border: '#fbbf24', bg: 'linear-gradient(135deg,#18181c 60%,#3d1a00 100%)',  badgeColor: '#fbbf24', badgeBg: '#3d1a00' },
+};
+
+const labelCategoria = {
+  bevi:      "🍺 Bevi",
+  penalita:  "💀 Penalità",
+  sfida:     "🎯 Sfida",
+  social:    "👥 Social",
+  minigioco: "🎮 Minigioco",
+  skill:     "🏀 Skill Shot",
+  regola:    "📜 Regola",
+  alleanza:  "🤝 Alleanza",
+  raro:      "⭐ Evento Raro",
+  ultrararo: "☢️ ULTRA RARO",
+};
+
+// ── EVENTI NORMALI (pescati casualmente) ───────────────────────────────────
 const eventi = {
   bevi: [
     "Bevi 1 sorso",
@@ -404,40 +432,95 @@ const eventi = {
     "Scegli qualcuno: deve dirti un segreto (piccolo) all'orecchio, poi tu decidi se beve o no",
     "Il gruppo vota la storia più assurda sentita stasera: il narratore assegna 2 sorsi a chi vuole",
   ],
+  minigioco: [
+    "🎮 Sasso carta forbice con il giocatore alla tua destra: chi perde beve 2 sorsi",
+    "🎮 Chi batte le mani per ultimo beve",
+    "🎮 Conta fino a 10 in gruppo: ogni multiplo di 3 diventa 'BOOM' — chi sbaglia beve",
+    "🎮 Chi tocca il tavolo per ultimo beve",
+    "🎮 Chi dice per ultimo il nome di un animale beve 2 sorsi",
+    "🎮 Gara occhi chiusi: chi li apre per primo beve",
+    "🎮 Chi ride per primo beve",
+    "🎮 Di' una città diversa da quella già detta o bevi — si va in giro",
+    "🎮 Tutti si tengono per mano: chi molla per primo beve",
+    "🎮 Dì il nome di un calciatore per ogni lettera dell'alfabeto: chi si blocca beve",
+    "🎮 Uno dice un numero, l'altro indovina se è pari o dispari: chi sbaglia beve",
+    "🎮 Thumb war con il vicino: chi perde beve",
+    "🎮 Gara di staring contest: chi guarda altrove per primo beve",
+    "🎮 Tutti contano mentalmente fino a 10 e dicono il numero in coro: chi è fuori beve",
+    "🎮 Di' 5 nomi di film in 5 secondi o bevi",
+  ],
+  skill: [
+    "🏀 Tira bendato: se segni assegni 3 sorsi, altrimenti bevi 2",
+    "🏀 Tira con la mano non dominante",
+    "🏀 Tira seduto a terra",
+    "🏀 Tira rimbalzando la pallina due volte prima del bicchiere",
+    "🏀 Tira da un passo più lontano del solito",
+    "🏀 Tira con entrambe le mani insieme",
+    "🏀 Girati su te stesso 3 volte, poi tira",
+    "🏀 Tira senza guardare il bersaglio",
+    "🏀 Se segni, tutti bevono 1 sorso. Se manchi, bevi 3",
+    "🏀 Tira con gli occhi chiusi: il gruppo guida a parole",
+    "🏀 Tira di spalle (colpo al buio)",
+    "🏀 Tira tenendo la pallina solo con due dita",
+  ],
+  regola: [
+    "📜 REGOLA ATTIVA: per i prossimi 3 turni non si può dire 'bere' o 'bevi' — chi lo dice beve",
+    "📜 REGOLA ATTIVA: per i prossimi 2 turni tutti parlano con accento francese o bevono",
+    "📜 REGOLA ATTIVA: ogni volta che qualcuno tira la pallina, tutti devono dire 'OLÉ!'",
+    "📜 REGOLA ATTIVA: per il prossimo turno si beve solo con la mano sinistra",
+    "📜 REGOLA ATTIVA: nessuno può usare il telefono per 5 minuti — chi lo fa beve 2 sorsi",
+    "📜 REGOLA ATTIVA: ogni brindisi deve essere seguito da un complimento inventato",
+    "📜 REGOLA ATTIVA: non si può pronunciare il nome di nessuno al tavolo — chi lo fa beve",
+    "📜 REGOLA ATTIVA: tutti devono tenere il mignolo alzato mentre bevono",
+    "📜 REGOLA ATTIVA: vietato ridere per 1 minuto — chi ride beve 2 sorsi",
+    "📜 REGOLA ATTIVA: ogni frase deve iniziare con 'Secondo me...' per i prossimi 2 turni",
+    "📜 REGOLA ATTIVA: chi parla senza essere interrogato beve",
+    "📜 REGOLA ATTIVA: ogni volta che qualcuno dice 'no', tutti bevono 1 sorso",
+  ],
+  alleanza: [
+    "🤝 Scegli un alleato: se uno dei due beve, beve anche l'altro (dura 3 turni)",
+    "🤝 Tu e il giocatore di fronte condividete il destino per questo turno",
+    "🤝 Scegli un rivale: se lui subisce una penalità, devi berla anche tu — ma lui beve doppio",
+    "🤝 Proteggi qualcuno: il prossimo sorso che dovrebbe bere lo bevi tu al suo posto",
+    "🤝 Scambia posto e bicchiere con qualcuno a tua scelta",
+    "🤝 Forma una squadra con il giocatore alla tua sinistra: vincete o perdete insieme per questo turno",
+    "🤝 Scegli qualcuno: da ora per 2 turni, ogni volta che bevi, beve anche lui",
+    "🤝 Alleanza difensiva: scegli qualcuno che è immune dalla prossima sfida social",
+  ],
 };
 
+// ── EVENTI RARI (~8% probabilità) ─────────────────────────────────────────
 const eventiRari = [
-  { testo: "💣 TUTTI BEVONO 3 SORSI", emoji: "💣" },
-  { testo: "👑 RE DEL TAVOLO: tutti devono obbedire al tuo prossimo ordine (entro 30 sec)", emoji: "👑" },
-  { testo: "🛡 CARTA SALVA: conserva questa carta, puoi usarla per rifiutare qualsiasi sfida", emoji: "🛡" },
-  { testo: "🎯 DOPPIO TURNO: premi ancora, vale doppio (sorsi e sfide)", emoji: "🎯" },
-  { testo: "🔄 SWAP: scambia il bicchiere con chiunque tu voglia, senza spiegazioni", emoji: "🔄" },
-  { testo: "🃏 JOLLY: inventa tu una sfida per qualcuno, il gruppo decide se è abbastanza folle", emoji: "🃏" },
-  { testo: "⚡ SPEED ROUND: tutti bevono ogni volta che qualcuno dice 'sì' per 1 minuto", emoji: "⚡" },
-  { testo: "🌀 CAOS TOTALE: tutti si alzano, cambiano posto e il giro riparte da capo", emoji: "🌀" },
-  { testo: "🎤 KARAOKE FORZATO: tutti cantano insieme per 20 secondi la stessa canzone (scelta dal gruppo)", emoji: "🎤" },
-  { testo: "📸 SELFIE DI GRUPPO: tutti nella foto entro 10 secondi o si beve!", emoji: "📸" },
-  { testo: "🃏 VERITÀ O BEVI: scegli qualcuno, fai una domanda scomoda — risponde o beve 3 sorsi", emoji: "🃏" },
-  { testo: "🏆 CAMPIONE: il giocatore alla tua sinistra non beve per i prossimi 2 turni", emoji: "🏆" },
-  { testo: "🔥 CATENA: ognuno beve un sorso a turno finché qualcuno si rifiuta — quel giocatore beve 4", emoji: "🔥" },
-  { testo: "🎲 DADO UMANO: tutti gridano un numero da 1 a 6, chi indovina il totale assegna 3 sorsi", emoji: "🎲" },
+  "💣 TUTTI BEVONO 3 SORSI",
+  "👑 RE DEL TAVOLO: tutti devono obbedire al tuo prossimo ordine (entro 30 sec)",
+  "🛡 CARTA SALVA: conserva questa carta, puoi usarla per rifiutare qualsiasi sfida",
+  "🎯 DOPPIO TURNO: premi ancora, vale doppio (sorsi e sfide)",
+  "🔄 SWAP: scambia il bicchiere con chiunque tu voglia, senza spiegazioni",
+  "🃏 JOLLY: inventa tu una sfida per qualcuno, il gruppo decide se è abbastanza folle",
+  "⚡ SPEED ROUND: tutti bevono ogni volta che qualcuno dice 'sì' per 1 minuto",
+  "🌀 CAOS TOTALE: tutti si alzano, cambiano posto e il giro riparte da capo",
+  "🎤 KARAOKE FORZATO: tutti cantano insieme per 20 secondi la stessa canzone",
+  "📸 SELFIE DI GRUPPO: tutti nella foto entro 10 secondi o si beve!",
+  "🃏 VERITÀ O BEVI: scegli qualcuno, fai una domanda scomoda — risponde o beve 3 sorsi",
+  "🏆 CAMPIONE: il giocatore alla tua sinistra è immune per i prossimi 2 turni",
+  "🔥 CATENA: ognuno beve un sorso a turno finché qualcuno si rifiuta — quel giocatore beve 4",
+  "🎲 DADO UMANO: tutti gridano un numero 1-6, chi indovina il totale assegna 3 sorsi",
 ];
 
-const coloriCategoria = {
-  bevi:     "cat-bevi",
-  penalita: "cat-penalita",
-  sfida:    "cat-sfida",
-  social:   "cat-social",
-  raro:     "cat-raro",
-};
+// ── ULTRA RARI (~2% probabilità) ──────────────────────────────────────────
+const eventiUltraRari = [
+  "☢️ NUCLEARE: TUTTI finiscono il bicchiere — nessuno escluso",
+  "👑 DITTATORE: inventi una regola valida fino alla fine della partita",
+  "🧊 FREEZE: puoi congelare qualsiasi giocatore per un intero turno",
+  "🎯 HEADSHOT: scegli qualcuno che deve finire il bicchiere adesso",
+  "🃏 GOD MODE: sei immune a tutte le penalità per i prossimi 3 turni",
+  "💸 BANCAROTTA: il giocatore con più sorsi bevuti questa sera assegna 5 sorsi a chi vuole",
+  "🌋 ERUZIONE: tutti bevono 2 sorsi ogni turno per i prossimi 3 turni",
+  "🎪 CIRCO: il gruppo vota la sfida più assurda mai vista — chi la esegue è esonerato per 2 turni",
+];
 
-const labelCategoria = {
-  bevi:     "🍺 Bevi",
-  penalita: "💀 Penalità",
-  sfida:    "🎯 Sfida",
-  social:   "👥 Social",
-  raro:     "⭐ EVENTO RARO",
-};
+// ── LOGICA ────────────────────────────────────────────────────────────────
+const tutteCategorie = Object.keys(eventi);
 
 let contatore = 0;
 let inCorso = false;
@@ -446,71 +529,61 @@ function randomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-const categoriaStyles = {
-  bevi:     { border: '#22c55e', bg: 'linear-gradient(135deg, #18181c 60%, #052e16 100%)', glow: 'rgba(34,197,94,0.08)',   badgeColor: '#22c55e', badgeBg: '#052e16' },
-  penalita: { border: '#ef4444', bg: 'linear-gradient(135deg, #18181c 60%, #450a0a 100%)', glow: 'rgba(239,68,68,0.08)',   badgeColor: '#ef4444', badgeBg: '#450a0a' },
-  sfida:    { border: '#f59e0b', bg: 'linear-gradient(135deg, #18181c 60%, #451a03 100%)', glow: 'rgba(245,158,11,0.08)',  badgeColor: '#f59e0b', badgeBg: '#451a03' },
-  social:   { border: '#3b82f6', bg: 'linear-gradient(135deg, #18181c 60%, #0c1a3a 100%)', glow: 'rgba(59,130,246,0.08)', badgeColor: '#3b82f6', badgeBg: '#0c1a3a' },
-  raro:     { border: '#a855f7', bg: 'linear-gradient(135deg, #18181c 60%, #2e1065 100%)', glow: 'rgba(168,85,247,0.12)', badgeColor: '#a855f7', badgeBg: '#2e1065' },
-};
-
 function setCard(categoria, testo, animate) {
   const card     = document.getElementById("card");
   const badge    = document.getElementById("badgeCategoria");
   const eventoEl = document.getElementById("eventoText");
   const s        = categoriaStyles[categoria];
 
-  // Applica stili direttamente — niente affidamento a CSS var inheritance tra classi
   card.style.borderColor = s.border;
   card.style.background  = s.bg;
-  card.style.animation   = categoria === "raro" ? "rarePulse 1.8s ease-in-out infinite" : "";
-
   badge.style.color       = s.badgeColor;
   badge.style.background  = s.badgeBg;
   badge.style.borderColor = s.badgeColor;
   badge.style.opacity     = "1";
   badge.style.transform   = "translateY(0)";
   badge.textContent       = labelCategoria[categoria];
+  eventoEl.textContent    = testo;
 
-  eventoEl.textContent = testo;
+  const isSpecial = categoria === "raro" || categoria === "ultrararo";
 
   if (animate) {
     card.style.animation = "";
-    void card.offsetWidth; // force reflow
-    card.style.animation = categoria === "raro"
+    void card.offsetWidth;
+    card.style.animation = isSpecial
       ? "pop 0.35s cubic-bezier(.22,1,.36,1) forwards, rarePulse 1.8s ease-in-out 0.35s infinite"
       : "pop 0.35s cubic-bezier(.22,1,.36,1) forwards";
+  } else {
+    card.style.animation = isSpecial ? "rarePulse 1.8s ease-in-out infinite" : "";
   }
 
-  if (categoria === "raro") spawnConfetti();
+  if (isSpecial) spawnConfetti();
 }
 
 async function slotAnimation() {
   const card     = document.getElementById("card");
   const eventoEl = document.getElementById("eventoText");
   const badge    = document.getElementById("badgeCategoria");
-  const categorie = Object.keys(eventi);
   const FRAMES   = 14;
 
   card.style.animation = "shakeCard 0.4s ease forwards";
 
   for (let i = 0; i < FRAMES; i++) {
-    const c = randomItem(categorie);
+    const c = randomItem(tutteCategorie);
     const e = randomItem(eventi[c]);
     const s = categoriaStyles[c];
 
-    card.style.borderColor = s.border;
-    card.style.background  = s.bg;
+    card.style.borderColor  = s.border;
+    card.style.background   = s.bg;
     badge.style.color       = s.badgeColor;
     badge.style.background  = s.badgeBg;
     badge.style.borderColor = s.badgeColor;
     badge.style.opacity     = "1";
     badge.style.transform   = "translateY(0)";
-    badge.textContent = labelCategoria[c];
-    eventoEl.textContent = e;
+    badge.textContent       = labelCategoria[c];
+    eventoEl.textContent    = e;
 
-    const delay = 50 + i * 10;
-    await new Promise(r => setTimeout(r, delay));
+    await new Promise(r => setTimeout(r, 50 + i * 10));
   }
 }
 
@@ -523,16 +596,20 @@ async function genera() {
 
   await slotAnimation();
 
-  // Ora assegna il risultato FINALE
   let categoria, testo;
-  if (Math.random() < 0.08) {
+  const r = Math.random();
+
+  if (r < 0.02) {
+    // 2% ultra raro
+    categoria = "ultrararo";
+    testo     = randomItem(eventiUltraRari);
+  } else if (r < 0.10) {
+    // 8% raro
     categoria = "raro";
-    const raro = randomItem(eventiRari);
-    testo = raro.testo;
+    testo     = randomItem(eventiRari);
   } else {
-    const categorie = Object.keys(eventi);
-    categoria = randomItem(categorie);
-    testo = randomItem(eventi[categoria]);
+    categoria = randomItem(tutteCategorie);
+    testo     = randomItem(eventi[categoria]);
   }
 
   setCard(categoria, testo, true);
@@ -548,24 +625,20 @@ function spawnConfetti() {
   const overlay = document.getElementById("raroOverlay");
   overlay.style.display = "block";
   overlay.innerHTML = "";
-  const colors = ["#a855f7","#f59e0b","#22c55e","#ef4444","#3b82f6","#f0eee8"];
-  for (let i = 0; i < 40; i++) {
+  const colors = ["#a855f7","#fbbf24","#22c55e","#ef4444","#3b82f6","#f0eee8","#ec4899","#06b6d4"];
+  for (let i = 0; i < 55; i++) {
     const el = document.createElement("div");
     el.className = "confetti-piece";
     el.style.left = Math.random() * 100 + "vw";
     el.style.top  = "-20px";
     el.style.background = randomItem(colors);
-    el.style.animationDelay = Math.random() * 0.6 + "s";
-    el.style.animationDuration = (0.8 + Math.random() * 0.8) + "s";
+    el.style.animationDelay    = Math.random() * 0.8 + "s";
+    el.style.animationDuration = (0.8 + Math.random() * 1) + "s";
     overlay.appendChild(el);
   }
-  setTimeout(() => {
-    overlay.style.display = "none";
-    overlay.innerHTML = "";
-  }, 2200);
+  setTimeout(() => { overlay.style.display = "none"; overlay.innerHTML = ""; }, 2500);
 }
 
-// Collega eventi senza attributi inline (compatibile con SES/Lockdown)
 document.getElementById("btnSfida").addEventListener("click", genera);
 document.addEventListener("DOMContentLoaded", genera);
 </script>
