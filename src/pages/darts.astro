@@ -1,0 +1,733 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="DartMaster Pro" description="Tracker partite di freccette — X01, Cricket, Shanghai e molto altro." sideBarActiveItemID="darts">
+
+<style>
+/* ── LANDING ───────────────────────────────────────── */
+.dm-landing {
+  font-family: 'DM Sans', sans-serif;
+}
+.dm-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0 2rem;
+}
+.dm-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #00e599;
+  background: #00e59912;
+  border: 1px solid #00e59930;
+  border-radius: 99px;
+  padding: 4px 12px;
+  width: fit-content;
+}
+.dm-h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  letter-spacing: 4px;
+  line-height: 1;
+  color: #e2f0ff;
+  margin: 0;
+}
+.dm-h1 span { color: #00e599; }
+.dm-desc {
+  font-size: 1rem;
+  color: #7da8cc;
+  max-width: 480px;
+  line-height: 1.65;
+}
+.dm-launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #00e599;
+  color: #030e07;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: all .15s;
+  width: fit-content;
+}
+.dm-launch-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.dm-launch-btn:active { transform: scale(.96); }
+.dm-launch-icon {
+  width: 20px; height: 20px;
+  border: 2.5px solid #030e07;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.dm-launch-icon::after {
+  content: '';
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 9px;
+  border-color: transparent transparent transparent #030e07;
+  margin-left: 2px;
+}
+
+/* modes grid */
+.dm-modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 1rem 0;
+}
+.dm-mode-card {
+  background: #0a1526;
+  border: 1px solid #162540;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all .18s;
+  cursor: default;
+}
+.dm-mode-card:hover {
+  border-color: #00e59940;
+  background: #0e1c32;
+}
+.dm-mode-ic { font-size: 1.4rem; line-height: 1; }
+.dm-mode-nm {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  color: #e2f0ff;
+  margin-top: 2px;
+}
+.dm-mode-ds { font-size: 0.68rem; color: #4d7a99; line-height: 1.35; }
+
+/* stats bar */
+.dm-statsbar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px;
+  background: #0a1526;
+  border: 1px solid #162540;
+  border-radius: 12px;
+}
+.dm-stat {
+  flex: 1;
+  min-width: 80px;
+  text-align: center;
+}
+.dm-stat-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #00e599;
+}
+.dm-stat-l {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #4d7a99;
+  margin-top: 2px;
+}
+
+/* section title */
+.dm-section-t {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #3d6080;
+  margin-bottom: 10px;
+}
+
+/* screenshot mockup */
+.dm-mockup {
+  background: #060c17;
+  border: 1px solid #162540;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.dm-mockup-bar {
+  background: #0a1526;
+  border-bottom: 1px solid #162540;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dm-mockup-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: #00e599;
+}
+.dm-mockup-logo em { color: #4d7a99; font-style: normal; }
+.dm-mockup-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dm-score-big {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(56px, 12vw, 88px);
+  font-weight: 700;
+  color: #00e599;
+  line-height: 1;
+  text-align: center;
+}
+.dm-score-sub {
+  text-align: center;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #3d6080;
+}
+.dm-keypad-prev {
+  display: flex;
+  grid-template-columns: repeat(3,1fr);
+  gap: 6px;
+  justify-content: center;
+}
+.dm-key {
+  background: #0e1c32;
+  border: 1px solid #162540;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e2f0ff;
+  text-align: center;
+  flex: 1;
+}
+.dm-key.green { background: #00e599; color: #030e07; flex: 2; }
+
+/* overlay launcher */
+#dm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3,7,15,.96);
+  align-items: center;
+  justify-content: center;
+}
+#dm-overlay.open { display: flex; }
+#dm-app-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.dm-close-btn {
+  position: absolute;
+  top: 12px;
+  left: 225px;
+  z-index: 10001;
+  background: #0e1c32;
+  border: 1px solid #253c60;
+  border-radius: 8px;
+  color: #7da8cc;
+  font-size: 1rem;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .14s;
+  display: none;
+}
+.dm-close-btn:hover { border-color: #ff3d5a; color: #ff3d5a; }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<div class="dm-landing">
+
+  <!-- HERO -->
+  <div class="dm-hero">
+    <div class="dm-eyebrow">🎯 Darts Tracker</div>
+    <h1 class="dm-h1">DART<span>MASTER</span><br>PRO</h1>
+    <p class="dm-desc">
+      Traccia ogni partita in tempo reale — X01, Cricket, Shanghai, Halve-It e altro.
+      Statistiche dettagliate, rivalità testa a testa e modalità allenamento solo.
+    </p>
+    <button class="dm-launch-btn" onclick="document.getElementById('dm-overlay').classList.add('open'); document.body.style.overflow='hidden'">
+      <span class="dm-launch-icon"></span>
+      LANCIA L'APP
+    </button>
+  </div>
+
+  <!-- STATS DAL LOCALE STORAGE -->
+  <div>
+    <div class="dm-section-t">Il tuo profilo</div>
+    <div class="dm-statsbar" id="dm-stats-bar">
+      <div class="dm-stat"><div class="dm-stat-v" id="st-players">—</div><div class="dm-stat-l">Giocatori</div></div>
+      <div class="dm-stat"><div class="dm-stat-v" id="st-games">—</div><div class="dm-stat-l">Partite totali</div></div>
+      <div class="dm-stat"><div class="dm-stat-v" id="st-avg">—</div><div class="dm-stat-l">Avg PPR top</div></div>
+      <div class="dm-stat"><div class="dm-stat-v" id="st-best">—</div><div class="dm-stat-l">Best solo</div></div>
+    </div>
+  </div>
+
+  <!-- MODALITÀ -->
+  <div>
+    <div class="dm-section-t">Modalità di gioco</div>
+    <div class="dm-modes">
+      <div class="dm-mode-card"><div class="dm-mode-ic">🎯</div><div class="dm-mode-nm">X01</div><div class="dm-mode-ds">501/301 — raggiungi zero esatto</div></div>
+      <div class="dm-mode-card"><div class="dm-mode-ic">🏏</div><div class="dm-mode-nm">Cricket</div><div class="dm-mode-ds">Chiudi 15–20 e Bull prima degli avversari</div></div>
+      <div class="dm-mode-card"><div class="dm-mode-ic">🌆</div><div class="dm-mode-nm">Shanghai</div><div class="dm-mode-ds">7 turni. Shanghai = vittoria istantanea</div></div>
+      <div class="dm-mode-card"><div class="dm-mode-ic">✂️</div><div class="dm-mode-nm">Halve-It</div><div class="dm-mode-ds">Manca il target? Punteggio dimezzato</div></div>
+      <div class="dm-mode-card"><div class="dm-mode-ic">🎲</div><div class="dm-mode-nm">Bob's 27</div><div class="dm-mode-ds">Parti da 27. Doppi in ordine</div></div>
+      <div class="dm-mode-card"><div class="dm-mode-ic">🕐</div><div class="dm-mode-nm">Around Clock</div><div class="dm-mode-ds">Colpisci 1→20 in sequenza</div></div>
+      <div class="dm-mode-card" style="border-color:#38b6ff28;background:#38b6ff06"><div class="dm-mode-ic">⏱️</div><div class="dm-mode-nm" style="color:#38b6ff">Countdown</div><div class="dm-mode-ds">Solo: quante freccette per azzerare?</div></div>
+      <div class="dm-mode-card" style="border-color:#38b6ff28;background:#38b6ff06"><div class="dm-mode-ic">📈</div><div class="dm-mode-nm" style="color:#38b6ff">Scoring</div><div class="dm-mode-ds">Solo: 10 turni, massimizza il punteggio</div></div>
+    </div>
+  </div>
+
+  <!-- MOCKUP PREVIEW -->
+  <div>
+    <div class="dm-section-t">Anteprima</div>
+    <div class="dm-mockup">
+      <div class="dm-mockup-bar">
+        <div class="dm-mockup-logo">🎯 DART<em>MASTER</em></div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <span style="background:#00e59918;border:1px solid #00e59930;border-radius:99px;font-size:0.6rem;font-weight:700;letter-spacing:1px;color:#00e599;padding:3px 9px">LIVE</span>
+        </div>
+      </div>
+      <div class="dm-mockup-body">
+        <div style="display:flex;gap:6px">
+          <div style="flex:1;background:#0e1c32;border:1px solid #162540;border-radius:10px;padding:8px 6px;text-align:center;border-bottom:2px solid #00e599">
+            <div style="font-size:0.5rem;color:#4d7a99;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">🎯 Luca</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:#00e599">247</div>
+            <div style="font-size:0.5rem;color:#fbbf24">avg 61.2</div>
+          </div>
+          <div style="flex:1;background:#0e1c32;border:1px solid #162540;border-radius:10px;padding:8px 6px;text-align:center;opacity:.6">
+            <div style="font-size:0.5rem;color:#4d7a99;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">🔥 Marco</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:#38b6ff">312</div>
+            <div style="font-size:0.5rem;color:#fbbf24">avg 54.8</div>
+          </div>
+          <div style="flex:1;background:#0e1c32;border:1px solid #162540;border-radius:10px;padding:8px 6px;text-align:center;opacity:.5">
+            <div style="font-size:0.5rem;color:#4d7a99;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">💎 Sara</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:#a78bfa">388</div>
+            <div style="font-size:0.5rem;color:#fbbf24">avg 48.1</div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:8px 0">
+          <div class="dm-score-big">247</div>
+          <div class="dm-score-sub">turno corrente · +60</div>
+          <div style="margin-top:6px;padding:3px 12px;border-radius:99px;background:#fbbf2414;border:1px solid #fbbf2428;color:#fbbf24;font-size:0.72rem;font-family:'JetBrains Mono',monospace;display:inline-block">→ T19 D25</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <div class="dm-key">1</div>
+          <div class="dm-key">2</div>
+          <div class="dm-key">3</div>
+          <div class="dm-key" style="background:#38b6ff18;color:#38b6ff;border-color:#38b6ff28">×2</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <div class="dm-key green">✓ CONFERMA</div>
+          <div class="dm-key" style="color:#ff3d5a;border-color:#ff3d5a22">C</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FULL-SCREEN OVERLAY CON L'APP -->
+<div id="dm-overlay">
+  <button class="dm-close-btn"
+    onclick="document.getElementById('dm-overlay').classList.remove('open'); document.body.style.overflow=''">
+    ✕ CHIUDI
+  </button>
+
+  <div id="dm-app-frame" style="width:100%;height:100%;overflow:hidden"></div>
+</div>
+
+
+<script is:inline>
+/* ── STATS DALLA LANDING ─────────────────────────────── */
+(function(){
+  try{
+    const players = JSON.parse(localStorage.getItem('dm_players_v3')) || [];
+    document.getElementById('st-players').textContent = players.length || '0';
+    const totalGames = players.reduce((s,p)=>s+(p.games_played||0),0);
+    document.getElementById('st-games').textContent = totalGames || '0';
+    const topAvg = players.length ? Math.max(...players.map(p=>p.avg_ppr||0)).toFixed(1) : '—';
+    document.getElementById('st-avg').textContent = topAvg;
+    const bests = players.map(p=>p.solo_best).filter(Boolean);
+    document.getElementById('st-best').textContent = bests.length ? Math.min(...bests)+'🎯' : '—';
+  } catch(e){}
+})();
+
+/* ── LAZY-LOAD APP NELL'OVERLAY ──────────────────────── */
+let appLoaded = false;
+document.querySelector('.dm-launch-btn').addEventListener('click', () => {
+  if(appLoaded) return;
+  appLoaded = true;
+  const frame = document.getElementById('dm-app-frame');
+
+  const appStyles = `
+    <style>
+    #dma{--bg:#060c17;--s1:#0a1526;--s2:#0e1c32;--s3:#12243e;--b1:#162540;--b2:#1d3050;--b3:#253c60;--grn:#00e599;--grn-a:#00e59918;--grn-b:#00e59935;--red:#ff3d5a;--red-a:#ff3d5a14;--blu:#38b6ff;--blu-a:#38b6ff14;--gld:#fbbf24;--gld-a:#fbbf2414;--prp:#a78bfa;--tx:#e2f0ff;--tx2:#7da8cc;--tx3:#3d6080;--font-d:'Bebas Neue',sans-serif;--font-m:'JetBrains Mono',monospace;--font-u:'DM Sans',sans-serif;--r:10px;--r2:14px;--r3:20px}
+    #dma,#dma *{box-sizing:border-box!important;-webkit-tap-highlight-color:transparent!important;margin:0;padding:0}
+    #dma{position:absolute;inset:0;z-index:1;background:var(--bg);color:var(--tx);font-family:var(--font-u);display:flex;flex-direction:column;overflow:hidden}
+    #dma input,#dma select{all:unset;display:block;padding:11px 14px!important;border-radius:var(--r)!important;border:1px solid var(--b2)!important;background:var(--s1)!important;color:var(--tx)!important;font-size:14px!important;font-family:var(--font-u)!important;width:100%!important;transition:all .2s}
+    #dma input:focus,#dma select:focus{outline:none!important;border-color:var(--grn)!important;box-shadow:0 0 0 3px var(--grn-b)!important}
+    #dma select{cursor:pointer}
+    #dma button{all:unset;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+    #dma .sc{display:none!important;width:100%;height:100%;overflow:hidden;flex-direction:column}
+    #dma .sc.on{display:flex!important}
+    #dma .si{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+    #dma .si::-webkit-scrollbar{width:3px}
+    #dma .si::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+    #dma .tb{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--s1);border-bottom:1px solid var(--b1);flex-shrink:0}
+    #dma .tb-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:3px;color:var(--grn);flex:1}
+    #dma .tb-logo em{color:var(--tx2);font-style:normal}
+    #dma .tb-title{font-family:var(--font-d);font-size:1.2rem;letter-spacing:2px;color:var(--grn);flex:1}
+    #dma .db{padding:10px 18px;border-radius:var(--r);font-family:var(--font-d);font-size:.9rem;letter-spacing:1.5px;transition:all .14s;white-space:nowrap;border:1px solid transparent}
+    #dma .db:active{transform:scale(.94)!important}
+    #dma .db-p{background:var(--grn)!important;color:#030e07!important;border-color:var(--grn)!important}
+    #dma .db-p:hover{filter:brightness(1.1)}
+    #dma .db-g{background:transparent!important;color:var(--tx2)!important;border:1px solid var(--b2)!important;font-family:var(--font-u)!important;font-size:.82rem!important;letter-spacing:.3px!important}
+    #dma .db-g:hover{border-color:var(--grn)!important;color:var(--grn)!important}
+    #dma .db-d{background:var(--red-a)!important;color:var(--red)!important;border:1px solid #ff3d5a28!important;font-family:var(--font-u)!important;font-size:.82rem!important}
+    #dma .db-i{background:var(--s2)!important;border:1px solid var(--b2)!important;color:var(--tx2)!important;padding:8px 12px!important;border-radius:var(--r)!important;font-size:1rem!important;transition:all .14s}
+    #dma .db-i:hover{border-color:var(--grn)!important;color:var(--grn)!important}
+    #dma .lbl{font-size:.58rem!important;font-weight:700!important;text-transform:uppercase;letter-spacing:2px;color:var(--tx3)}
+    #dma .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--b2);font-size:.8rem}
+    #dma .chip-x{cursor:pointer;color:var(--tx3);font-size:.68rem;margin-left:2px}
+    #dma .chip-x:hover{color:var(--red)}
+    #dma .badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:99px;font-size:.62rem;font-weight:700;letter-spacing:.4px}
+    #dma .badge-g{background:var(--grn-a);color:var(--grn);border:1px solid var(--grn-b)}
+    #dma .badge-gld{background:var(--gld-a);color:var(--gld);border:1px solid #fbbf2430}
+    #dma .badge-b{background:var(--blu-a);color:var(--blu);border:1px solid #38b6ff30}
+    #dma .card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden}
+    #dma .card-h{padding:9px 13px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:8px}
+    #dma .card-b{padding:12px 13px;display:flex;flex-direction:column;gap:10px}
+    #dma-toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-8px);padding:8px 18px;border-radius:var(--r);font-size:.85rem;font-weight:600;z-index:10000;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;background:var(--s3);border:1px solid var(--b2);color:var(--tx);font-family:var(--font-u);white-space:nowrap}
+    #dma-toast.on{opacity:1!important;transform:translateX(-50%) translateY(0)!important}
+    #dma-toast.bust{border-color:var(--red)!important;color:var(--red)!important;background:#140a10!important}
+    #dma-toast.win{border-color:var(--gld)!important;color:var(--gld)!important;background:#14110a!important}
+    #dma-toast.info{border-color:var(--grn)!important;color:var(--grn)!important}
+    #dma-winner{display:none!important;position:fixed;inset:0;z-index:9999;background:rgba(3,7,15,.92);flex-direction:column;align-items:center;justify-content:center;gap:10px}
+    #dma-winner.on{display:flex!important}
+    #dma .wt{font-size:3.5rem;animation:dmPop .4s cubic-bezier(.36,.07,.19,.97) both}
+    @keyframes dmPop{0%{transform:scale(0) rotate(-15deg)}70%{transform:scale(1.12) rotate(3deg)}100%{transform:scale(1)}}
+    #dma .wtag{font-size:.6rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gld);background:var(--gld-a);border:1px solid #fbbf2430;border-radius:99px;padding:3px 12px}
+    #dma .wname{font-family:var(--font-d);font-size:3rem;letter-spacing:5px;color:var(--tx);text-align:center;line-height:1}
+    #dma .wsub{color:var(--tx2);font-size:.82rem;text-align:center}
+    #dma .wact{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+    #dma .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+    #dma .pc{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 10px;text-align:center;cursor:pointer;transition:all .18s;position:relative;display:flex;flex-direction:column;align-items:center;gap:5px}
+    #dma .pc:hover{border-color:var(--b2);transform:translateY(-2px)}
+    #dma .pc.sel{background:var(--grn-a);box-shadow:0 0 0 1.5px var(--grn)}
+    #dma .pc.sel::after{content:'✓';position:absolute;top:7px;right:9px;color:var(--grn);font-weight:700;font-size:.78rem}
+    #dma .pc-av{font-size:2rem;line-height:1}
+    #dma .pc-nm{font-weight:600;font-size:.82rem;color:var(--tx)}
+    #dma .pc-st{font-size:.58rem;color:var(--tx2)}
+    #dma .pc-add{background:var(--s1);border:1px dashed var(--b2);border-radius:var(--r2);padding:14px;text-align:center;cursor:pointer;transition:all .18s;color:var(--tx2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:105px}
+    #dma .pc-add:hover{border-color:var(--grn);color:var(--grn)}
+    #dma .pc-plus{width:32px;height:32px;border-radius:50%;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all .18s}
+    #dma .pc-add:hover .pc-plus{background:var(--grn-a);border-color:var(--grn);color:var(--grn)}
+    #dma .solo-banner{background:var(--blu-a);border:1px solid #38b6ff28;border-radius:var(--r2);padding:12px 14px;display:flex;align-items:center;gap:12px}
+    #dma .solo-banner-txt{flex:1}
+    #dma .rv{background:var(--gld-a);border:1px solid #fbbf2428;border-radius:var(--r);padding:10px 13px;display:flex;align-items:center;gap:10px;font-size:.82rem}
+    #dma .rv-sc{font-family:var(--font-m);font-weight:700;font-size:.95rem;color:var(--gld)}
+    #dma-modal{display:none!important;position:fixed;inset:0;z-index:9998;background:rgba(3,7,15,.82);align-items:center;justify-content:center;padding:14px}
+    #dma-modal.on{display:flex!important}
+    #dma .mo{background:var(--s2);border:1px solid var(--b2);border-radius:var(--r3);padding:18px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 70px rgba(0,0,0,.7)}
+    #dma .mo-t{font-family:var(--font-d);font-size:1.2rem;letter-spacing:2px;color:var(--grn)}
+    #dma .eg{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+    #dma .eo{aspect-ratio:1;border-radius:7px;font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--s1);border:2px solid transparent;transition:all .1s}
+    #dma .eo:hover{background:var(--s3)}
+    #dma .eo.on{border-color:var(--grn);background:var(--grn-a)}
+    #dma .cg{display:flex;gap:7px;flex-wrap:wrap}
+    #dma .co{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .14s}
+    #dma .co.on{border-color:#fff;transform:scale(1.2)}
+    #dma .mg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    #dma .mc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:11px;cursor:pointer;transition:all .16s;position:relative}
+    #dma .mc:hover{border-color:var(--b2)}
+    #dma .mc.on{border-color:var(--grn);background:var(--grn-a)}
+    #dma .mc.solo-only::after{content:'SOLO';position:absolute;top:5px;right:7px;font-size:.5rem;font-weight:700;letter-spacing:1px;color:var(--blu);background:var(--blu-a);border:1px solid #38b6ff30;border-radius:99px;padding:1px 6px}
+    #dma .mc-ic{font-size:1.3rem;margin-bottom:3px}
+    #dma .mc-nm{font-family:var(--font-d);font-size:.9rem;letter-spacing:1px;color:var(--tx)}
+    #dma .mc-ds{font-size:.58rem;color:var(--tx2);margin-top:2px;line-height:1.35}
+    #dma .ptabs{display:flex;background:var(--s1);border-bottom:1px solid var(--b1);overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+    #dma .ptab{flex:1;min-width:82px;padding:8px 5px;text-align:center;border-right:1px solid var(--b1);opacity:.3;transition:all .2s;position:relative}
+    #dma .ptab.on{opacity:1;background:var(--grn-a)}
+    #dma .ptab.on::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--grn)}
+    #dma .ptab-nm{font-size:.52rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2)}
+    #dma .ptab-sc{font-family:var(--font-m);font-size:1.3rem;font-weight:700;line-height:1.1}
+    #dma .ptab-av{font-size:.52rem;color:var(--gld);margin-top:1px}
+    #dma .gm{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 14px;position:relative;overflow:hidden}
+    #dma .gm::before{content:'';position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#00e59906 0%,transparent 65%);pointer-events:none}
+    #dma .solo-panel{width:100%;max-width:420px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:12px;margin-bottom:10px}
+    #dma .solo-stat-row{display:flex;gap:8px}
+    #dma .solo-stat{flex:1;background:var(--s1);border-radius:var(--r);padding:8px 10px;text-align:center;border:1px solid var(--b1)}
+    #dma .solo-stat-v{font-family:var(--font-m);font-size:1.1rem;font-weight:700}
+    #dma .solo-stat-l{font-size:.55rem;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-top:1px}
+    #dma .dots{display:flex;gap:8px;margin-bottom:10px}
+    #dma .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--b2);transition:all .22s}
+    #dma .dot.on{border-color:var(--grn)}
+    #dma .big{font-family:var(--font-m);font-size:clamp(62px,11vw,115px);font-weight:700;line-height:1}
+    #dma .tl{font-size:.58rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--tx3);margin-top:4px}
+    #dma .tp{font-family:var(--font-m);font-size:1.1rem;color:var(--blu);font-weight:600}
+    #dma .hint{margin-top:8px;padding:4px 13px;border-radius:99px;background:var(--gld-a);border:1px solid #fbbf2428;color:var(--gld);font-size:.78rem;font-family:var(--font-m);font-weight:600;min-height:26px;display:flex;align-items:center;opacity:0;transition:opacity .22s}
+    #dma .tg{text-align:center}
+    #dma .tg-l{font-size:.58rem;text-transform:uppercase;letter-spacing:2px;color:var(--tx2);margin-bottom:6px}
+    #dma .tg-n{font-family:var(--font-d);font-size:4.5rem;letter-spacing:2px;line-height:1}
+    #dma .tg-s{font-size:.7rem;color:var(--tx2);margin-top:4px}
+    #dma .kw{background:var(--s1);border-top:1px solid var(--b1);padding:9px 11px 11px;flex-shrink:0}
+    #dma .kprev{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;background:var(--s2);border-radius:var(--r);margin-bottom:8px;border:1px solid var(--b1)}
+    #dma .kpn{font-family:var(--font-m);font-size:1.15rem;font-weight:700;color:var(--blu)}
+    #dma .kpe{font-family:var(--font-m);font-size:.78rem;color:var(--tx2)}
+    #dma .kp{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+    #dma .k{padding:13px 4px;font-size:1.2rem;border-radius:var(--r);background:var(--s2);color:var(--tx);font-weight:700;font-family:var(--font-m);border:1px solid var(--b1);transition:all .1s}
+    #dma .k:active{transform:scale(.89)!important;background:var(--blu)!important;border-color:var(--blu)!important;color:#fff!important}
+    #dma .k-mod{background:var(--blu-a)!important;color:var(--blu)!important;border-color:#38b6ff28!important}
+    #dma .k-mod.on{background:var(--blu)!important;color:#fff!important;border-color:var(--blu)!important}
+    #dma .k-del{color:var(--red)!important;border-color:#ff3d5a22!important}
+    #dma .k-ok{background:var(--grn)!important;color:#030e07!important;grid-column:span 2;font-family:var(--font-d)!important;letter-spacing:1.5px;font-size:1rem!important}
+    #dma .k-skip{color:var(--tx2)!important;font-size:.68rem!important;font-family:var(--font-u)!important}
+    #dma .k-exit{color:var(--tx3)!important;font-size:.62rem!important;font-family:var(--font-u)!important}
+    #dma .podium{display:flex;justify-content:center;align-items:flex-end;gap:8px;padding:14px 0 6px}
+    #dma .pd-sl{text-align:center;display:flex;flex-direction:column;align-items:center}
+    #dma .pd-bl{width:76px;border-radius:5px 5px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:7px}
+    #dma .pd-bl.r1{height:82px;background:linear-gradient(180deg,#fbbf2412,transparent);border:1px solid #fbbf2438}
+    #dma .pd-bl.r2{height:58px;background:var(--s2);border:1px solid var(--b2)}
+    #dma .pd-bl.r3{height:40px;background:var(--s2);border:1px solid var(--b1)}
+    #dma .pd-rk{font-size:1.3rem}
+    #dma .pd-nm{font-size:.7rem;font-weight:600;margin-top:5px;color:var(--tx)}
+    #dma .pd-sb{font-size:.56rem;color:var(--tx2)}
+    #dma .sg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    #dma .scard{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:11px}
+    #dma .scard-l{font-size:.56rem;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);margin-bottom:4px}
+    #dma .scard-v{font-family:var(--font-m);font-size:1.2rem;font-weight:700}
+    #dma .scard-s{font-size:.58rem;color:var(--tx2);margin-top:2px}
+    #dma .psb{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;margin-bottom:8px}
+    #dma .psb-h{padding:10px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:9px}
+    #dma .psb-b{padding:11px 12px;display:flex;flex-direction:column;gap:8px}
+    #dma .psb-r{display:flex;justify-content:space-between;align-items:center}
+    #dma .psb-l{font-size:.7rem;color:var(--tx2)}
+    #dma .psb-v{font-family:var(--font-m);font-weight:700;font-size:.88rem}
+    #dma .bar-t{height:4px;background:var(--b1);border-radius:2px;overflow:hidden;margin-top:2px}
+    #dma .bar-f{height:100%;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+    #dma .tc{display:flex;gap:2px;align-items:flex-end;height:40px}
+    #dma .tcb{flex:1;border-radius:2px 2px 0 0;min-width:5px;background:var(--b2)}
+    #dma .tcb.bust{background:var(--red);opacity:.6}
+    #dma .tcb.high{background:var(--grn)}
+    #dma .solo-history{display:flex;flex-direction:column;gap:4px;max-height:160px;overflow-y:auto}
+    #dma .sh-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;background:var(--s1);font-family:var(--font-m);font-size:.8rem}
+    #dma .sh-n{color:var(--tx3);font-size:.65rem;min-width:22px}
+    #dma .sh-s{font-weight:700;min-width:34px}
+    #dma .sh-bar{flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
+    #dma .sh-bf{height:100%;border-radius:2px}
+    @media(min-width:860px){#dma #sc-game{flex-direction:row!important}#dma .ptabs{flex-direction:column;width:115px;height:100%;border-right:1px solid var(--b1);border-bottom:none;overflow-y:auto}#dma .ptab{min-width:unset;flex:none;height:84px;border-right:none;border-bottom:1px solid var(--b1)}#dma .ptab.on::after{bottom:0;top:0;right:0;left:unset;width:2px;height:auto}#dma .gm{flex:1}#dma .kw{width:340px;border-top:none;border-left:1px solid var(--b1);display:flex;flex-direction:column;justify-content:center;padding:14px}}
+    </style>
+  `;
+
+  frame.innerHTML = appStyles + `
+    <div id="dma">
+    <div id="dma-toast"></div>
+    <div id="dma-winner">
+      <div class="wt">🏆</div>
+      <div class="wtag">VITTORIA</div>
+      <div class="wname" id="w-name">PLAYER</div>
+      <div class="wsub" id="w-sub"></div>
+      <div class="wact">
+        <button class="db db-p" onclick="dmShowStats()">📊 STATISTICHE</button>
+        <button class="db db-g" onclick="dmHome()">NUOVA PARTITA</button>
+      </div>
+    </div>
+    <div id="dma-modal">
+      <div class="mo">
+        <div class="mo-t" id="mo-title">NUOVO GIOCATORE</div>
+        <div><div class="lbl" style="margin-bottom:7px">Avatar</div><div class="eg" id="mo-emojis"></div></div>
+        <div><div class="lbl" style="margin-bottom:7px">Colore</div><div class="cg" id="mo-colors"></div></div>
+        <div><div class="lbl" style="margin-bottom:5px">Nome</div><input type="text" id="mo-name" placeholder="Nome giocatore" maxlength="20"></div>
+        <div style="display:flex;gap:7px">
+          <button class="db db-p" style="flex:1" onclick="dmSavePlayer()">SALVA</button>
+          <button class="db db-g" onclick="dmCloseModal()">ANNULLA</button>
+        </div>
+        <button class="db db-d" id="mo-del" style="display:none;width:100%" onclick="dmDeletePlayer()">🗑 ELIMINA</button>
+      </div>
+    </div>
+    <div class="sc on" id="sc-players">
+      <div class="tb">
+        <div class="tb-logo">🎯 DART<em>MASTER</em></div>
+        <button class="db db-p" id="play-btn" style="display:none" onclick="dmGoSetup()">▶ GIOCA</button>
+      </div>
+      <div class="si">
+        <div class="solo-banner">
+          <div style="font-size:1.6rem">🧍</div>
+          <div class="solo-banner-txt">
+            <div style="font-weight:600;font-size:.88rem;color:var(--blu)">Modalità Allenamento Solo</div>
+            <div style="font-size:.72rem;color:var(--tx2);margin-top:2px">Seleziona solo te stesso per allenarti.</div>
+          </div>
+          <button class="db" style="background:var(--blu-a)!important;color:var(--blu)!important;border:1px solid #38b6ff28!important;font-family:var(--font-d)!important;letter-spacing:1px;font-size:.82rem!important;padding:8px 14px!important;white-space:nowrap" onclick="dmStartSolo()">SOLO ▶</button>
+        </div>
+        <div>
+          <div class="lbl" style="margin-bottom:9px">Seleziona giocatori</div>
+          <div class="pg" id="pg"></div>
+        </div>
+        <div id="rv-zone" style="display:none"></div>
+      </div>
+    </div>
+    <div class="sc" id="sc-setup">
+      <div class="tb">
+        <button class="db-i" onclick="dmShowScreen('sc-players')">←</button>
+        <div class="tb-title">CONFIGURA PARTITA</div>
+      </div>
+      <div class="si">
+        <div class="card"><div class="card-h"><div class="lbl">Giocatori</div></div><div class="card-b"><div id="sp-row" style="display:flex;gap:7px;flex-wrap:wrap;min-height:32px;align-items:center"></div></div></div>
+        <div>
+          <div class="lbl" style="margin-bottom:9px">Modalità di gioco</div>
+          <div class="mg">
+            <div class="mc on" data-mode="X01" onclick="dmSelMode(this)"><div class="mc-ic">🎯</div><div class="mc-nm">X01</div><div class="mc-ds">501/301 — raggiungi zero esatto.</div></div>
+            <div class="mc" data-mode="CRICKET" onclick="dmSelMode(this)"><div class="mc-ic">🏏</div><div class="mc-nm">CRICKET</div><div class="mc-ds">Chiudi 15–20 e Bull prima degli avversari.</div></div>
+            <div class="mc" data-mode="SHANGHAI" onclick="dmSelMode(this)"><div class="mc-ic">🌆</div><div class="mc-nm">SHANGHAI</div><div class="mc-ds">7 turni. Shanghai = vittoria istantanea!</div></div>
+            <div class="mc" data-mode="HALVEIT" onclick="dmSelMode(this)"><div class="mc-ic">✂️</div><div class="mc-nm">HALVE-IT</div><div class="mc-ds">Manca il target? Punteggio dimezzato.</div></div>
+            <div class="mc" data-mode="BOBS27" onclick="dmSelMode(this)"><div class="mc-ic">🎲</div><div class="mc-nm">BOB'S 27</div><div class="mc-ds">Parti da 27. Doppi in ordine.</div></div>
+            <div class="mc" data-mode="ATC" onclick="dmSelMode(this)"><div class="mc-ic">🕐</div><div class="mc-nm">AROUND CLOCK</div><div class="mc-ds">Colpisci 1→20 in ordine.</div></div>
+            <div class="mc solo-only" data-mode="COUNTDOWN" onclick="dmSelMode(this)"><div class="mc-ic">⏱️</div><div class="mc-nm">COUNTDOWN</div><div class="mc-ds">Solo: quante freccette per azzerare?</div></div>
+            <div class="mc solo-only" data-mode="SCORING" onclick="dmSelMode(this)"><div class="mc-ic">📈</div><div class="mc-nm">SCORING</div><div class="mc-ds">Solo: 10 turni, massimizza il punteggio.</div></div>
+          </div>
+        </div>
+        <div id="x01-opts" class="card">
+          <div class="card-h"><div class="lbl">Opzioni X01 / Countdown</div></div>
+          <div class="card-b">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div><div class="lbl" style="margin-bottom:5px">Punteggio</div><input type="number" id="start-score" value="501"></div>
+              <div><div class="lbl" style="margin-bottom:5px">Uscita</div>
+                <select id="out-rule"><option value="SINGLE">Single Out</option><option value="DOUBLE">Double Out</option></select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="db db-p" style="width:100%;padding:14px;font-size:1rem" onclick="dmInitGame()">▶ INIZIA PARTITA</button>
+      </div>
+    </div>
+    <div class="sc" id="sc-game" style="flex-direction:column">
+      <div class="ptabs" id="ptabs"></div>
+      <div class="gm">
+        <div id="solo-panel-wrap"></div>
+        <div class="dots" id="dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+        <div id="dc" style="display:flex;flex-direction:column;align-items:center;width:100%"></div>
+        <div class="hint" id="co-hint"></div>
+      </div>
+      <div class="kw">
+        <div class="kprev">
+          <div><div class="lbl">tiro</div><div class="kpn" id="kpn">—</div></div>
+          <div style="text-align:right"><div class="lbl" id="kpm">mod</div><div class="kpe" id="kpe">—</div></div>
+        </div>
+        <div class="kp">
+          <button class="k" onclick="dmPress(1)">1</button><button class="k" onclick="dmPress(2)">2</button><button class="k" onclick="dmPress(3)">3</button><button class="k k-mod" id="km2" onclick="dmMod(2)">×2</button>
+          <button class="k" onclick="dmPress(4)">4</button><button class="k" onclick="dmPress(5)">5</button><button class="k" onclick="dmPress(6)">6</button><button class="k k-mod" id="km3" onclick="dmMod(3)">×3</button>
+          <button class="k" onclick="dmPress(7)">7</button><button class="k" onclick="dmPress(8)">8</button><button class="k" onclick="dmPress(9)">9</button><button class="k k-del" onclick="dmClear()">C</button>
+          <button class="k" onclick="dmUndo()">↶</button><button class="k" onclick="dmPress(0)">0</button><button class="k" onclick="dmPress(25)" style="font-size:.68rem!important">BULL</button><button class="k k-skip" onclick="dmSkip()">SKIP</button>
+          <button class="k k-ok" onclick="dmConfirm()">✓ CONFERMA</button>
+          <button class="k k-exit" onclick="dmHome()" style="grid-column:span 2">⏏ ESCI</button>
+        </div>
+      </div>
+    </div>
+    <div class="sc" id="sc-stats">
+      <div class="tb">
+        <button class="db-i" onclick="dmHome()">←</button>
+        <div class="tb-title">📊 RIEPILOGO</div>
+      </div>
+      <div class="si" id="stats-body"></div>
+    </div>
+    </div>
+  `;
+
+  // inject the game script
+  const s = document.createElement('script');
+  s.textContent = `(${dmAppScript.toString()})()`;
+  frame.appendChild(s);
+
+  // refresh landing stats after closing
+  document.querySelector('.dm-close-btn').addEventListener('click', () => {
+    try{
+      const players = JSON.parse(localStorage.getItem('dm_players_v3')) || [];
+      document.getElementById('st-players').textContent = players.length || '0';
+      const totalGames = players.reduce((s,p)=>s+(p.games_played||0),0);
+      document.getElementById('st-games').textContent = totalGames || '0';
+      const topAvg = players.length ? Math.max(...players.map(p=>p.avg_ppr||0)).toFixed(1) : '—';
+      document.getElementById('st-avg').textContent = topAvg;
+      const bests = players.map(p=>p.solo_best).filter(Boolean);
+      document.getElementById('st-best').textContent = bests.length ? Math.min(...bests)+'🎯' : '—';
+    } catch(e){}
+  });
+});
+
+/* ── APP LOGIC (IIFE injected into overlay) ─────────── */
+function dmAppScript(){
+const STORE="dm_players_v3";
+const EMOJIS=["🎯","🏹","🎳","⚡","🔥","💎","🦁","🐉","🦊","👑","🌟","💀","🎲","🍀","🦅","🤖","🎪","🏆","⚔️","🛡️","🌊","🎭","🦄","🔮"];
+const COLORS=["#00e599","#38b6ff","#ff3d5a","#fbbf24","#a78bfa","#fb923c","#34d399","#f472b6"];
+const CRICKET_NUMS=[20,19,18,17,16,15,25];
+const HALVEIT_T=["15","16","17","18","19","20","Bull","D Any","T Any","B+20"];
+const CHECKOUTS={170:"T20 T20 Bull",167:"T20 T19 Bull",164:"T20 T18 Bull",161:"T20 T17 Bull",160:"T20 T20 D20",158:"T20 T18 D16",157:"T20 T19 D10",100:"T20 D20",96:"T20 D18",80:"T20 D10",72:"T20 D6",60:"S20 D20",50:"Bull",40:"D20",38:"D19",36:"D18",32:"D16",24:"D12",20:"D10",16:"D8",8:"D4",4:"D2",2:"D1"};
+const SOLO_MODES=["COUNTDOWN","SCORING"];
+let players=[],selIds=[],G={};
+let moEditId=null,moEmoji="🎯",moColor="#00e599";
+let chosenMode="X01";
+function load(){try{players=JSON.parse(localStorage.getItem(STORE))||[];}catch{players=[];}}
+function save(){localStorage.setItem(STORE,JSON.stringify(players));}
+window.dmShowScreen=function(id){document.querySelectorAll("#dma .sc").forEach(s=>s.classList.remove("on"));document.getElementById(id).classList.add("on");};
+window.dmHome=function(){document.getElementById("dma-winner").classList.remove("on");load();renderPlayers();dmShowScreen("sc-players");};
+window.dmGoSetup=function(){renderSetup();dmShowScreen("sc-setup");};
+window.dmStartSolo=function(){if(selIds.length===0){if(players.length===0){showToast("Crea prima un giocatore","bust");return;}selIds=[players[0].id];}else if(selIds.length>1){selIds=[selIds[0]];}chosenMode="X01";renderSetup();dmShowScreen("sc-setup");};
+function renderPlayers(){const g=document.getElementById("pg");g.innerHTML="";players.forEach(p=>{const sel=selIds.includes(p.id);const d=document.createElement("div");d.className="pc"+(sel?" sel":"");if(sel)d.style.boxShadow=`0 0 0 1.5px ${p.color}`;d.innerHTML=`<div class="pc-av">${p.avatar}</div><div class="pc-nm">${p.name}</div><div class="pc-st">${p.games_played||0} partite · ${p.games_won||0} vittorie</div><div class="pc-st" style="color:var(--gld)">avg ${p.avg_ppr||0} PPR</div>`;d.onclick=()=>toggleSel(p.id);let lt;d.addEventListener("touchstart",()=>{lt=setTimeout(()=>openEdit(p.id),600);});d.addEventListener("touchend",()=>clearTimeout(lt));d.addEventListener("contextmenu",e=>{e.preventDefault();openEdit(p.id);});g.appendChild(d);});const add=document.createElement("div");add.className="pc-add";add.innerHTML=`<div class="pc-plus">＋</div><div style="font-size:.72rem;font-weight:600">Nuovo Giocatore</div>`;add.onclick=openNew;g.appendChild(add);const isSolo=selIds.length===1;const isMulti=selIds.length>=2;const pb=document.getElementById("play-btn");pb.style.display=(isSolo||isMulti)?"":"none";pb.textContent=isSolo?"▶ SOLO":"▶ GIOCA";renderRivalry();}
+function toggleSel(id){const i=selIds.indexOf(id);if(i===-1)selIds.push(id);else selIds.splice(i,1);renderPlayers();}
+function renderRivalry(){const z=document.getElementById("rv-zone");if(selIds.length!==2){z.style.display="none";return;}const a=players.find(p=>p.id===selIds[0]),b=players.find(p=>p.id===selIds[1]);if(!a||!b){z.style.display="none";return;}const key=`dm_h2h_${Math.min(a.id,b.id)}_${Math.max(a.id,b.id)}`;let h;try{h=JSON.parse(localStorage.getItem(key));}catch{}if(!h||h.games===0){z.style.display="none";return;}const aw=a.id<b.id?h.p1wins:h.p2wins,bw=a.id<b.id?h.p2wins:h.p1wins;z.style.display="";z.innerHTML=`<div class="rv"><div style="font-size:1.2rem">⚔️</div><div style="flex:1"><div style="font-size:.6rem;color:var(--tx2);margin-bottom:2px;text-transform:uppercase;letter-spacing:1px">Rivalità · ${h.games} partite</div><div style="font-weight:600;font-size:.85rem">${a.avatar} ${a.name} <span class="rv-sc">${aw} — ${bw}</span> ${b.name} ${b.avatar}</div></div></div>`;}
+function updateH2H(wi){if(G.players.length<2)return;for(let i=0;i<G.players.length;i++){for(let j=i+1;j<G.players.length;j++){const pA=G.players[i],pB=G.players[j];const key=`dm_h2h_${Math.min(pA.id,pB.id)}_${Math.max(pA.id,pB.id)}`;let h;try{h=JSON.parse(localStorage.getItem(key));}catch{}h=h||{games:0,p1wins:0,p2wins:0};h.games++;const wid=G.players[wi]?.id;if(wid===Math.min(pA.id,pB.id))h.p1wins++;else if(wid===Math.max(pA.id,pB.id))h.p2wins++;localStorage.setItem(key,JSON.stringify(h));}}}
+function openNew(){moEditId=null;moEmoji="🎯";moColor="#00e599";document.getElementById("mo-name").value="";document.getElementById("mo-title").textContent="NUOVO GIOCATORE";document.getElementById("mo-del").style.display="none";renderModal();document.getElementById("dma-modal").classList.add("on");}
+function openEdit(id){const p=players.find(x=>x.id===id);if(!p)return;moEditId=id;moEmoji=p.avatar;moColor=p.color;document.getElementById("mo-name").value=p.name;document.getElementById("mo-title").textContent="MODIFICA";document.getElementById("mo-del").style.display="";renderModal();document.getElementById("dma-modal").classList.add("on");}
+function renderModal(){document.getElementById("mo-emojis").innerHTML=EMOJIS.map(e=>`<div class="eo${e===moEmoji?" on":""}" onclick="dmPickEmoji('${e}')">${e}</div>`).join("");document.getElementById("mo-colors").innerHTML=COLORS.map(c=>`<div class="dm-co co${c===moColor?" on":""}" style="background:${c}" onclick="dmPickColor('${c}')"></div>`).join("");}
+window.dmPickEmoji=function(e){moEmoji=e;renderModal();};
+window.dmPickColor=function(c){moColor=c;renderModal();};
+window.dmSavePlayer=function(){const name=document.getElementById("mo-name").value.trim();if(!name){showToast("Inserisci un nome","bust");return;}if(moEditId){const p=players.find(x=>x.id===moEditId);if(p){p.name=name;p.avatar=moEmoji;p.color=moColor;}}else{players.push({id:Date.now(),name,avatar:moEmoji,color:moColor,games_played:0,games_won:0,avg_ppr:0,best_leg:null,solo_best:null});}save();dmCloseModal();renderPlayers();};
+window.dmDeletePlayer=function(){if(!moEditId)return;players=players.filter(p=>p.id!==moEditId);selIds=selIds.filter(id=>id!==moEditId);save();dmCloseModal();renderPlayers();};
+window.dmCloseModal=function(){document.getElementById("dma-modal").classList.remove("on");};
+function renderSetup(){const isSolo=selIds.length===1;document.querySelectorAll("#dma .mc.solo-only").forEach(el=>{el.style.display=isSolo?"":"none";});document.getElementById("sp-row").innerHTML=selIds.map(id=>{const p=players.find(x=>x.id===id);return`<div class="chip" style="border-color:${p.color}40"><span style="color:${p.color}">${p.avatar}</span><span>${p.name}</span><span class="chip-x" onclick="dmRemSel(${id})">✕</span></div>`;}).join("");if(!isSolo&&SOLO_MODES.includes(chosenMode)){chosenMode="X01";document.querySelectorAll("#dma .mc").forEach(c=>c.classList.remove("on"));document.querySelector("#dma .mc[data-mode='X01']").classList.add("on");}}
+window.dmRemSel=function(id){selIds=selIds.filter(x=>x!==id);renderSetup();if(selIds.length===0){dmShowScreen("sc-players");renderPlayers();}};
+window.dmSelMode=function(el){document.querySelectorAll("#dma .mc").forEach(c=>c.classList.remove("on"));el.classList.add("on");chosenMode=el.dataset.mode;document.getElementById("x01-opts").style.display=(chosenMode==="X01"||chosenMode==="BOBS27"||chosenMode==="COUNTDOWN")?"":"none";};
+window.dmInitGame=function(){const score=parseInt(document.getElementById("start-score").value)||501;const outRule=document.getElementById("out-rule").value;const isSolo=selIds.length===1;G={mode:chosenMode,outRule,startScore:score,isSolo,players:selIds.map(id=>{const r=players.find(p=>p.id===id);return{id:r.id,name:r.name,avatar:r.avatar,color:r.color,score:(chosenMode==="X01"||chosenMode==="COUNTDOWN")?score:(chosenMode==="BOBS27"?27:0),totalScored:0,dartsThrown:0,highTurn:0,bustsCount:0,checkoutAttempts:0,checkoutHits:0,cricket:{20:0,19:0,18:0,17:0,16:0,15:0,25:0},atcTarget:1,shanghaiScore:0,halveScore:0,scoringScore:0,scoringTurns:0,_halveHit:false,_shanghaiHits:{},turnHistory:[]};}),current:0,buffer:"",mod:1,darts:0,turnScore:0,history:[],turnLog:[],shanghaiRound:1,halveRound:0,scoringRound:0};dmShowScreen("sc-game");updateUI();};
+window.dmPress=function(n){if(n===25)G.buffer="25";else if(G.buffer.length<2)G.buffer+=n;updatePreview();};
+window.dmMod=function(m){G.mod=(G.mod===m)?1:m;updatePreview();};
+window.dmClear=function(){G.buffer="";G.mod=1;updatePreview();};
+function updatePreview(){const val=G.buffer?parseInt(G.buffer):null,eff=val!==null?val*G.mod:null;document.getElementById("kpn").textContent=G.buffer||"—";document.getElementById("kpm").textContent=G.mod>1?`×${G.mod} =`:"mod";document.getElementById("kpe").textContent=eff!==null?(G.mod>1?`${eff}`:eff):"—";document.getElementById("km2").className="k k-mod"+(G.mod===2?" on":"");document.getElementById("km3").className="k k-mod"+(G.mod===3?" on":"");}
+function saveState(){G.history.push(JSON.stringify({players:JSON.parse(JSON.stringify(G.players)),current:G.current,darts:G.darts,turnScore:G.turnScore,turnLog:JSON.parse(JSON.stringify(G.turnLog)),shanghaiRound:G.shanghaiRound,halveRound:G.halveRound,scoringRound:G.scoringRound}));if(G.history.length>50)G.history.shift();}
+window.dmUndo=function(){if(!G.history.length)return;Object.assign(G,JSON.parse(G.history.pop()));dmClear();updateUI();};
+window.dmConfirm=function(){if(G.buffer==="")return;saveState();const val=parseInt(G.buffer)||0,pts=val*G.mod,p=G.players[G.current];if(G.mode==="X01"||G.mode==="COUNTDOWN")hX01(p,val,pts);else if(G.mode==="CRICKET")hCricket(p,val);else if(G.mode==="ATC")hATC(p,val);else if(G.mode==="SHANGHAI")hShanghai(p,val);else if(G.mode==="HALVEIT")hHalveIt(p,val);else if(G.mode==="BOBS27")hBobs(p,val);else if(G.mode==="SCORING")hScoring(p,val,pts);p.dartsThrown++;G.darts++;dmClear();if(G.darts>=3){G.turnLog.push({playerIdx:G.current,score:G.turnScore,bust:false,darts:3});p.turnHistory.push(G.turnScore);setTimeout(dmSkip,350);}updateUI();};
+function hX01(p,val,pts){const rem=p.score-pts;if(p.score<=170)p.checkoutAttempts++;let bust=false;if(G.outRule==="DOUBLE"){if(rem<0||rem===1||(rem===0&&G.mod!==2))bust=true;}else{if(rem<0)bust=true;}if(bust){p.bustsCount++;G.turnLog.push({playerIdx:G.current,score:G.turnScore,bust:true,darts:G.darts+1});p.turnHistory.push(0);showToast("💥 BUST!","bust");G.turnScore=0;G.darts=3;return;}p.score=rem;G.turnScore+=pts;p.totalScored+=pts;p.highTurn=Math.max(p.highTurn,G.turnScore);if(rem===0){p.checkoutHits++;G.turnLog.push({playerIdx:G.current,score:G.turnScore,bust:false,darts:G.darts+1});p.turnHistory.push(G.turnScore);dmWin(G.current);}}
+function hCricket(p,val){if(!CRICKET_NUMS.includes(val))return;const others=G.players.filter((_,i)=>i!==G.current);for(let i=0;i<G.mod;i++){if(p.cricket[val]<3){p.cricket[val]++;}else{const ac=others.every(o=>o.cricket[val]>=3);if(!ac){p.score+=val;p.totalScored+=val;}}}G.turnScore+=val;if(CRICKET_NUMS.every(n=>p.cricket[n]>=3))dmWin(G.current);}
+function hATC(p,val){if(val===p.atcTarget){p.atcTarget++;p.totalScored++;G.turnScore++;}if(p.atcTarget>20)dmWin(G.current);}
+function hShanghai(p,val){if(val!==G.shanghaiRound)return;const pts=val*G.mod;p.shanghaiScore+=pts;p.totalScored+=pts;G.turnScore+=pts;p._shanghaiHits[G.mod]=true;if(p._shanghaiHits[1]&&p._shanghaiHits[2]&&p._shanghaiHits[3]){showToast("🌆 SHANGHAI!","win");dmWin(G.current);}}
+function hHalveIt(p,val){const t=HALVEIT_T[G.halveRound];let hit=false;if(t==="Bull"&&val===25)hit=true;else if(t==="D Any"&&G.mod===2&&val>0)hit=true;else if(t==="T Any"&&G.mod===3&&val>0)hit=true;else if(t==="B+20"&&(val===25||val===20))hit=true;else if(parseInt(t)===val&&G.mod===1)hit=true;if(hit){const pts=val*G.mod;p.halveScore+=pts;p.totalScored+=pts;G.turnScore+=pts;p._halveHit=true;}}
+function hBobs(p,val){const tgt=Math.ceil((p.dartsThrown+1)/3);if(val===tgt&&G.mod===2){const pts=tgt*2;p.score+=pts;p.totalScored+=pts;G.turnScore+=pts;}}
+function hScoring(p,val,pts){p.scoringScore+=pts;p.totalScored+=pts;G.turnScore+=pts;p.highTurn=Math.max(p.highTurn,G.turnScore);}
+window.dmSkip=function(){const p=G.players[G.current];const next=(G.current+1)%G.players.length;if(G.mode==="SCORING"){p.scoringTurns++;if(p.scoringTurns>=10&&G.isSolo){dmWin(G.current);return;}G.scoringRound++;if(G.scoringRound>=10&&!G.isSolo){const w=G.players.reduce((a,b)=>a.scoringScore>b.scoringScore?a:b);dmWin(G.players.indexOf(w));return;}}if(G.mode==="HALVEIT"){if(!p._halveHit&&p.halveScore>0){p.halveScore=Math.floor(p.halveScore/2);showToast(`✂️ ${p.name}: dimezzato!`,"bust");}p._halveHit=false;if(next===0){G.halveRound++;if(G.halveRound>=HALVEIT_T.length){const w=G.players.reduce((a,b)=>a.halveScore>b.halveScore?a:b);dmWin(G.players.indexOf(w));return;}}}if(G.mode==="SHANGHAI"){p._shanghaiHits={};if(next===0){G.shanghaiRound++;if(G.shanghaiRound>7){const w=G.players.reduce((a,b)=>a.shanghaiScore>b.shanghaiScore?a:b);dmWin(G.players.indexOf(w));return;}}}if(G.mode==="BOBS27"){const tgt=Math.ceil(p.dartsThrown/3);if(G.turnScore===0&&tgt>=1){p.score-=tgt*2;showToast(`😬 ${p.name}: -${tgt*2}`,"bust");}}G.darts=0;G.turnScore=0;G.current=next;dmClear();updateUI();};
+function dmWin(idx){const p=G.players[idx];if(!G.isSolo)updateH2H(idx);players.forEach(ap=>{const gp=G.players.find(x=>x.id===ap.id);if(!gp)return;ap.games_played=(ap.games_played||0)+1;if(gp.id===p.id)ap.games_won=(ap.games_won||0)+1;const rounds=Math.max(1,Math.ceil(gp.dartsThrown/3));const ppr=parseFloat((gp.totalScored/rounds).toFixed(1));ap.avg_ppr=ap.games_played===1?ppr:parseFloat(((ap.avg_ppr*(ap.games_played-1)+ppr)/ap.games_played).toFixed(1));if(G.isSolo&&(G.mode==="X01"||G.mode==="COUNTDOWN")){if(!ap.solo_best||gp.dartsThrown<ap.solo_best)ap.solo_best=gp.dartsThrown;}});save();let sub=`vittoria in ${p.dartsThrown} freccette`;const rounds=Math.max(1,Math.ceil(p.dartsThrown/3));sub+=` · avg ${(p.totalScored/rounds).toFixed(1)} PPR`;if(G.isSolo&&G.mode==="SCORING")sub=`${p.scoringScore} punti in 10 turni`;document.getElementById("w-name").textContent=p.name.toUpperCase();document.getElementById("w-sub").textContent=sub;document.getElementById("dma-winner").classList.add("on");}
+function updateUI(){const p=G.players[G.current];if(!p)return;document.getElementById("ptabs").innerHTML=G.players.map((pl,i)=>{const rounds=Math.max(1,Math.ceil(pl.dartsThrown/3));const avg=(pl.totalScored/rounds).toFixed(1);let ds;if(G.mode==="ATC")ds=pl.atcTarget;else if(G.mode==="SHANGHAI")ds=pl.shanghaiScore;else if(G.mode==="HALVEIT")ds=pl.halveScore;else if(G.mode==="SCORING")ds=pl.scoringScore;else ds=pl.score;return`<div class="ptab${i===G.current?" on":""}"><div class="ptab-nm">${pl.avatar} ${pl.name}</div><div class="ptab-sc" style="color:${pl.color}">${ds}</div><div class="ptab-av">avg ${avg}</div></div>`;}).join("");const dots=document.getElementById("dots").children;for(let i=0;i<3;i++){const f=i<(3-G.darts);dots[i].className="dot"+(f?" on":"");dots[i].style.background=f?p.color:"transparent";dots[i].style.borderColor=f?p.color:"var(--b2)";dots[i].style.boxShadow=f?`0 0 7px ${p.color}50`:"none";}const spw=document.getElementById("solo-panel-wrap");if(G.isSolo&&p.dartsThrown>0){const rounds2=Math.max(1,Math.ceil(p.dartsThrown/3));const avg2=(p.totalScored/rounds2).toFixed(1);const dart100=p.turnHistory.filter(t=>t>=100).length;let extra="";if(G.mode==="SCORING"){extra=`<div class="solo-stat"><div class="solo-stat-v" style="color:var(--grn)">${10-p.scoringTurns}</div><div class="solo-stat-l">Turni rimasti</div></div>`;}else if(G.mode==="COUNTDOWN"||G.mode==="X01"){extra=`<div class="solo-stat"><div class="solo-stat-v" style="color:var(--blu)">${p.dartsThrown}</div><div class="solo-stat-l">Freccette</div></div>`;}spw.innerHTML=`<div class="solo-panel"><div class="lbl" style="margin-bottom:7px">⚡ Live Stats</div><div class="solo-stat-row"><div class="solo-stat"><div class="solo-stat-v" style="color:var(--grn)">${avg2}</div><div class="solo-stat-l">Avg PPR</div></div><div class="solo-stat"><div class="solo-stat-v" style="color:var(--gld)">${p.highTurn}</div><div class="solo-stat-l">High</div></div><div class="solo-stat"><div class="solo-stat-v" style="color:var(--prp)">${dart100}</div><div class="solo-stat-l">100+</div></div>${extra}</div></div>`;}else{spw.innerHTML="";}const dc=document.getElementById("dc");if(G.mode==="CRICKET"){const sym=n=>["","╱","✕","⊗"][Math.min(n,3)];const hcols=G.players.map(pl=>`<th style="text-align:center;padding:7px 7px;color:${pl.color};font-size:.7rem;font-weight:700;white-space:nowrap;letter-spacing:.4px">${pl.avatar} ${pl.name}</th>`).join("");const rows=CRICKET_NUMS.map(n=>{const ac=G.players.every(pl=>pl.cricket[n]>=3);const cells=G.players.map(pl=>`<td style="text-align:center;padding:6px 4px;font-size:1rem;color:${pl.color};opacity:${ac?0.22:1}">${sym(pl.cricket[n])}</td>`).join("");return`<tr style="border-bottom:1px solid var(--b1)">${cells}<td style="text-align:center;padding:6px 12px;font-family:var(--font-d);font-size:1rem;font-weight:700;color:${ac?"var(--tx3)":"var(--tx)"};border-left:1px solid var(--b2);min-width:50px">${n===25?"Bull":n}</td></tr>`;}).join("");dc.innerHTML=`<div style="width:94%;max-width:500px;overflow-x:auto"><table style="width:100%;border-collapse:collapse"><thead><tr style="border-bottom:1px solid var(--b2)">${hcols}<th style="border-left:1px solid var(--b2);min-width:50px"></th></tr></thead><tbody>${rows}</tbody></table></div>`;}else if(G.mode==="ATC"){dc.innerHTML=`<div class="tg"><div class="tg-l">Target</div><div class="tg-n" style="color:${p.color}">${p.atcTarget}</div><div class="tg-s">colpisci per avanzare</div></div>`;}else if(G.mode==="SHANGHAI"){dc.innerHTML=`<div class="tg"><div class="tg-l">Round ${G.shanghaiRound}/7 — colpisci il</div><div class="tg-n" style="color:${p.color}">${G.shanghaiRound}</div><div class="tg-s">S+D+T stesso turno = Shanghai!</div><div style="margin-top:8px;font-family:var(--font-m);font-size:1rem;color:var(--blu)">+${G.turnScore} questo turno</div></div>`;}else if(G.mode==="HALVEIT"){dc.innerHTML=`<div class="tg"><div class="tg-l">Round ${G.halveRound+1} — target</div><div class="tg-n" style="color:${p.color};font-size:3.2rem">${HALVEIT_T[G.halveRound]}</div><div class="tg-s">manca → punteggio dimezzato</div><div style="margin-top:8px;font-family:var(--font-m);font-size:1.4rem;color:${p.color}">${p.halveScore} pts</div></div>`;}else if(G.mode==="BOBS27"){const bt=Math.ceil((p.dartsThrown+1)/3);dc.innerHTML=`<div class="tg"><div class="tg-l">Doppio da colpire</div><div class="tg-n" style="color:${p.color}">D${bt}</div><div class="tg-s">sbaglia: -${bt*2} pts</div><div class="big" style="font-size:clamp(46px,7vw,88px);margin-top:6px;color:${p.score<0?"var(--red)":p.color}">${p.score}</div></div>`;}else if(G.mode==="SCORING"){const turns_left=10-p.scoringTurns;dc.innerHTML=`<div class="tg"><div class="tg-l">Turno ${p.scoringTurns+1}/10 — massimizza</div><div class="big" style="font-size:clamp(60px,10vw,110px);color:${p.color}">${p.scoringScore}</div><div class="tg-s">${turns_left} turni rimasti · +${G.turnScore} ora</div></div>`;}else{dc.innerHTML=`<div class="big" style="color:${p.color}">${p.score}</div><div class="tl">turno corrente</div><div class="tp">${G.turnScore>0?"+"+G.turnScore:"—"}</div>`;}const hint=(G.mode==="X01"||G.mode==="COUNTDOWN")&&G.outRule==="DOUBLE"?getHint(p.score):"";const he=document.getElementById("co-hint");he.textContent=hint?"→ "+hint:"";he.style.opacity=hint?1:0;updatePreview();}
+function getHint(s){if(s>170||s<2)return"";if(CHECKOUTS[s])return CHECKOUTS[s];if(s<=40&&s%2===0)return"D"+(s/2);return"";}
+window.dmShowStats=function(){document.getElementById("dma-winner").classList.remove("on");buildStats();dmShowScreen("sc-stats");};
+function buildStats(){const body=document.getElementById("stats-body");const isSolo=G.isSolo;const p=G.players[0];if(isSolo){const rounds=Math.max(1,Math.ceil(p.dartsThrown/3));const avg=(p.totalScored/rounds).toFixed(1);const dart100=p.turnHistory.filter(t=>t>=100).length;const dart0=p.turnHistory.filter(t=>t===0).length;const maxH=Math.max(...p.turnHistory,1);const bars=p.turnHistory.map(t=>{return`<div class="sh-row"><div class="sh-n">#${p.turnHistory.indexOf(t)+1}</div><div class="sh-s" style="color:${t>=100?"var(--grn)":t===0?"var(--red)":"var(--tx)"}">${t}</div><div class="sh-bar"><div class="sh-bf" style="width:${Math.round((t/maxH)*100)}%;background:${t>=100?"var(--grn)":t===0?"var(--red)":"var(--blu)"}"></div></div>${t>=100?'<span class="badge badge-g" style="font-size:.5rem">100+</span>':t===0?'<span class="badge" style="background:var(--red-a);color:var(--red);border:1px solid #ff3d5a28;font-size:.5rem">BUST</span>':""}</div>`;}).join("");const ap=players.find(x=>x.id===p.id);const pb=ap?.solo_best;body.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:6px 0 4px"><div style="font-size:2rem">${p.avatar}</div><div><div style="font-weight:700;font-size:1.1rem">${p.name}</div><div style="font-size:.7rem;color:var(--tx2)">${G.mode} · ${p.dartsThrown} freccette · ${rounds} turni</div></div>${G.mode==="SCORING"?`<span class="badge badge-g" style="margin-left:auto">${p.scoringScore} PTS</span>`:`<span class="badge badge-b" style="margin-left:auto">${p.dartsThrown} 🎯</span>`}</div><div class="sg"><div class="scard"><div class="scard-l">Media PPR</div><div class="scard-v" style="color:var(--grn)">${avg}</div><div class="scard-s">punti per turno</div></div><div class="scard"><div class="scard-l">Turno top</div><div class="scard-v" style="color:var(--gld)">${p.highTurn}</div><div class="scard-s">massimo in una mano</div></div><div class="scard"><div class="scard-l">Turni 100+</div><div class="scard-v" style="color:var(--prp)">${dart100}</div><div class="scard-s">su ${rounds} turni totali</div></div><div class="scard"><div class="scard-l">Bust / Zero</div><div class="scard-v" style="color:var(--red)">${dart0+p.bustsCount}</div><div class="scard-s">turni sprecati</div></div></div>${pb?`<div class="card"><div class="card-h"><div class="lbl">🏅 Record personale</div></div><div class="card-b" style="flex-direction:row;align-items:center;justify-content:space-between"><div style="font-size:.82rem;color:var(--tx2)">Miglior partita X01/Countdown</div><div style="font-family:var(--font-m);font-weight:700;color:var(--gld)">${pb} 🎯</div></div></div>`:""}<div class="card"><div class="card-h"><div class="lbl">📋 Storico turni</div></div><div class="card-b"><div class="solo-history">${bars||'<div style="color:var(--tx2);font-size:.8rem">Nessun turno completato</div>'}</div></div></div><button class="db db-g" style="width:100%;margin-top:2px" onclick="dmHome()">↩ TORNA AL MENU</button>`;return;}const sorted=[...G.players].sort((a,b)=>{if(G.mode==="X01"||G.mode==="BOBS27")return a.score-b.score;if(G.mode==="SHANGHAI")return b.shanghaiScore-a.shanghaiScore;if(G.mode==="HALVEIT")return b.halveScore-a.halveScore;if(G.mode==="SCORING")return b.scoringScore-a.scoringScore;return b.totalScored-a.totalScored;});let pod=`<div class="podium">`;sorted.slice(0,3).forEach((p2,i)=>{pod+=`<div class="pd-sl"><div class="pd-nm">${p2.avatar} ${p2.name}</div><div class="pd-bl ${["r1","r2","r3"][i]}"><div class="pd-rk">${["🥇","🥈","🥉"][i]}</div></div><div class="pd-sb">${p2.dartsThrown} 🎯</div></div>`;});pod+=`</div>`;const td=G.players.reduce((s,p2)=>s+p2.dartsThrown,0);const tb=G.players.reduce((s,p2)=>s+p2.bustsCount,0);const ht=G.turnLog.reduce((m,t)=>Math.max(m,t.score),0);const tt=G.turnLog.length;const glob=`<div><div class="lbl" style="margin-bottom:9px">Partita</div><div class="sg"><div class="scard"><div class="scard-l">Freccette totali</div><div class="scard-v">${td}</div><div class="scard-s">${tt} turni</div></div><div class="scard"><div class="scard-l">Bust totali</div><div class="scard-v" style="color:var(--red)">${tb}</div><div class="scard-s">${tt>0?((tb/tt)*100).toFixed(0):0}% turni</div></div><div class="scard"><div class="scard-l">Turno top</div><div class="scard-v" style="color:var(--gld)">${ht}</div><div class="scard-s">in una mano</div></div><div class="scard"><div class="scard-l">Modalità</div><div class="scard-v" style="font-size:.88rem">${G.mode}</div><div class="scard-s">${G.outRule||"—"}</div></div></div></div>`;const maxPPR=Math.max(...G.players.map(p2=>p2.totalScored/Math.max(1,Math.ceil(p2.dartsThrown/3))));let pl=`<div><div class="lbl" style="margin-bottom:9px">Giocatori</div>`;G.players.forEach((p2,idx)=>{const rounds2=Math.max(1,Math.ceil(p2.dartsThrown/3));const ppr=(p2.totalScored/rounds2).toFixed(1);const bw=Math.round((parseFloat(ppr)/Math.max(1,maxPPR))*100);const co=p2.checkoutAttempts>0?`${((p2.checkoutHits/p2.checkoutAttempts)*100).toFixed(0)}%`:"N/A";const mt=G.turnLog.filter(t=>t.playerIdx===idx);const mx=Math.max(...mt.map(t=>t.score),1);const brs=mt.slice(-20).map(t=>{const h=Math.max(3,Math.round((t.score/mx)*38));return`<div class="tcb${t.bust?" bust":t.score>=100?" high":""}" style="height:${h}px"></div>`;}).join("");pl+=`<div class="psb"><div class="psb-h"><div style="font-size:1.4rem">${p2.avatar}</div><div style="flex:1"><div style="font-weight:600;font-size:.85rem">${p2.name}</div><div style="font-size:.58rem;color:var(--tx2)">${p2.dartsThrown} freccette · ${rounds2} turni</div></div>${idx===0?`<span class="badge badge-gld">🏆 WINNER</span>`:""}</div><div class="psb-b"><div class="psb-r"><span class="psb-l">Media PPR</span><span class="psb-v" style="color:${p2.color}">${ppr}</span></div><div class="bar-t"><div class="bar-f" style="width:${bw}%;background:${p2.color}"></div></div><div class="psb-r"><span class="psb-l">Turno migliore</span><span class="psb-v" style="color:var(--gld)">${p2.highTurn}</span></div>${G.mode==="X01"?`<div class="psb-r"><span class="psb-l">Checkout %</span><span class="psb-v">${co}</span></div>`:""}<div class="psb-r"><span class="psb-l">Bust</span><span class="psb-v" style="color:var(--red)">${p2.bustsCount}</span></div>${mt.length>0?`<div><div class="lbl" style="margin-bottom:4px">Andamento</div><div class="tc">${brs}</div></div>`:""}</div></div>`;});pl+=`</div>`;body.innerHTML=pod+glob+pl+`<button class="db db-g" style="width:100%;margin-top:2px" onclick="dmHome()">↩ TORNA AL MENU</button>`;}
+function showToast(msg,type){const t=document.getElementById("dma-toast");t.textContent=msg;t.className="on"+(type?" "+type:"");clearTimeout(t._t);t._t=setTimeout(()=>{t.className="";},2200);}
+load();renderPlayers();
+}
+</script>
+
+</BaseLayout>
