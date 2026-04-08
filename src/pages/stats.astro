@@ -1,0 +1,952 @@
+---
+// stats.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Statistiche DartMaster" description="Analisi dettagliata delle tue partite di freccette" sideBarActiveItemID="stats">
+
+<style>
+/* Stili specifici per la pagina statistiche */
+.stats-container {
+  font-family: 'DM Sans', sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Header */
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.stats-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 3px;
+}
+
+.stats-title span {
+  color: #00e599;
+}
+
+.stats-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-select {
+  background: #0a1526;
+  border: 1px solid #162540;
+  border-radius: 8px;
+  color: #e2f0ff;
+  padding: 8px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-select:hover {
+  border-color: #00e599;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, #0a1526 0%, #0e1c32 100%);
+  border: 1px solid #162540;
+  border-radius: 14px;
+  padding: 20px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: #00e59940;
+}
+
+.kpi-icon {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #00e599;
+  line-height: 1.2;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #7da8cc;
+  margin-top: 8px;
+}
+
+.kpi-trend {
+  font-size: 0.7rem;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trend-positive {
+  color: #00e599;
+}
+
+.trend-negative {
+  color: #ff3d5a;
+}
+
+/* Sezioni */
+.stats-section {
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: #e2f0ff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title-icon {
+  color: #00e599;
+}
+
+/* Tab Navigation */
+.tabs-nav {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #7da8cc;
+  padding: 5px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  color: #e2f0ff;
+}
+
+.tab-btn.active {
+  color: #00e599;
+  border-bottom-color: #00e599;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Classifica Giocatori */
+.rankings-table {
+  width: 100%;
+}
+
+.ranking-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 90px 80px 80px;
+  padding: 12px 16px;
+  background: #060c17;
+  border-radius: 8px;
+  color: #4d7a99;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 90px 80px 80px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #162540;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.ranking-row:hover {
+  background: #0e1c32;
+}
+
+.rank-position {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.rank-1 { color: #fbbf24; }
+.rank-2 { color: #c0c0c0; }
+.rank-3 { color: #cd7f32; }
+
+.player-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-avatar {
+  font-size: 1.5rem;
+}
+
+.player-name {
+  font-weight: 600;
+  color: #e2f0ff;
+}
+
+.player-level {
+  font-size: 0.65rem;
+  color: #7da8cc;
+  margin-top: 2px;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: #e2f0ff;
+}
+
+.stat-value.highlight {
+  color: #00e599;
+}
+
+/* Matrice H2H */
+.h2h-matrix {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.matrix-header {
+  background: #060c17;
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  color: #7da8cc;
+  font-size: 0.8rem;
+}
+
+.matrix-cell {
+  text-align: center;
+  padding: 12px;
+  border: 1px solid #162540;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.matrix-cell.win {
+  background: #00e59918;
+  color: #00e599;
+}
+
+.matrix-cell.loss {
+  background: #ff3d5a14;
+  color: #ff3d5a;
+}
+
+.matrix-cell.draw {
+  background: #fbbf2414;
+  color: #fbbf24;
+}
+
+/* Record Cards */
+.records-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.record-card {
+  background: #0e1c32;
+  border: 1px solid #162540;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.record-icon {
+  font-size: 2.2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #00e59914;
+  border-radius: 10px;
+}
+
+.record-content {
+  flex: 1;
+}
+
+.record-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #00e599;
+  line-height: 1.1;
+}
+
+.record-label {
+  font-size: 0.75rem;
+  color: #7da8cc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 4px 0;
+}
+
+.record-holder {
+  font-size: 0.7rem;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Modalità Stats */
+.mode-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.mode-card {
+  background: #0e1c32;
+  border: 1px solid #162540;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.mode-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 1.5px;
+  color: #e2f0ff;
+  margin-bottom: 12px;
+}
+
+.mode-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mode-stat-label {
+  font-size: 0.65rem;
+  color: #4d7a99;
+  text-transform: uppercase;
+}
+
+.mode-stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #00e599;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-container {
+    padding: 1rem;
+  }
+  
+  .ranking-header,
+  .ranking-row {
+    grid-template-columns: 40px 1fr 70px 60px;
+    font-size: 0.8rem;
+  }
+  
+  .ranking-header > *:nth-child(n+5),
+  .ranking-row > *:nth-child(n+5) {
+    display: none;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #00e599;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  opacity: 0.4;
+}
+
+.empty-state-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.empty-state-sub {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #162540;
+  border-top-color: #00e599;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<div class="stats-container">
+  <!-- Header -->
+  <div class="stats-header">
+    <h1 class="stats-title">STATI<span>STICHE</span></h1>
+    
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid" id="kpi-grid">
+    <!-- Popolato via JavaScript -->
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="stats-section bg-base-300">
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="rankings">🏆 Classifica</button>
+      <button class="tab-btn" data-tab="rivalries">⚔️ Rivalità</button>
+      <button class="tab-btn" data-tab="records">🏅 Record</button>
+      <!-- <button class="tab-btn" data-tab="modes">📊 Modalità</button> -->
+    </div>
+
+    <!-- Tab: Classifica -->
+    <div class="tab-content active" id="rankings-tab">
+      <div id="rankings-content">
+        <!-- Popolato via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Tab: Rivalità -->
+    <div class="tab-content" id="rivalries-tab">
+      <div id="rivalries-content">
+        <!-- Popolato via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Tab: Record -->
+    <div class="tab-content" id="records-tab">
+      <div id="records-content">
+        <!-- Popolato via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Tab: Modalità 
+    <div class="tab-content" id="modes-tab">
+      <div id="modes-content">
+         Popolato via JavaScript 
+      </div>
+    </div>
+    -->
+  </div>
+</div>
+
+<script is:inline>
+(function() {
+  const STORAGE_KEY = 'dm_players_v3';
+  const H2H_PREFIX = 'dm_h2h_';
+  
+  // Carica dati
+  function loadData() {
+    try {
+      const players = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      const games = loadAllGames();
+      const h2hData = loadAllH2H();
+      return { players, games, h2hData };
+    } catch (e) {
+      console.error('Errore caricamento dati:', e);
+      return { players: [], games: [], h2hData: {} };
+    }
+  }
+
+  function loadAllGames() {
+    // Carica tutte le partite salvate
+    const games = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith('dm_game_')) {
+        try {
+          games.push(JSON.parse(localStorage.getItem(key)));
+        } catch (e) {}
+      }
+    }
+    return games;
+  }
+
+  function loadAllH2H() {
+    const h2h = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(H2H_PREFIX)) {
+        try {
+          h2h[key] = JSON.parse(localStorage.getItem(key));
+        } catch (e) {}
+      }
+    }
+    return h2h;
+  }
+
+  // Calcola statistiche globali
+  function calculateGlobalStats(data) {
+    const { players, games, h2hData } = data;
+    
+    const totalGames = players.reduce((sum, p) => sum + (p.games_played || 0), 0);
+    const totalWins = players.reduce((sum, p) => sum + (p.games_won || 0), 0);
+    const avgPPR = players.length > 0 
+      ? (players.reduce((sum, p) => sum + (p.avg_ppr || 0), 0) / players.length).toFixed(1)
+      : '0.0';
+    
+    const activePlayers = players.filter(p => (p.games_played || 0) > 0).length;
+    
+    // Trova best performance
+    let bestPPR = 0;
+    let bestPlayer = null;
+    players.forEach(p => {
+      if ((p.avg_ppr || 0) > bestPPR) {
+        bestPPR = p.avg_ppr || 0;
+        bestPlayer = p;
+      }
+    });
+
+    const totalH2HGames = Object.values(h2hData).reduce((sum, h) => sum + (h.games || 0), 0);
+    
+    return {
+      totalGames,
+      totalWins,
+      avgPPR,
+      activePlayers,
+      bestPPR,
+      bestPlayer,
+      totalPlayers: players.length,
+      totalH2HGames,
+      winRate: totalGames > 0 ? ((totalWins / totalGames) * 100).toFixed(1) : '0.0'
+    };
+  }
+
+  // Render KPI
+  function renderKPIs(globalStats) {
+    const kpiGrid = document.getElementById('kpi-grid');
+    
+    kpiGrid.innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-value">${globalStats.totalGames}</div>
+        <div class="kpi-label">Partite Totali</div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-value">${globalStats.activePlayers}</div>
+        <div class="kpi-label">Giocatori Attivi</div>
+        <div class="kpi-trend">su ${globalStats.totalPlayers} totali</div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-value">${globalStats.avgPPR}</div>
+        <div class="kpi-label">Media punti per turno</div>
+      </div>
+      
+      <div class="kpi-card">
+        <div class="kpi-icon">🏆</div>
+        <div class="kpi-value">${globalStats.winRate}%</div>
+        <div class="kpi-label">Win Rate Medio</div>
+        <div class="kpi-trend">${globalStats.totalWins} vittorie</div>
+      </div>
+    `;
+  }
+
+  // Render Classifica
+  function renderRankings(players) {
+    const container = document.getElementById('rankings-content');
+    
+    if (players.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">👥</div>
+          <div class="empty-state-text">Nessun giocatore trovato</div>
+          <div class="empty-state-sub">Crea giocatori nell'app DartMaster per vedere le statistiche</div>
+        </div>
+      `;
+      return;
+    }
+
+    // Ordina per PPR
+    const sorted = [...players].sort((a, b) => (b.avg_ppr || 0) - (a.avg_ppr || 0));
+    
+    let html = `
+      
+    `;
+
+    sorted.forEach((p, idx) => {
+      const winRate = p.games_played > 0 
+        ? ((p.games_won / p.games_played) * 100).toFixed(1) 
+        : '0.0';
+      
+      const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+      
+      html += ` <div class="divider"></div>
+        <div class="ranking-row">
+          <div class="player-cell">
+            <div class="player-info-inline ">
+                <span class="player-avatar stat-value">${p.avatar || '🎯'}</span>
+              <span class="player-name stat-value" style="color: ${p.color || '#7da8cc'}">${p.name || 'Sconosciuto'}</span>
+             
+            </div>
+          </div>
+          
+          <!-- Colonna PPR: Etichetta e valore sulla stessa linea -->
+          <div class="stat-cell">
+            <span class="stat-label-mobile">Media punti</span>
+            <span class="stat-value highlight">${(p.avg_ppr || 0).toFixed(1)}</span>
+          </div>
+          
+          <!-- Colonna Partite: Etichetta e valore sulla stessa linea -->
+          <div class="stat-cell">
+            <span class="stat-label-mobile">Partite</span>
+            <span class="stat-value">${p.games_played || 0}</span>
+          </div>
+          
+          <!-- Colonna Vittorie: Etichetta e valore sulla stessa linea -->
+          <div class="stat-cell">
+            <span class="stat-label-mobile">Vittorie</span>
+            <span class="stat-value">${p.games_won || 0}</span>
+          </div>
+          
+          <!-- Colonna Win%: Etichetta e valore sulla stessa linea -->
+          <div class="stat-cell">
+            <span class="stat-label-mobile">Win%</span>
+            <span class="stat-value">${winRate}%</span>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+
+  // Render Rivalità
+  function renderRivalries(players, h2hData) {
+    const container = document.getElementById('rivalries-content');
+    
+    if (players.length < 2) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">⚔️</div>
+          <div class="empty-state-text">Almeno 2 giocatori necessari</div>
+          <div class="empty-state-sub">Gioca partite testa a testa per vedere le rivalità</div>
+        </div>
+      `;
+      return;
+    }
+
+    // Matrice H2H
+    let matrixHtml = `
+      <div class="h2h-matrix">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th class="matrix-header">Giocatore</th>
+              ${players.map(p => `<th class="matrix-header">${p.avatar} ${p.name}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    players.forEach((p1, i) => {
+      matrixHtml += `<tr>`;
+      matrixHtml += `<td class="matrix-header">${p1.avatar} ${p1.name}</td>`;
+      
+      players.forEach((p2, j) => {
+        if (i === j) {
+          matrixHtml += `<td class="matrix-cell">—</td>`;
+        } else {
+          const key = `${H2H_PREFIX}${Math.min(p1.id, p2.id)}_${Math.max(p1.id, p2.id)}`;
+          const h2h = h2hData[key];
+          
+          if (!h2h || h2h.games === 0) {
+            matrixHtml += `<td class="matrix-cell">0-0</td>`;
+          } else {
+            const p1Wins = p1.id < p2.id ? h2h.p1wins : h2h.p2wins;
+            const p2Wins = p1.id < p2.id ? h2h.p2wins : h2h.p1wins;
+            const cellClass = p1Wins > p2Wins ? 'win' : p1Wins < p2Wins ? 'loss' : 'draw';
+            matrixHtml += `<td class="matrix-cell ${cellClass}">${p1Wins}-${p2Wins}</td>`;
+          }
+        }
+      });
+      
+      matrixHtml += `</tr>`;
+    });
+
+    matrixHtml += `</tbody></table></div>`;
+
+    // Top rivalità
+    const rivalries = [];
+    for (let i = 0; i < players.length; i++) {
+      for (let j = i + 1; j < players.length; j++) {
+        const key = `${H2H_PREFIX}${Math.min(players[i].id, players[j].id)}_${Math.max(players[i].id, players[j].id)}`;
+        const h2h = h2hData[key];
+        if (h2h && h2h.games > 0) {
+          rivalries.push({
+            p1: players[i],
+            p2: players[j],
+            games: h2h.games,
+            p1Wins: players[i].id < players[j].id ? h2h.p1wins : h2h.p2wins,
+            p2Wins: players[i].id < players[j].id ? h2h.p2wins : h2h.p1wins
+          });
+        }
+      }
+    }
+    
+    rivalries.sort((a, b) => b.games - a.games);
+    
+    let topRivalriesHtml = '';
+    if (rivalries.length > 0) {
+      topRivalriesHtml = `
+        <div class="section-header" style="margin-top: 2rem;">
+          <h3 class="section-title">🔥 Rivalità più accese</h3>
+        </div>
+        <div class="records-grid">
+      `;
+      
+      rivalries.slice(0, 3).forEach(r => {
+        topRivalriesHtml += `
+          <div class="record-card">
+            <div class="record-icon">⚔️</div>
+            <div class="record-content">
+              <div class="record-value" style="font-size: 1.4rem;">${r.p1Wins} - ${r.p2Wins}</div>
+              <div class="record-label">${r.p1.name} vs ${r.p2.name}</div>
+              <div class="record-holder">${r.games} partite giocate</div>
+            </div>
+          </div>
+        `;
+      });
+      
+      topRivalriesHtml += `</div>`;
+    }
+
+    container.innerHTML = matrixHtml + topRivalriesHtml;
+  }
+
+  // Render Record
+  function renderRecords(players) {
+    const container = document.getElementById('records-content');
+    
+    if (players.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🏅</div>
+          <div class="empty-state-text">Nessun record disponibile</div>
+          <div class="empty-state-sub">Gioca partite per stabilire nuovi record</div>
+        </div>
+      `;
+      return;
+    }
+
+    // Trova record
+    let bestPPR = { player: null, value: 0 };
+    let mostWins = { player: null, value: 0 };
+    let mostGames = { player: null, value: 0 };
+    let bestSolo = { player: null, value: Infinity };
+    
+    players.forEach(p => {
+      if ((p.avg_ppr || 0) > bestPPR.value) {
+        bestPPR = { player: p, value: p.avg_ppr || 0 };
+      }
+      if ((p.games_won || 0) > mostWins.value) {
+        mostWins = { player: p, value: p.games_won || 0 };
+      }
+      if ((p.games_played || 0) > mostGames.value) {
+        mostGames = { player: p, value: p.games_played || 0 };
+      }
+      if (p.solo_best && p.solo_best < bestSolo.value) {
+        bestSolo = { player: p, value: p.solo_best };
+      }
+    });
+
+    container.innerHTML = `
+      <div class="records-grid">
+        <div class="record-card">
+          <div class="record-icon">🎯</div>
+          <div class="record-content">
+            <div class="record-value">${bestPPR.value.toFixed(1)}</div>
+            <div class="record-label">Miglior PPR</div>
+            <div class="record-holder">
+              <span>${bestPPR.player?.avatar || '🎯'}</span>
+              <span>${bestPPR.player?.name || '—'}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="record-card">
+          <div class="record-icon">🏆</div>
+          <div class="record-content">
+            <div class="record-value">${mostWins.value}</div>
+            <div class="record-label">Maggior numero di vittorie</div>
+            <div class="record-holder">
+              <span>${mostWins.player?.avatar || '🎯'}</span>
+              <span>${mostWins.player?.name || '—'}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="record-card">
+          <div class="record-icon">🎲</div>
+          <div class="record-content">
+            <div class="record-value">${mostGames.value}</div>
+            <div class="record-label">Più partite giocate</div>
+            <div class="record-holder">
+              <span>${mostGames.player?.avatar || '🎯'}</span>
+              <span>${mostGames.player?.name || '—'}</span>
+            </div>
+          </div>
+        </div>
+        
+        ${bestSolo.player ? `
+        <div class="record-card">
+          <div class="record-icon">⚡</div>
+          <div class="record-content">
+            <div class="record-value">${bestSolo.value} 🎯</div>
+            <div class="record-label">Miglior Solo (X01/Countdown)</div>
+            <div class="record-holder">
+              <span>${bestSolo.player.avatar}</span>
+              <span>${bestSolo.player.name}</span>
+            </div>
+          </div>
+        </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+
+
+  // Tab switching
+  function initTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetId = tab.dataset.tab;
+        
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(`${targetId}-tab`).classList.add('active');
+      });
+    });
+  }
+
+  // Inizializza pagina
+  function init() {
+    const data = loadData();
+    const globalStats = calculateGlobalStats(data);
+    
+    renderKPIs(globalStats);
+    renderRankings(data.players);
+    renderRivalries(data.players, data.h2hData);
+    renderRecords(data.players);
+    
+    
+    initTabs();
+    
+    // Filtri (placeholder - da implementare)
+    document.getElementById('period-filter').addEventListener('change', (e) => {
+      console.log('Filtro periodo:', e.target.value);
+      // Implementare filtraggio
+    });
+    
+    document.getElementById('mode-filter').addEventListener('change', (e) => {
+      console.log('Filtro modalità:', e.target.value);
+      // Implementare filtraggio
+    });
+  }
+
+  // Avvia quando il DOM è pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</BaseLayout>
