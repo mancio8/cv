@@ -25,4 +25,4 @@ COPY --from=builder /app/dist /app/dist
 EXPOSE 4321
 
 # Start the Astro server
-CMD ["npx", "astro", "preview"]
+CMD ["npx", "astro", "preview", "--host", "0.0.0.0"]

@@ -10,30 +10,68 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   aggiorna:
     runs-on: ubuntu-latest
 
     steps:
+    # --------------------------------------------------
+    # Checkout
+    # --------------------------------------------------
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    # --------------------------------------------------
+    # Python
+    # --------------------------------------------------
     - name: Configura Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
+    # --------------------------------------------------
+    # Dipendenze Python
+    # --------------------------------------------------
     - name: Installa dipendenze
       run: |
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: Aggiorna campionato
+    # --------------------------------------------------
+    # Aggiorna campionato
+    # --------------------------------------------------
+    - name: Aggiorna dati campionato
       run: |
         python scripts/aggiorna_campionato.py
 
-    - name: Commit e push
+    # --------------------------------------------------
+    # Controlla JSON
+    # --------------------------------------------------
+    - name: Controlla JSON
+      run: |
+        python - <<'PY'
+        import json
+
+        file = "public/campionato_2026_EC_A.json"
+
+        with open(file, encoding="utf-8") as f:
+            data = json.load(f)
+
+        print("JSON valido")
+        print(f"Campionato: {data.get('campionato')}")
+        print(f"Girone: {data.get('girone')}")
+        print(f"Stagione: {data.get('stagione')}")
+        print(f"Squadre: {len(data.get('classifica', []))}")
+        print(f"Partite: {len(data.get('calendario', []))}")
+        PY
+
+    # --------------------------------------------------
+    # Commit JSON aggiornato
+    # --------------------------------------------------
+    - name: Commit dati aggiornati
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -41,8 +79,48 @@ jobs:
         git add public/campionato_2026_2C_C.json
 
         if git diff --cached --quiet; then
-          echo "Nessuna modifica al calendario"
+          echo "Nessuna modifica al JSON"
         else
           git commit -m "Aggiorna dati campionato"
           git push
         fi
+
+    # --------------------------------------------------
+    # Setup Node
+    # --------------------------------------------------
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    # --------------------------------------------------
+    # Installazione dipendenze Astro
+    # --------------------------------------------------
+    - name: Install dependencies
+      run: npm ci
+
+    # --------------------------------------------------
+    # Build Astro
+    # --------------------------------------------------
+    - name: Build Astro
+      run: npm run build
+
+    # --------------------------------------------------
+    # Configura GitHub Pages
+    # --------------------------------------------------
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    # --------------------------------------------------
+    # Upload artifact
+    # --------------------------------------------------
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./dist
+
+    # --------------------------------------------------
+    # Deploy
+    # --------------------------------------------------
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
