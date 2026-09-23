@@ -76,7 +76,7 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-        git add public/campionato_2026_2C_C.json
+        git add public/campionato_2026_EC_A.json
 
         if git diff --cached --quiet; then
           echo "Nessuna modifica al JSON"
