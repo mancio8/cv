@@ -15,7 +15,7 @@ CAMPIONATO = "2C"
 GIRONE = "C"
 STAGIONE = "2026"
 
-NUM_GIORNATE = 17
+NUM_GIORNATE = 13
 
 OUTPUT_FILE = (
     Path(__file__).resolve().parent.parent
