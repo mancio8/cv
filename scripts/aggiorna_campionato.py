@@ -11,8 +11,8 @@ import requests
 
 BASE_URL = "https://gare.lnd.it/competizione/campania"
 
-CAMPIONATO = "EC"
-GIRONE = "A"
+CAMPIONATO = "2C"
+GIRONE = "C"
 STAGIONE = "2026"
 
 NUM_GIORNATE = 17
