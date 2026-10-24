@@ -743,15 +743,15 @@
       "indirizzo": "VIA CANNAVINA, PIETRELCINA (BN)",
       "logo_casa": "https://play.lnd.it/lndimg/0/logo-societa-generico.png",
       "logo_trasferta": "https://play.lnd.it/lndimg/963757/963757-web.jpeg",
-      "giocata": false,
+      "giocata": true,
       "rinviata": false,
-      "esito": "",
+      "esito": "Da referto arbitrale",
       "winner": null,
       "live_url": null,
       "is_live": false,
       "is_rest": false,
       "is_inverted": false,
-      "result_state": 0
+      "result_state": 2
     },
     {
       "fase": "andata",
